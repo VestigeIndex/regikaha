@@ -11,7 +11,7 @@ export function PortfolioStrip() {
         <SectionHeading
           eyebrow="Trabajos realizados"
           title="Resultados reales, antes y después"
-          description="Proyectos completados por profesionales verificados de RegiNova. Pasa el cursor para ver el antes."
+          description="Proyectos completados por profesionales verificados de RegiKaha. Pasa el cursor para ver el antes."
         />
         <Link href="/trabajos" className="btn btn-secondary shrink-0">
           Ver portfolio <ArrowRight size={16} />

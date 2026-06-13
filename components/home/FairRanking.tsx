@@ -24,7 +24,7 @@ export function FairRanking() {
               <Scale size={15} /> Ranking justo
             </span>
             <h2 className="mt-3 text-3xl lg:text-[2.4rem] font-bold tracking-tight text-balance">
-              En RegiNova nadie paga por aparecer primero
+              En RegiKaha nadie paga por aparecer primero
             </h2>
             <p className="mt-4 text-white/85 leading-relaxed max-w-xl">
               Los profesionales destacan por su reputación, calidad, precio justo, trabajos reales y

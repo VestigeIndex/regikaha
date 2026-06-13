@@ -10,7 +10,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Trabajos realizados",
   description:
-    "Galería de trabajos realizados por profesionales verificados de RegiNova: reformas, baños, cocinas, fachadas, energía solar y más. Resultados reales, antes y después.",
+    "Galería de trabajos realizados por profesionales verificados de RegiKaha: reformas, baños, cocinas, fachadas, energía solar y más. Resultados reales, antes y después.",
   path: "/trabajos",
 });
 

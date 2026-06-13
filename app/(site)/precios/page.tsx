@@ -9,7 +9,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = buildMetadata({
   title: "Precios",
   description:
-    "RegiNova es gratis para clientes. Para profesionales: 49,95 €/mes + IVA o 499 €/año + IVA. Sin comisiones por lead, sin rankings comprados. Primeros 300 verificados: 5 meses gratis.",
+    "RegiKaha es gratis para clientes. Para profesionales: 49,95 €/mes + IVA o 499 €/año + IVA. Sin comisiones por lead, sin rankings comprados. Primeros 300 verificados: 5 meses gratis.",
   path: "/precios",
 });
 
@@ -57,7 +57,7 @@ export default function PreciosPage() {
             <span className="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full bg-forest-600 text-white px-3 py-1 text-xs font-semibold">
               <Sparkles size={13} /> Más elegido
             </span>
-            <h2 className="font-bold text-ink text-lg">RegiNova Pro</h2>
+            <h2 className="font-bold text-ink text-lg">RegiKaha Pro</h2>
             <p className="text-sm text-muted mt-1">Para profesionales y empresas.</p>
             <div className="mt-5 flex items-baseline gap-1">
               <span className="text-4xl font-bold text-ink">49,95 €</span>
@@ -76,7 +76,7 @@ export default function PreciosPage() {
 
           {/* Pro anual */}
           <div className="card p-7 flex flex-col">
-            <h2 className="font-bold text-ink text-lg">RegiNova Pro Anual</h2>
+            <h2 className="font-bold text-ink text-lg">RegiKaha Pro Anual</h2>
             <p className="text-sm text-muted mt-1">Paga una vez al año y ahorra.</p>
             <div className="mt-5 flex items-baseline gap-1">
               <span className="text-4xl font-bold text-ink">499 €</span>
@@ -85,7 +85,7 @@ export default function PreciosPage() {
             <p className="text-sm text-forest-700 font-medium mt-1">Ahorra ~17% frente al mensual</p>
             <ul className="mt-5 space-y-2.5 flex-1">
               <li className="flex items-start gap-2 text-sm text-ink/80">
-                <Check size={16} className="text-forest-600 mt-0.5 shrink-0" /> Todo lo de RegiNova Pro
+                <Check size={16} className="text-forest-600 mt-0.5 shrink-0" /> Todo lo de RegiKaha Pro
               </li>
               <li className="flex items-start gap-2 text-sm text-ink/80">
                 <Check size={16} className="text-forest-600 mt-0.5 shrink-0" /> Facturación anual simple
@@ -100,7 +100,7 @@ export default function PreciosPage() {
 
         {/* Lo que nunca cobramos */}
         <div className="max-w-3xl mx-auto mt-12 card p-7">
-          <h2 className="font-bold text-ink">Lo que en RegiNova nunca pagas</h2>
+          <h2 className="font-bold text-ink">Lo que en RegiKaha nunca pagas</h2>
           <div className="mt-4 grid sm:grid-cols-2 gap-x-8 gap-y-2.5">
             {["Ranking comprado", "Pago por aparecer primero", "Comisión por lead", "Comisión por mensaje", "Créditos artificiales", "Trampas de visibilidad"].map((t) => (
               <div key={t} className="flex items-center gap-2 text-sm text-muted">

@@ -1,8 +1,8 @@
 {
-  "name": "reginova",
+  "name": "regikaha",
   "version": "0.1.0",
   "private": true,
-  "description": "RegiNova — Marketplace español de profesionales verificados para reformas, construcción y servicios técnicos.",
+  "description": "RegiKaha — Marketplace español de profesionales verificados para reformas, construcción y servicios técnicos.",
   "engines": {
     "node": ">=20",
     "npm": ">=10"

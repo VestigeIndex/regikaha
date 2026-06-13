@@ -5,7 +5,7 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = buildMetadata({
   title: "Política de privacidad",
-  description: "Cómo RegiNova trata los datos personales de clientes y profesionales conforme al RGPD.",
+  description: "Cómo RegiKaha trata los datos personales de clientes y profesionales conforme al RGPD.",
   path: "/legal/privacidad",
 });
 
@@ -14,7 +14,7 @@ export default function PrivacidadPage() {
     <LegalArticle
       title="Política de privacidad"
       updated="13 de junio de 2026"
-      intro="En RegiNova nos tomamos en serio la protección de tus datos personales, conforme al Reglamento General de Protección de Datos (RGPD) y la normativa española aplicable."
+      intro="En RegiKaha nos tomamos en serio la protección de tus datos personales, conforme al Reglamento General de Protección de Datos (RGPD) y la normativa española aplicable."
       sections={[
         { h: "Responsable del tratamiento", p: [`${site.legalName}, con correo de contacto ${site.email}, es responsable del tratamiento de los datos recogidos a través del Sitio.`] },
         { h: "Datos que recogemos", p: ["De clientes: nombre, email, teléfono y la descripción del proyecto al solicitar presupuesto.", "De profesionales: datos identificativos, fiscales, de actividad y de contacto necesarios para la verificación y la prestación del servicio."] },

@@ -8,7 +8,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Categorías de profesionales",
   description:
-    "Explora todas las categorías de RegiNova: reformas, baños y cocinas, electricidad, fontanería, pintura, climatización, energía solar, arquitectura y más. Profesionales verificados en toda España.",
+    "Explora todas las categorías de RegiKaha: reformas, baños y cocinas, electricidad, fontanería, pintura, climatización, energía solar, arquitectura y más. Profesionales verificados en toda España.",
   path: "/categorias",
 });
 

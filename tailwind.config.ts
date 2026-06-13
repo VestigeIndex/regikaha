@@ -12,7 +12,7 @@ const config: Config = {
         sans: ["Inter", "SF Pro Display", "system-ui", "-apple-system", "sans-serif"],
       },
       colors: {
-        // Identidad verde RegiNova
+        // Identidad verde RegiKaha
         forest: {
           50: "#eafaf2",
           100: "#DDF4EA",

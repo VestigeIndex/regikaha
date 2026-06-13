@@ -1,5 +1,5 @@
 /**
- * Generador de recursos SVG de RegiNova.
+ * Generador de recursos SVG de RegiKaha.
  *
  * Produce placeholders premium con la identidad verde para la fase inicial.
  * Cuando se conecten fotos reales (R2 / CDN) se sustituyen estos archivos sin
@@ -57,7 +57,7 @@ write(
     <path d="M24 47 46 26l22 21" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M30 44v25a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2V44" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <text x="210" y="278" font-family="Inter, sans-serif" font-size="58" font-weight="800" fill="#fff">RegiNova</text>
+  <text x="210" y="278" font-family="Inter, sans-serif" font-size="58" font-weight="800" fill="#fff">RegiKaha</text>
   <text x="92" y="396" font-family="Inter, sans-serif" font-size="40" font-weight="700" fill="#fff">Profesionales verificados para</text>
   <text x="92" y="448" font-family="Inter, sans-serif" font-size="40" font-weight="700" fill="${GREEN.mint}">reformas y servicios técnicos</text>
   <text x="92" y="516" font-family="Inter, sans-serif" font-size="26" fill="rgba(255,255,255,0.85)">Compara por precio, calidad, portfolio y valoraciones reales · Gratis para clientes</text>
@@ -95,7 +95,7 @@ function sceneCard({ w = 800, h = 600, label, hueShift = 0, motif = "build" }) {
   <circle cx="${w * 0.85}" cy="${h * 0.9}" r="${h * 0.28}" fill="rgba(0,0,0,0.07)"/>
   ${motifSvg}
   <text x="48" y="${h - 56}" font-family="Inter, sans-serif" font-size="34" font-weight="700" fill="#fff">${label}</text>
-  <text x="48" y="${h - 24}" font-family="Inter, sans-serif" font-size="18" fill="rgba(255,255,255,0.8)">RegiNova · imagen de muestra</text>
+  <text x="48" y="${h - 24}" font-family="Inter, sans-serif" font-size="18" fill="rgba(255,255,255,0.8)">RegiKaha · imagen de muestra</text>
 </svg>`;
 }
 

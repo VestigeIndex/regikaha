@@ -10,7 +10,7 @@ import { getPlatformStats } from "@/lib/data";
 export const metadata: Metadata = buildMetadata({
   title: "Oferta fundadores",
   description:
-    "Los primeros 300 profesionales verificados de RegiNova reciben 5 meses gratis de RegiNova Pro. Sin comisiones por lead, sin rankings comprados. Únete como miembro fundador.",
+    "Los primeros 300 profesionales verificados de RegiKaha reciben 5 meses gratis de RegiKaha Pro. Sin comisiones por lead, sin rankings comprados. Únete como miembro fundador.",
   path: "/fundadores",
 });
 
@@ -24,7 +24,7 @@ export default function FundadoresPage() {
       <PageHeader
         eyebrow="Oferta fundadores"
         title={`Primeros ${site.founderSlots} verificados: ${site.founderFreeMonths} meses gratis`}
-        description="Sé de los primeros en construir tu reputación en RegiNova. Como miembro fundador, disfrutas de 5 meses gratis de RegiNova Pro y de la insignia de fundador en tu perfil."
+        description="Sé de los primeros en construir tu reputación en RegiKaha. Como miembro fundador, disfrutas de 5 meses gratis de RegiKaha Pro y de la insignia de fundador en tu perfil."
         breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Oferta fundadores" }]}
       >
         <div className="max-w-md">
@@ -46,7 +46,7 @@ export default function FundadoresPage() {
           </span>
           <ul className="mt-5 space-y-3">
             {[
-              `${site.founderFreeMonths} meses gratis de RegiNova Pro`,
+              `${site.founderFreeMonths} meses gratis de RegiKaha Pro`,
               "Insignia de “Fundador” en tu perfil",
               "Antigüedad en el marketplace desde el inicio",
               "Más tiempo para acumular reseñas verificadas",

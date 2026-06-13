@@ -40,7 +40,7 @@ export function LegalArticle({
       </div>
 
       <div className="mt-10 rounded-xl bg-canvas ring-1 ring-forest-600/10 p-4 text-xs text-muted">
-        Este documento es una plantilla orientativa para la fase inicial de RegiNova y debe ser
+        Este documento es una plantilla orientativa para la fase inicial de RegiKaha y debe ser
         revisado y adaptado por un asesor legal antes de su publicación definitiva.
       </div>
     </div>

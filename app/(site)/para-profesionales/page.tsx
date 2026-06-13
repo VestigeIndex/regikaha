@@ -64,7 +64,7 @@ export default function ParaProfesionalesPage() {
               Primeros {site.founderSlots} verificados: {site.founderFreeMonths} meses gratis
             </h2>
             <p className="mt-4 text-muted leading-relaxed">
-              Únete ahora como miembro fundador de RegiNova Pro. Después: {site.founderPrice.monthly} o{" "}
+              Únete ahora como miembro fundador de RegiKaha Pro. Después: {site.founderPrice.monthly} o{" "}
               {site.founderPrice.yearly}.
             </p>
             <ul className="mt-5 space-y-2.5">
@@ -79,7 +79,7 @@ export default function ParaProfesionalesPage() {
           </div>
           <div className="card p-7">
             <div className="flex items-center gap-2 text-forest-700">
-              <BadgeCheck size={20} /> <span className="font-semibold">RegiNova Pro</span>
+              <BadgeCheck size={20} /> <span className="font-semibold">RegiKaha Pro</span>
             </div>
             <div className="mt-4 flex items-baseline gap-2">
               <span className="text-4xl font-bold text-ink">49,95 €</span>

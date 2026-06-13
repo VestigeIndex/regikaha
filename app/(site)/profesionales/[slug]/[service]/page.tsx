@@ -33,7 +33,7 @@ export async function generateMetadata({
   if (!pro || !svc) return { title: "Servicio no encontrado" };
   return {
     title: `${svc.title} en ${pro.city} — ${pro.publicName} | ${site.name}`,
-    description: `${svc.description} ${priceTypeLabel(svc.priceType)} ${formatPriceFrom(svc.priceFrom)}. Pide presupuesto a ${pro.publicName}, profesional verificado en RegiNova.`,
+    description: `${svc.description} ${priceTypeLabel(svc.priceType)} ${formatPriceFrom(svc.priceFrom)}. Pide presupuesto a ${pro.publicName}, profesional verificado en RegiKaha.`,
     alternates: { canonical: `/profesionales/${pro.slug}/${svc.slug}` },
   };
 }

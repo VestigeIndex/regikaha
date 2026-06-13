@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = buildMetadata({
   title: "Únete como profesional",
   description:
-    "Crea tu perfil profesional en RegiNova y consigue clientes para tus servicios de reformas, construcción o mantenimiento. Primeros 300 verificados: 5 meses gratis. Sin pagar por leads.",
+    "Crea tu perfil profesional en RegiKaha y consigue clientes para tus servicios de reformas, construcción o mantenimiento. Primeros 300 verificados: 5 meses gratis. Sin pagar por leads.",
   path: "/registro",
 });
 

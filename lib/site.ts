@@ -1,13 +1,13 @@
 /** Configuración central del sitio: identidad, navegación y enlaces. */
 
 export const site = {
-  name: "RegiNova",
-  legalName: "RegiNova",
-  url: "https://reginova.es",
-  email: "hola@reginova.es",
+  name: "RegiKaha",
+  legalName: "RegiKaha",
+  url: "https://regikaha.com",
+  email: "hola@regikaha.com",
   tagline: "Compara profesionales verificados para reformas y servicios técnicos en toda España",
   description:
-    "RegiNova es el marketplace español de profesionales verificados para reformas, construcción, instalaciones, mantenimiento, arquitectura e ingeniería. Compara por precio, calidad, portfolio y valoraciones reales. Gratis para clientes.",
+    "RegiKaha es el marketplace español de profesionales verificados para reformas, construcción, instalaciones, mantenimiento, arquitectura e ingeniería. Compara por precio, calidad, portfolio y valoraciones reales. Gratis para clientes.",
   founderPrice: { monthly: "49,95 €/mes + IVA", yearly: "499 €/año + IVA" },
   founderSlots: 300,
   founderFreeMonths: 5,
@@ -51,9 +51,9 @@ export const footerNav: { title: string; links: { label: string; href: string }[
     ],
   },
   {
-    title: "RegiNova",
+    title: "RegiKaha",
     links: [
-      { label: "Sobre RegiNova", href: "/sobre" },
+      { label: "Sobre RegiKaha", href: "/sobre" },
       { label: "Contacto", href: "/contacto" },
       { label: "Aviso legal", href: "/legal/aviso-legal" },
       { label: "Privacidad", href: "/legal/privacidad" },

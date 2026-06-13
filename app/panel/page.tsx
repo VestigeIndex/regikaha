@@ -29,7 +29,7 @@ export default function PanelHome() {
     <>
       <DashboardHeader
         title={`Hola, ${pro.publicName}`}
-        subtitle="Resumen de tu actividad en RegiNova."
+        subtitle="Resumen de tu actividad en RegiKaha."
         action={
           <Link href={`/profesionales/${pro.slug}`} className="btn btn-secondary text-sm">
             Ver mi perfil público <ArrowRight size={15} />

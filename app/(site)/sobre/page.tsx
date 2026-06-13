@@ -9,9 +9,9 @@ import { getPlatformStats } from "@/lib/data";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Sobre RegiNova",
+  title: "Sobre RegiKaha",
   description:
-    "RegiNova es el marketplace español de profesionales verificados para reformas y servicios técnicos. Nuestra misión: que contratar una reforma sea transparente, justo y sin riesgos.",
+    "RegiKaha es el marketplace español de profesionales verificados para reformas y servicios técnicos. Nuestra misión: que contratar una reforma sea transparente, justo y sin riesgos.",
   path: "/sobre",
 });
 
@@ -27,10 +27,10 @@ export default function SobrePage() {
   return (
     <>
       <PageHeader
-        eyebrow="Sobre RegiNova"
+        eyebrow="Sobre RegiKaha"
         title="Hacemos que contratar una reforma sea transparente y justo"
-        description="RegiNova nace para resolver un problema real: contratar reformas y servicios técnicos a ciegas, sin saber si el profesional es de fiar ni cuánto debería costar."
-        breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Sobre RegiNova" }]}
+        description="RegiKaha nace para resolver un problema real: contratar reformas y servicios técnicos a ciegas, sin saber si el profesional es de fiar ni cuánto debería costar."
+        breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Sobre RegiKaha" }]}
       />
 
       <section className="container-x py-16">

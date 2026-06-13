@@ -35,7 +35,7 @@ export function Testimonials() {
       <div className="container-x py-16 lg:py-20">
         <SectionHeading
           eyebrow="Testimonios"
-          title="Lo que dicen los clientes de RegiNova"
+          title="Lo que dicen los clientes de RegiKaha"
           description="Reseñas verificadas de clientes con un servicio realizado. Sin valoraciones compradas."
           align="center"
         />

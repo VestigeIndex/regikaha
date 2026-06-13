@@ -51,7 +51,7 @@ export default function SolicitudesPage() {
       </div>
 
       <p className="mt-6 text-xs text-muted">
-        Los datos de contacto se muestran completos solo a profesionales verificados. En RegiNova no
+        Los datos de contacto se muestran completos solo a profesionales verificados. En RegiKaha no
         se cobra por lead ni por mensaje.
       </p>
     </>

@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!category) return { title: "Categoría no encontrada" };
   return {
     title: `${category.name} — Profesionales verificados en España`,
-    description: `${category.description} Compara precios orientativos, portfolio y valoraciones reales en RegiNova. Pide presupuesto gratis.`,
+    description: `${category.description} Compara precios orientativos, portfolio y valoraciones reales en RegiKaha. Pide presupuesto gratis.`,
     alternates: { canonical: `/categorias/${category.slug}` },
   };
 }
@@ -126,13 +126,13 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         </section>
       )}
 
-      {/* ¿Por qué RegiNova? */}
+      {/* ¿Por qué RegiKaha? */}
       <section className="container-x py-14">
         <div className="rounded-3xl bg-gradient-brand text-white p-8 sm:p-10 grid lg:grid-cols-2 gap-8 items-center">
           <div>
             <h2 className="text-2xl font-bold text-balance">Contrata {category.name.toLowerCase()} con confianza</h2>
             <p className="mt-3 text-white/85 leading-relaxed">
-              En RegiNova todos los profesionales compiten por mérito. Compara antes de contratar y
+              En RegiKaha todos los profesionales compiten por mérito. Compara antes de contratar y
               decide con información real.
             </p>
           </div>

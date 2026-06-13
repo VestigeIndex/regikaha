@@ -17,7 +17,7 @@ const nav: NavItem[] = [
 
 export default function PanelLayout({ children }: { children: React.ReactNode }) {
   return (
-    <DashboardShell nav={nav} badge="RegiNova Pro · Fundador">
+    <DashboardShell nav={nav} badge="RegiKaha Pro · Fundador">
       {children}
     </DashboardShell>
   );

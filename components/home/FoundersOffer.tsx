@@ -23,7 +23,7 @@ export function FoundersOffer() {
               <span className="text-mint">{site.founderFreeMonths} meses gratis</span>
             </h2>
             <p className="mt-4 text-white/80 leading-relaxed max-w-xl">
-              Únete como miembro fundador de RegiNova Pro. Después: {site.founderPrice.monthly} o{" "}
+              Únete como miembro fundador de RegiKaha Pro. Después: {site.founderPrice.monthly} o{" "}
               {site.founderPrice.yearly}. Sin comisiones por lead. Sin rankings comprados.
             </p>
 

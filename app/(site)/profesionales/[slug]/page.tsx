@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const primary = getCategoryById(pro.categoryIds[0]);
   return {
     title: professionalSeoTitle(pro, primary),
-    description: `${pro.shortTagline}. Compara precios orientativos, portfolio, valoraciones reales (${pro.averageRating}/5) y zona de servicio de ${pro.publicName} en ${pro.city}. Pide presupuesto gratis en RegiNova.`,
+    description: `${pro.shortTagline}. Compara precios orientativos, portfolio, valoraciones reales (${pro.averageRating}/5) y zona de servicio de ${pro.publicName} en ${pro.city}. Pide presupuesto gratis en RegiKaha.`,
     alternates: { canonical: `/profesionales/${pro.slug}` },
   };
 }

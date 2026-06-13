@@ -600,7 +600,7 @@ export const professionals: Professional[] = [
     responseTimeHours: 12,
     priceFrom: 2000,
     description:
-      "Empresa de reformas en Madrid pendiente de verificación. La documentación está en revisión por el equipo de RegiNova antes de mostrar el perfil completo en los listados públicos.",
+      "Empresa de reformas en Madrid pendiente de verificación. La documentación está en revisión por el equipo de RegiKaha antes de mostrar el perfil completo en los listados públicos.",
     shortTagline: "Reformas en Madrid (en verificación)",
     logoColor: "#94a3b8",
     coverImage: "/images/categories/reformas-integrales.svg",

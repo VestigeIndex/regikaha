@@ -39,7 +39,7 @@ export {
 };
 
 /**
- * RANKING JUSTO — el núcleo ético de RegiNova.
+ * RANKING JUSTO — el núcleo ético de RegiKaha.
  *
  * La puntuación de mérito NO incluye ningún factor de pago, plan ni puja.
  * Combina exclusivamente señales de calidad y servicio:

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Cookie } from "lucide-react";
 
-const KEY = "reginova-cookie-consent";
+const KEY = "regikaha-cookie-consent";
 
 export function CookieBanner() {
   const [show, setShow] = useState(false);
@@ -36,7 +36,7 @@ export function CookieBanner() {
             <Cookie size={20} />
           </span>
           <p className="text-sm text-ink/80 leading-relaxed flex-1">
-            Usamos cookies necesarias para que RegiNova funcione y, con tu permiso, cookies para
+            Usamos cookies necesarias para que RegiKaha funcione y, con tu permiso, cookies para
             mejorar la experiencia. Consulta nuestra{" "}
             <Link href="/legal/cookies" className="underline text-forest-700 hover:text-forest-800">
               política de cookies

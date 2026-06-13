@@ -1,4 +1,4 @@
-# RegiNova
+# RegiKaha
 
 **Marketplace español de profesionales verificados** para reformas, construcción,
 instalaciones, mantenimiento, arquitectura, ingeniería y servicios técnicos.
@@ -100,12 +100,25 @@ El paquete original incluye **10 prompts** (no fotos). Cada uno está en
 
 Regenerar todos los SVG: `node scripts/generate-assets.mjs`.
 
-## ☁️ Despliegue (fase inicial low-cost)
+## ☁️ Despliegue — Cloudflare Pages (auto-deploy)
 
-Pensado para **Cloudflare Pages + Workers + D1 + R2**. La capa de datos está aislada
-detrás de interfaces (`lib/types.ts`) para migrar de mock a D1/PostgreSQL sin reescribir la UI.
-Próximos pasos sugeridos: conectar formularios (`QuoteForm`, registro) a Workers + D1
-(tablas `quote_requests`, `professionals`, etc.) y subir imágenes reales a R2.
+El sitio se exporta como **HTML estático** (`output: "export"` → carpeta `out/`) y se publica en
+**Cloudflare Pages**. El despliegue es automático con **GitHub Actions**:
+
+- Workflow: `.github/workflows/deploy.yml` (se ejecuta en cada push a `main`).
+- Crea/actualiza el proyecto Pages `regikaha`, despliega `out/` y vincula el dominio
+  **regikaha.com** + `www`.
+- Secrets necesarios en el repo (`Settings → Secrets and variables → Actions`):
+  - `CLOUDFLARE_API_TOKEN` — token con permisos *Cloudflare Pages: Edit* (+ *Zone: DNS Edit* para el dominio).
+  - `CLOUDFLARE_ACCOUNT_ID` — id de la cuenta.
+
+Requisito para el dominio: **regikaha.com** debe estar añadido como **zona** en la misma cuenta de
+Cloudflare para que el CNAME se cree solo. URL provisional: `https://regikaha.pages.dev`.
+
+Despliegue manual (opcional): `npm run build && npx wrangler pages deploy out --project-name=regikaha`.
+
+La capa de datos está aislada detrás de interfaces (`lib/types.ts`) para migrar de mock a
+**D1 / R2** sin reescribir la UI (conectar `QuoteForm` y registro a Workers + D1, imágenes a R2).
 
 ## 📌 Notas
 

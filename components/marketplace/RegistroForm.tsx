@@ -22,11 +22,11 @@ export function RegistroForm() {
         <span className="mx-auto grid place-items-center h-16 w-16 rounded-2xl bg-forest-500/12 text-forest-600">
           <PartyPopper size={32} />
         </span>
-        <h2 className="mt-5 text-2xl font-bold text-ink">¡Bienvenido a RegiNova!</h2>
+        <h2 className="mt-5 text-2xl font-bold text-ink">¡Bienvenido a RegiKaha!</h2>
         <p className="mt-3 text-muted leading-relaxed">
           Hemos recibido tu solicitud. Nuestro equipo verificará tu actividad y te avisará por email
           para activar tu perfil. Si estás entre los primeros 300 verificados, tendrás{" "}
-          <span className="font-semibold text-forest-700">5 meses gratis</span> de RegiNova Pro.
+          <span className="font-semibold text-forest-700">5 meses gratis</span> de RegiKaha Pro.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <a href="/panel" className="btn btn-primary">Ir a mi panel</a>
@@ -136,11 +136,11 @@ export function RegistroForm() {
                 Acepto las{" "}
                 <a href="/legal/terminos-profesionales" className="underline text-forest-700">condiciones para profesionales</a>,
                 la <a href="/legal/politica-verificacion" className="underline text-forest-700">política de verificación</a> y
-                el ranking justo de RegiNova (sin pagos por posición).
+                el ranking justo de RegiKaha (sin pagos por posición).
               </span>
             </label>
             <div className="rounded-xl bg-mint/60 ring-1 ring-forest-600/12 p-4 text-sm text-forest-800">
-              <strong>Oferta fundadores:</strong> si estás entre los primeros 300 verificados, tienes 5 meses gratis de RegiNova Pro.
+              <strong>Oferta fundadores:</strong> si estás entre los primeros 300 verificados, tienes 5 meses gratis de RegiKaha Pro.
             </div>
           </div>
         )}
