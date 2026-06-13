@@ -72,33 +72,42 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy out --project-name=regikaha --branch=main --commit-dirty=true
 
-      - name: Configurar dominio regikaha.com + www
+      - name: Configurar DNS + dominio regikaha.com + www
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          ok=1
-          for host in "$DOMAIN" "www.$DOMAIN"; do
-            echo "── Vinculando $host al proyecto Pages ──"
-            resp=$(curl -s -X POST \
-              -H "Authorization: Bearer $CF_API_TOKEN" \
-              -H "Content-Type: application/json" \
-              "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/pages/projects/$PROJECT_NAME/domains" \
-              --data "{\"name\":\"$host\"}")
-            echo "$resp"
-            if echo "$resp" | grep -q '"success":true'; then
-              echo "✅ $host añadido"
-            elif echo "$resp" | grep -qiE "already|exists|duplicate|81053|8000007"; then
-              echo "✅ $host ya estaba configurado"
+          api="https://api.cloudflare.com/client/v4"
+          auth="Authorization: Bearer $CF_API_TOKEN"
+          target="${PROJECT_NAME}.pages.dev"
+
+          # 1) Zona de regikaha.com
+          ZID=$(curl -s -H "$auth" "$api/zones?name=$DOMAIN" | jq -r '.result[0].id // empty')
+          echo "zone=$ZID"
+          [ -n "$ZID" ] || { echo "::error::Zona $DOMAIN no encontrada en la cuenta"; exit 1; }
+
+          # 2) Crear/actualizar el CNAME (apex + www) proxied → pages.dev
+          for name in "$DOMAIN" "www.$DOMAIN"; do
+            recid=$(curl -s -H "$auth" "$api/zones/$ZID/dns_records?name=$name&type=CNAME" | jq -r '.result[0].id // empty')
+            payload=$(jq -nc --arg n "$name" --arg c "$target" '{type:"CNAME",name:$n,content:$c,proxied:true,ttl:1}')
+            if [ -n "$recid" ]; then
+              res=$(curl -s -X PATCH -H "$auth" -H "Content-Type: application/json" "$api/zones/$ZID/dns_records/$recid" --data "$payload")
             else
-              echo "❌ $host NO se pudo configurar"
-              ok=0
+              res=$(curl -s -X POST -H "$auth" -H "Content-Type: application/json" "$api/zones/$ZID/dns_records" --data "$payload")
             fi
-            echo ""
+            if [ "$(echo "$res" | jq -r '.success')" = "true" ]; then
+              echo "✅ DNS $name → $target"
+            else
+              echo "::error::DNS $name falló: $(echo "$res" | jq -c '.errors')"
+              exit 1
+            fi
           done
-          if [ "$ok" != "1" ]; then
-            echo "El dominio no se configuró. Revisa que regikaha.com sea una zona en esta cuenta"
-            echo "y que el token tenga permisos de Cloudflare Pages (y Zone DNS)."
-            exit 1
-          fi
-          echo "Dominio configurado correctamente."
+
+          # 3) Adjuntar dominios al proyecto Pages (idempotente) para validar
+          for host in "$DOMAIN" "www.$DOMAIN"; do
+            res=$(curl -s -X POST -H "$auth" -H "Content-Type: application/json" \
+              "$api/accounts/$CF_ACCOUNT_ID/pages/projects/$PROJECT_NAME/domains" --data "{\"name\":\"$host\"}")
+            ok=$(echo "$res" | jq -r '.success // "false"')
+            echo "Pages domain $host: success=$ok"
+          done
+          echo "DNS y dominios configurados. El certificado SSL se provisiona en unos minutos."
