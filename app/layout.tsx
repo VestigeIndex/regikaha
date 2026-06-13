@@ -3,6 +3,7 @@ import "./globals.css";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { organizationSchema } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { I18nProvider } from "@/lib/i18n/context";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -71,7 +72,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         <JsonLd data={organizationSchema()} />
       </head>
-      <body className="min-h-screen bg-white text-ink antialiased">{children}</body>
+      <body className="min-h-screen bg-white text-ink antialiased">
+        <I18nProvider>{children}</I18nProvider>
+      </body>
     </html>
   );
 }

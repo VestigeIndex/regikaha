@@ -5,10 +5,12 @@ import { useState } from "react";
 import { Search, MapPin, LayoutGrid } from "lucide-react";
 import { categories } from "@/lib/data/categories";
 import { locations } from "@/lib/data/locations";
+import { useT } from "@/lib/i18n/context";
 import { cn } from "@/lib/utils";
 
 export function SearchBar({ variant = "hero" }: { variant?: "hero" | "inline" }) {
   const router = useRouter();
+  const t = useT();
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("");
   const [loc, setLoc] = useState("");
@@ -37,9 +39,9 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "inline" })
           type="text"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="¿Qué necesitas? Ej. reforma de baño"
+          placeholder={t.searchBar.what}
           className="w-full bg-transparent text-sm outline-none placeholder:text-muted text-ink"
-          aria-label="Qué necesitas"
+          aria-label={t.searchBar.what}
         />
       </label>
 
@@ -49,9 +51,9 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "inline" })
           value={loc}
           onChange={(e) => setLoc(e.target.value)}
           className="w-full bg-transparent text-sm outline-none text-ink cursor-pointer"
-          aria-label="Dónde lo necesitas"
+          aria-label={t.searchBar.where}
         >
-          <option value="">¿Dónde?</option>
+          <option value="">{t.searchBar.where}</option>
           {locations.map((l) => (
             <option key={l.slug} value={l.slug}>{l.city}</option>
           ))}
@@ -64,9 +66,9 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "inline" })
           value={cat}
           onChange={(e) => setCat(e.target.value)}
           className="w-full bg-transparent text-sm outline-none text-ink cursor-pointer"
-          aria-label="Categoría"
+          aria-label={t.searchBar.category}
         >
-          <option value="">Categoría</option>
+          <option value="">{t.searchBar.category}</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>{c.name}</option>
           ))}
@@ -74,7 +76,7 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "inline" })
       </label>
 
       <button type="submit" className="btn btn-primary md:px-7 justify-center">
-        Buscar
+        {t.searchBar.button}
       </button>
     </form>
   );

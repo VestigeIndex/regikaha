@@ -34,3 +34,6 @@ yarn-error.log*
 # editor
 .idea
 .vscode
+
+# Workflow pendiente de token con scope 'workflow' (copia en docs/)
+.github/workflows/deploy.yml
