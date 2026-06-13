@@ -1,0 +1,69 @@
+import Link from "next/link";
+import { Sparkles, Check } from "lucide-react";
+import { site } from "@/lib/site";
+import { getPlatformStats } from "@/lib/data";
+
+export function FoundersOffer() {
+  const stats = getPlatformStats();
+  const claimed = site.founderSlots - stats.foundersRemaining;
+  const pct = Math.min(100, Math.round((claimed / site.founderSlots) * 100));
+
+  return (
+    <section className="container-x py-16 lg:py-20">
+      <div className="relative overflow-hidden rounded-3xl bg-ink text-white shadow-elevated">
+        <div className="absolute inset-0 bg-gradient-to-br from-forest-800/80 via-ink to-ink" />
+        <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-forest-500/20 blur-3xl" />
+        <div className="relative p-8 sm:p-12 grid lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full bg-forest-500/20 text-mint px-3 py-1 text-xs font-semibold ring-1 ring-forest-500/30">
+              <Sparkles size={14} /> Oferta fundadores
+            </span>
+            <h2 className="mt-4 text-3xl lg:text-[2.3rem] font-bold tracking-tight text-balance">
+              Los primeros {site.founderSlots} profesionales verificados:{" "}
+              <span className="text-mint">{site.founderFreeMonths} meses gratis</span>
+            </h2>
+            <p className="mt-4 text-white/80 leading-relaxed max-w-xl">
+              Únete como miembro fundador de RegiNova Pro. Después: {site.founderPrice.monthly} o{" "}
+              {site.founderPrice.yearly}. Sin comisiones por lead. Sin rankings comprados.
+            </p>
+
+            <div className="mt-6 max-w-md">
+              <div className="flex justify-between text-sm text-white/70 mb-2">
+                <span>{claimed} plazas reservadas</span>
+                <span>{stats.foundersRemaining} disponibles</span>
+              </div>
+              <div className="h-2.5 rounded-full bg-white/15 overflow-hidden">
+                <div className="h-full rounded-full bg-gradient-to-r from-forest-500 to-mint" style={{ width: `${pct}%` }} />
+              </div>
+            </div>
+
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/registro" className="btn btn-white text-base">Unirme como fundador</Link>
+              <Link href="/fundadores" className="btn text-base text-white ring-1 ring-white/25 hover:bg-white/10">
+                Ver condiciones
+              </Link>
+            </div>
+          </div>
+
+          <ul className="space-y-3">
+            {[
+              "Página profesional con SEO propio",
+              "Portfolio y servicios ilimitados",
+              "Solicitudes de clientes directas",
+              "Reseñas verificadas",
+              "Ranking justo, sin pagar por leads",
+              "Cuota fija simple, sin sorpresas",
+            ].map((b) => (
+              <li key={b} className="flex items-center gap-3 rounded-xl bg-white/8 ring-1 ring-white/10 px-4 py-3">
+                <span className="grid place-items-center h-6 w-6 rounded-full bg-forest-500 text-white shrink-0">
+                  <Check size={14} />
+                </span>
+                <span className="text-sm text-white/90">{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}

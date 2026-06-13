@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="cg" gradientTransform="rotate(147)">
+      <stop offset="0" stop-color="#0F5C4A"/><stop offset="0.55" stop-color="#198C68"/><stop offset="1" stop-color="#2AB673"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#cg)"/>
+  <circle cx="144" cy="132" r="204.00000000000003" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="680" cy="540" r="168.00000000000003" fill="rgba(0,0,0,0.07)"/>
+  <g stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none">
+      <rect x="440.00000000000006" y="252" width="240" height="240" rx="6"/>
+      <path d="M440.00000000000006 252 L560 180 L680 252"/>
+      <line x1="496" y1="330" x2="624" y2="330"/>
+      <line x1="496" y1="390" x2="624" y2="390"/>
+    </g>
+  <text x="48" y="544" font-family="Inter, sans-serif" font-size="34" font-weight="700" fill="#fff">Baños y cocinas</text>
+  <text x="48" y="576" font-family="Inter, sans-serif" font-size="18" fill="rgba(255,255,255,0.8)">RegiNova · imagen de muestra</text>
+</svg>

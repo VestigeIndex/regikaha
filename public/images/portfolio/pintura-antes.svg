@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#d8ded9"/>
+  <rect width="800" height="600" fill="url(#n)" opacity="0.5"/>
+  <g stroke="rgba(18,32,25,0.18)" stroke-width="2" fill="none">
+    <rect x="400" y="240" width="256" height="252" rx="4"/>
+    <line x1="80" y1="491.99999999999994" x2="720" y2="491.99999999999994"/>
+  </g>
+  <text x="40" y="56" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="rgba(18,32,25,0.55)">ANTES</text>
+  <text x="40" y="568" font-family="Inter, sans-serif" font-size="22" fill="rgba(18,32,25,0.5)">Paredes con gotelé</text>
+</svg>

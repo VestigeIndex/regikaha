@@ -1,0 +1,107 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { Stars } from "@/components/ui/Stars";
+import { Avatar } from "@/components/ui/Avatar";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { publishedReviews, getProfessionalById } from "@/lib/data";
+
+const featured = publishedReviews
+  .filter((r) => r.rating >= 4 && r.comment.length > 60)
+  .slice(0, 7)
+  .map((r) => {
+    const pro = getProfessionalById(r.professionalId);
+    return { ...r, proName: pro?.publicName ?? "Profesional", proColor: pro?.logoColor ?? "#198C68" };
+  });
+
+export function Testimonials() {
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const count = featured.length;
+
+  const go = useCallback((i: number) => setIndex(((i % count) + count) % count), [count]);
+
+  useEffect(() => {
+    if (paused || count <= 1) return;
+    const t = setInterval(() => setIndex((i) => (i + 1) % count), 6000);
+    return () => clearInterval(t);
+  }, [paused, count]);
+
+  if (count === 0) return null;
+
+  return (
+    <section className="bg-canvas border-y hairline">
+      <div className="container-x py-16 lg:py-20">
+        <SectionHeading
+          eyebrow="Testimonios"
+          title="Lo que dicen los clientes de RegiNova"
+          description="Reseñas verificadas de clientes con un servicio realizado. Sin valoraciones compradas."
+          align="center"
+        />
+
+        <div
+          className="mt-12 max-w-3xl mx-auto"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
+          <div className="overflow-hidden">
+            <div className="slide-track" style={{ transform: `translateX(-${index * 100}%)` }}>
+              {featured.map((r) => (
+                <figure key={r.id} className="w-full shrink-0 px-1">
+                  <div className="card p-7 sm:p-9 text-center relative">
+                    <Quote size={40} className="mx-auto text-forest-200" />
+                    <Stars value={r.rating} size={18} className="justify-center mt-4" />
+                    <blockquote className="mt-4 text-lg sm:text-xl text-ink leading-relaxed text-balance">
+                      “{r.comment}”
+                    </blockquote>
+                    <figcaption className="mt-6 flex items-center justify-center gap-3">
+                      <Avatar name={r.clientName} color={r.proColor} size={40} />
+                      <div className="text-left">
+                        <p className="font-semibold text-ink text-sm">{r.clientName}</p>
+                        <p className="text-xs text-muted">{r.serviceLabel} · {r.proName}</p>
+                      </div>
+                    </figcaption>
+                  </div>
+                </figure>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-6 flex items-center justify-center gap-4">
+            <button
+              type="button"
+              onClick={() => go(index - 1)}
+              className="grid place-items-center h-10 w-10 rounded-full bg-white ring-1 ring-forest-600/15 text-forest-700 hover:bg-mint transition-colors"
+              aria-label="Testimonio anterior"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <div className="flex items-center gap-2">
+              {featured.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => go(i)}
+                  aria-label={`Ir al testimonio ${i + 1}`}
+                  className={
+                    "h-2 rounded-full transition-all " +
+                    (i === index ? "w-6 bg-forest-600" : "w-2 bg-forest-300/60 hover:bg-forest-400")
+                  }
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => go(index + 1)}
+              className="grid place-items-center h-10 w-10 rounded-full bg-white ring-1 ring-forest-600/15 text-forest-700 hover:bg-mint transition-colors"
+              aria-label="Siguiente testimonio"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

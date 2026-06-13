@@ -1,0 +1,40 @@
+{
+  "product": "RegiNova",
+  "market": "Spain-first",
+  "category": "Marketplace for verified construction, reforms, maintenance, installations, architecture, engineering and technical services",
+  "business_model": {
+    "clients": "Free",
+    "professionals": "49.95 EUR/month + VAT or 499 EUR/year + VAT",
+    "founder_offer": "First 300 verified professionals get 5 months free",
+    "ranking": "Merit-based, no pay-to-win"
+  },
+  "core_entities": [
+    "users",
+    "professionals",
+    "professional_profiles",
+    "services",
+    "categories",
+    "locations",
+    "reviews",
+    "portfolio_items",
+    "quote_requests",
+    "verification_requests",
+    "subscriptions",
+    "admin_actions",
+    "audit_logs"
+  ],
+  "initial_stack": [
+    "Cloudflare Pages",
+    "Cloudflare Workers Free",
+    "Cloudflare D1 Free",
+    "Cloudflare R2 optional",
+    "Next.js / TypeScript / Tailwind CSS if code generated"
+  ],
+  "visual_identity": {
+    "primary_color": "#198C68",
+    "deep_green": "#0F5C4A",
+    "accent": "#2AB673",
+    "background": "#F7FAF8",
+    "text": "#122019"
+  }
+}

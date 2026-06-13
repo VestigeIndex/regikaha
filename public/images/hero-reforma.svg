@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <defs>
+    <linearGradient id="cg" gradientTransform="rotate(135)">
+      <stop offset="0" stop-color="#0F5C4A"/><stop offset="0.55" stop-color="#198C68"/><stop offset="1" stop-color="#2AB673"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#cg)"/>
+  <circle cx="144" cy="220" r="340" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="680" cy="900" r="280" fill="rgba(0,0,0,0.07)"/>
+  <g stroke="rgba(255,255,255,0.5)" stroke-width="3" fill="none">
+      <rect x="440.00000000000006" y="420" width="240" height="400" rx="6"/>
+      <path d="M440.00000000000006 420 L560 300 L680 420"/>
+      <line x1="496" y1="550" x2="624" y2="550"/>
+      <line x1="496" y1="650" x2="624" y2="650"/>
+    </g>
+  <text x="48" y="944" font-family="Inter, sans-serif" font-size="34" font-weight="700" fill="#fff">Reforma premium</text>
+  <text x="48" y="976" font-family="Inter, sans-serif" font-size="18" fill="rgba(255,255,255,0.8)">RegiNova · imagen de muestra</text>
+</svg>
