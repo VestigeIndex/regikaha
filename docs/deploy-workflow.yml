@@ -1,0 +1,91 @@
+name: Deploy a Cloudflare Pages
+
+# Auto-deploy: cada push a main construye el sitio estático y lo publica en
+# Cloudflare Pages (proyecto "regikaha"). El primer despliegue crea el proyecto
+# y configura el dominio regikaha.com + www. La API de Cloudflare se llama desde
+# el runner de GitHub (que sí tiene acceso de red).
+#
+# Secrets necesarios en el repo (Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN   token de Cloudflare con permisos de Pages (+ Zone DNS para el dominio)
+#   CLOUDFLARE_ACCOUNT_ID  id de la cuenta de Cloudflare
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PROJECT_NAME: regikaha
+  PRODUCTION_BRANCH: main
+  DOMAIN: regikaha.com
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Build (export estático → ./out)
+        run: npm run build
+
+      - name: Asegurar proyecto de Pages (idempotente)
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          echo "Comprobando proyecto de Pages '$PROJECT_NAME'…"
+          code=$(curl -s -o /tmp/proj.json -w "%{http_code}" \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/pages/projects/$PROJECT_NAME")
+          if [ "$code" != "200" ]; then
+            echo "No existe; creándolo…"
+            curl -s -X POST \
+              -H "Authorization: Bearer $CF_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/pages/projects" \
+              --data "{\"name\":\"$PROJECT_NAME\",\"production_branch\":\"$PRODUCTION_BRANCH\"}" \
+              | head -c 600 || true
+          else
+            echo "El proyecto ya existe."
+          fi
+
+      - name: Desplegar a Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy out --project-name=regikaha --branch=main --commit-dirty=true
+
+      - name: Configurar dominio regikaha.com + www (best-effort)
+        continue-on-error: true
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          for host in "$DOMAIN" "www.$DOMAIN"; do
+            echo "Vinculando dominio $host al proyecto Pages…"
+            curl -s -X POST \
+              -H "Authorization: Bearer $CF_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/pages/projects/$PROJECT_NAME/domains" \
+              --data "{\"name\":\"$host\"}" | head -c 400
+            echo ""
+          done
+          echo "Nota: el dominio regikaha.com debe estar añadido como zona en esta cuenta de Cloudflare"
+          echo "para que el CNAME se cree automáticamente. Si no, añade la zona y vuelve a ejecutar el workflow."
