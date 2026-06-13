@@ -72,20 +72,33 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy out --project-name=regikaha --branch=main --commit-dirty=true
 
-      - name: Configurar dominio regikaha.com + www (best-effort)
-        continue-on-error: true
+      - name: Configurar dominio regikaha.com + www
         env:
           CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
+          ok=1
           for host in "$DOMAIN" "www.$DOMAIN"; do
-            echo "Vinculando dominio $host al proyecto Pages…"
-            curl -s -X POST \
+            echo "── Vinculando $host al proyecto Pages ──"
+            resp=$(curl -s -X POST \
               -H "Authorization: Bearer $CF_API_TOKEN" \
               -H "Content-Type: application/json" \
               "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/pages/projects/$PROJECT_NAME/domains" \
-              --data "{\"name\":\"$host\"}" | head -c 400
+              --data "{\"name\":\"$host\"}")
+            echo "$resp"
+            if echo "$resp" | grep -q '"success":true'; then
+              echo "✅ $host añadido"
+            elif echo "$resp" | grep -qiE "already|exists|duplicate|81053|8000007"; then
+              echo "✅ $host ya estaba configurado"
+            else
+              echo "❌ $host NO se pudo configurar"
+              ok=0
+            fi
             echo ""
           done
-          echo "Nota: el dominio regikaha.com debe estar añadido como zona en esta cuenta de Cloudflare"
-          echo "para que el CNAME se cree automáticamente. Si no, añade la zona y vuelve a ejecutar el workflow."
+          if [ "$ok" != "1" ]; then
+            echo "El dominio no se configuró. Revisa que regikaha.com sea una zona en esta cuenta"
+            echo "y que el token tenga permisos de Cloudflare Pages (y Zone DNS)."
+            exit 1
+          fi
+          echo "Dominio configurado correctamente."
