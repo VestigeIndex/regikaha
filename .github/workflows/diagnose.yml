@@ -1,0 +1,70 @@
+name: Diagnostico dominio
+
+# Diagnóstico bajo demanda. Cada comprobación es un PASO independiente cuyo
+# resultado (verde/rojo) es legible vía la API de GitHub, de modo que se puede
+# saber el estado del dominio sin leer logs.
+
+on:
+  workflow_dispatch:
+
+env:
+  PROJECT_NAME: regikaha
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "check pages.dev = 200"
+        if: always()
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" https://${PROJECT_NAME}.pages.dev/)
+          echo "pages.dev -> $code"
+          echo "::notice title=pages.dev::$code"
+          [ "$code" = "200" ]
+
+      - name: "check regikaha.com = 200"
+        if: always()
+        run: |
+          code=$(curl -s -m 25 -o /dev/null -w "%{http_code}" https://regikaha.com/)
+          echo "regikaha.com -> $code"
+          echo "::notice title=apex::$code"
+          [ "$code" = "200" ]
+
+      - name: "check www.regikaha.com = 200"
+        if: always()
+        run: |
+          code=$(curl -s -m 25 -o /dev/null -w "%{http_code}" https://www.regikaha.com/)
+          echo "www -> $code"
+          echo "::notice title=www::$code"
+          [ "$code" = "200" ]
+
+      - name: "check dominio ACTIVE en Pages"
+        if: always()
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          resp=$(curl -s -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/pages/projects/$PROJECT_NAME/domains")
+          echo "$resp" | tr ',' '\n' | grep -iE '"name"|"status"' || true
+          echo "::notice title=domains::$(echo "$resp" | tr -d '\n ' | head -c 300)"
+          # OK si regikaha.com aparece con estado active
+          echo "$resp" | grep -q '"name":"regikaha.com"' && echo "$resp" | grep -q '"status":"active"'
+
+      - name: "check zona DNS de regikaha.com"
+        if: always()
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          z=$(curl -s -H "Authorization: Bearer $CF_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones?name=regikaha.com")
+          zid=$(echo "$z" | grep -o '"id":"[a-f0-9]\{32\}"' | head -1 | sed 's/.*:"//;s/"//')
+          echo "zone id: $zid"
+          echo "::notice title=zone::${zid:-none}"
+          if [ -n "$zid" ]; then
+            rec=$(curl -s -H "Authorization: Bearer $CF_API_TOKEN" \
+              "https://api.cloudflare.com/client/v4/zones/$zid/dns_records?name=regikaha.com")
+            echo "$rec" | tr ',' '\n' | grep -iE '"type"|"name"|"content"|"proxied"' | head -20
+            echo "::notice title=dns::$(echo "$rec" | tr -d '\n ' | head -c 300)"
+          fi
+          [ -n "$zid" ]
