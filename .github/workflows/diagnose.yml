@@ -22,6 +22,14 @@ jobs:
           echo "::notice title=pages.dev::$code"
           [ "$code" = "200" ]
 
+      - name: "check /api/health"
+        if: always()
+        run: |
+          body=$(curl -s -m 25 "https://${PROJECT_NAME}.pages.dev/api/health")
+          echo "$body"
+          echo "::notice title=api_health::$(echo "$body" | head -c 250)"
+          echo "$body" | grep -q '"ok":true'
+
       - name: "check regikaha.com = 200"
         if: always()
         run: |
