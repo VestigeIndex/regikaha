@@ -4,7 +4,7 @@ export const site = {
   name: "RegiKaha",
   legalName: "RegiKaha",
   url: "https://regikaha.com",
-  email: "hola@regikaha.com",
+  email: "help@regikaha.com",
   tagline: "Compara profesionales verificados para reformas y servicios técnicos en toda España",
   description:
     "RegiKaha es el marketplace español de profesionales verificados para reformas, construcción, instalaciones, mantenimiento, arquitectura e ingeniería. Compara por precio, calidad, portfolio y valoraciones reales. Gratis para clientes.",

@@ -1,0 +1,77 @@
+name: Configurar Email Routing
+
+# Configura el reenvío help@regikaha.com -> regikaha.eu@gmail.com con
+# Cloudflare Email Routing. Cada paso informa su resultado por anotaciones,
+# legibles vía API. La dirección de destino requiere VERIFICACIÓN manual
+# (Cloudflare envía un email a regikaha.eu@gmail.com que hay que confirmar).
+
+on:
+  workflow_dispatch:
+
+env:
+  ZONE: regikaha.com
+  DEST: regikaha.eu@gmail.com
+  SRC: help@regikaha.com
+
+jobs:
+  email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Zona + IDs"
+        id: ids
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          api="https://api.cloudflare.com/client/v4"; auth="Authorization: Bearer $CF_API_TOKEN"
+          ZID=$(curl -s -H "$auth" "$api/zones?name=$ZONE" | jq -r '.result[0].id // empty')
+          echo "::notice title=zone::${ZID:-none}"
+          [ -n "$ZID" ] || { echo "::error::zona no encontrada"; exit 1; }
+          echo "zid=$ZID" >> "$GITHUB_OUTPUT"
+          echo "acc=$CF_ACCOUNT_ID" >> "$GITHUB_OUTPUT"
+
+      - name: "Crear dirección destino (verificación por email)"
+        if: always()
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          api="https://api.cloudflare.com/client/v4"; auth="Authorization: Bearer $CF_API_TOKEN"
+          acc="${{ steps.ids.outputs.acc }}"
+          res=$(curl -s -X POST -H "$auth" -H "Content-Type: application/json" \
+            "$api/accounts/$acc/email/routing/addresses" --data "{\"email\":\"$DEST\"}")
+          echo "$res" | jq -c '{success, errors, result:{email:.result.email, verified:.result.verified}}' || echo "$res"
+          echo "::notice title=dest::$(echo "$res" | jq -c '{s:.success, e:(.errors[0].message // "")}')"
+          # OK si se creó o ya existía
+          echo "$res" | jq -e '.success==true' >/dev/null || echo "$res" | grep -qiE "already|exists|duplicate"
+
+      - name: "Habilitar Email Routing en la zona"
+        if: always()
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          api="https://api.cloudflare.com/client/v4"; auth="Authorization: Bearer $CF_API_TOKEN"
+          zid="${{ steps.ids.outputs.zid }}"
+          res=$(curl -s -X POST -H "$auth" "$api/zones/$zid/email/routing/enable" --data '{}')
+          echo "::notice title=enable::$(echo "$res" | jq -c '{s:.success, e:(.errors[0].message // "")}')"
+          echo "$res" | jq -e '.success==true' >/dev/null || echo "$res" | grep -qiE "already|enabled"
+
+      - name: "Crear regla help@ -> gmail"
+        if: always()
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          api="https://api.cloudflare.com/client/v4"; auth="Authorization: Bearer $CF_API_TOKEN"
+          zid="${{ steps.ids.outputs.zid }}"
+          body=$(jq -nc --arg src "$SRC" --arg dest "$DEST" \
+            '{name:"help to gmail", enabled:true, matchers:[{type:"literal", field:"to", value:$src}], actions:[{type:"forward", value:[$dest]}]}')
+          res=$(curl -s -X POST -H "$auth" -H "Content-Type: application/json" \
+            "$api/zones/$zid/email/routing/rules" --data "$body")
+          echo "::notice title=rule::$(echo "$res" | jq -c '{s:.success, e:(.errors[0].message // "")}')"
+          echo "$res" | jq -e '.success==true' >/dev/null || echo "$res" | grep -qiE "already|exists|duplicate"
+
+      - name: "Resumen"
+        if: always()
+        run: |
+          echo "Si los pasos están en verde: el reenvío está creado."
+          echo "FALTA: confirmar el email de verificación que Cloudflare envió a $DEST"
+          echo "(sin esa confirmación, el reenvío no entrega)."
