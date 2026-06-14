@@ -1,0 +1,27 @@
+import { json, bad, isEmail } from "../../apilib/http";
+import { newId } from "../../apilib/auth";
+
+// POST /api/quote — solicitud de presupuesto de un cliente.
+export async function onRequestPost(context: any) {
+  const { request, env } = context;
+  let b: any;
+  try { b = await request.json(); } catch { return bad("JSON inválido"); }
+  const email = String(b.clientEmail || b.email || "").trim();
+  const description = String(b.description || "").trim();
+  if (!isEmail(email)) return bad("Email no válido");
+  if (description.length < 5) return bad("Describe brevemente lo que necesitas");
+
+  const id = newId("qr_");
+  await env.DB.prepare(
+    `INSERT INTO quote_requests
+      (id,professional_id,category_id,service_id,client_name,client_email,client_phone,country,region,city,description,budget_range,urgency)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+  ).bind(
+    id, b.professionalId || null, b.categoryId || null, b.serviceId || null,
+    String(b.name || b.clientName || ""), email, String(b.phone || ""),
+    String(b.country || "").toUpperCase(), String(b.region || ""), String(b.city || ""),
+    description, String(b.budgetRange || ""), String(b.urgency || "flexible"),
+  ).run();
+
+  return json({ ok: true, id }, 201);
+}

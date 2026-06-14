@@ -1,0 +1,45 @@
+name: Probar API
+
+on:
+  workflow_dispatch:
+
+env:
+  BASE: https://regikaha.pages.dev
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "register (crea profesional de prueba)"
+        if: always()
+        run: |
+          ts=$(date +%s)
+          email="qa+$ts@regikaha.com"
+          res=$(curl -s -X POST "$BASE/api/register" -H "Content-Type: application/json" \
+            --data "{\"email\":\"$email\",\"password\":\"test12345\",\"publicName\":\"QA $ts\",\"type\":\"autonomo\",\"country\":\"ES\",\"region\":\"Madrid\",\"city\":\"Madrid\",\"categories\":[\"electricidad\"]}")
+          echo "$res"
+          echo "::notice title=register::$(echo "$res" | head -c 220)"
+          echo "$res" | grep -q '"ok":true'
+
+      - name: "search (categoria + zona)"
+        if: always()
+        run: |
+          res=$(curl -s "$BASE/api/search?cat=electricidad&country=ES&region=Madrid")
+          echo "$res" | head -c 400
+          echo "::notice title=search::$(echo "$res" | head -c 220)"
+          echo "$res" | grep -q '"total"'
+
+      - name: "me sin sesion = no auth"
+        if: always()
+        run: |
+          res=$(curl -s "$BASE/api/me")
+          echo "::notice title=me::$(echo "$res" | head -c 150)"
+          echo "$res" | grep -q '"authenticated":false'
+
+      - name: "quote (solicitud)"
+        if: always()
+        run: |
+          res=$(curl -s -X POST "$BASE/api/quote" -H "Content-Type: application/json" \
+            --data '{"clientEmail":"cliente@example.com","name":"Cliente QA","country":"ES","city":"Madrid","categoryId":"electricidad","description":"Necesito un electricista para revisar el cuadro."}')
+          echo "::notice title=quote::$(echo "$res" | head -c 200)"
+          echo "$res" | grep -q '"ok":true'
