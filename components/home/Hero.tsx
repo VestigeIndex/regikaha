@@ -1,19 +1,23 @@
+"use client";
+
 import Link from "next/link";
 import { BadgeCheck, Star, ShieldCheck, ArrowRight } from "lucide-react";
 import { SearchBar } from "@/components/marketplace/SearchBar";
 import { getPlatformStats } from "@/lib/data";
 import { HeroSlideshow } from "@/components/home/HeroSlideshow";
+import { useT } from "@/lib/i18n/context";
 
 const heroSlides = [
-  { src: "/images/photos/ventanas.webp", alt: "Vivienda reformada con grandes ventanales" },
-  { src: "/images/photos/suelos.webp", alt: "Instalación de suelo de baldosas premium" },
-  { src: "/images/photos/carpinteria.webp", alt: "Armario de carpintería a medida en madera" },
+  { src: "/images/photos/ventanas.webp", alt: "Reforma con grandes ventanales" },
+  { src: "/images/photos/suelos.webp", alt: "Instalación de suelo premium" },
+  { src: "/images/photos/carpinteria.webp", alt: "Armario de carpintería a medida" },
   { src: "/images/photos/puertas.webp", alt: "Instalación de puerta moderna" },
   { src: "/images/photos/pavimentacion.webp", alt: "Pavimentación de patio exterior" },
 ];
 
 export function Hero() {
   const stats = getPlatformStats();
+  const t = useT();
   return (
     <section className="relative overflow-hidden bg-gradient-hero">
       <div className="absolute inset-0 bg-grid-soft bg-grid opacity-[0.6] [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
@@ -21,23 +25,19 @@ export function Hero() {
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center">
           <div className="max-w-2xl">
             <span className="eyebrow">
-              <BadgeCheck size={15} /> Profesionales verificados en toda España
+              <BadgeCheck size={15} /> {t.hero.eyebrow}
             </span>
             <h1 className="mt-4 text-[2.3rem] sm:text-5xl lg:text-[3.4rem] font-bold leading-[1.05] tracking-tight text-ink text-balance">
-              Compara profesionales verificados para{" "}
-              <span className="text-gradient">reformas y servicios técnicos</span>
+              {t.hero.title}
             </h1>
-            <p className="mt-5 text-lg text-muted leading-relaxed max-w-xl">
-              Encuentra empresas de reformas, técnicos, instaladores, arquitectos e ingenieros por
-              precio, calidad, zona de trabajo, portfolio y valoraciones reales.
-            </p>
+            <p className="mt-5 text-lg text-muted leading-relaxed max-w-xl">{t.hero.subtitle}</p>
 
             <div className="mt-7 flex flex-wrap gap-3">
               <Link href="/buscar" className="btn btn-primary text-base">
-                Buscar profesionales <ArrowRight size={18} />
+                {t.nav.search} <ArrowRight size={18} />
               </Link>
               <Link href="/registro" className="btn btn-secondary text-base">
-                Soy profesional
+                {t.actions.imPro}
               </Link>
             </div>
 
@@ -46,7 +46,6 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Visual lateral con tarjetas de confianza */}
           <div className="relative hidden lg:block">
             <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-elevated ring-1 ring-forest-600/10">
               <HeroSlideshow slides={heroSlides} />
@@ -60,7 +59,7 @@ export function Hero() {
                 </span>
                 <div>
                   <p className="text-lg font-bold text-ink leading-none">{stats.averageRating}/5</p>
-                  <p className="text-xs text-muted mt-0.5">Valoración media</p>
+                  <p className="text-xs text-muted mt-0.5">{t.heroExtra.avgRating}</p>
                 </div>
               </div>
             </div>
@@ -71,8 +70,8 @@ export function Hero() {
                   <ShieldCheck size={18} />
                 </span>
                 <div>
-                  <p className="text-sm font-bold text-ink leading-tight">Sin rankings comprados</p>
-                  <p className="text-xs text-muted mt-0.5">Solo mérito y reputación</p>
+                  <p className="text-sm font-bold text-ink leading-tight">{t.trust.noPaidRanking}</p>
+                  <p className="text-xs text-muted mt-0.5">{t.heroExtra.meritDesc}</p>
                 </div>
               </div>
             </div>

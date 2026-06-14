@@ -1,13 +1,17 @@
-import { BadgeCheck, Star, Scale, HeartHandshake } from "lucide-react";
+"use client";
 
-const items = [
-  { icon: BadgeCheck, title: "Profesionales verificados", text: "Identidad, NIF/CIF y actividad comprobados." },
-  { icon: Star, title: "Valoraciones reales", text: "Solo de clientes con servicio realizado." },
-  { icon: Scale, title: "Sin rankings comprados", text: "Nadie paga por aparecer primero." },
-  { icon: HeartHandshake, title: "Gratis para clientes", text: "Buscar, comparar y pedir presupuesto sin coste." },
-];
+import { BadgeCheck, Star, Scale, HeartHandshake } from "lucide-react";
+import { useT } from "@/lib/i18n/context";
 
 export function TrustBand() {
+  const t = useT();
+  const items = [
+    { icon: BadgeCheck, title: t.trust.verified, text: t.trustExtra.verifiedDesc },
+    { icon: Star, title: t.trust.realReviews, text: t.trustExtra.realReviewsDesc },
+    { icon: Scale, title: t.trust.noPaidRanking, text: t.trustExtra.noPaidRankingDesc },
+    { icon: HeartHandshake, title: t.trust.freeForClients, text: t.trustExtra.freeForClientsDesc },
+  ];
+
   return (
     <section className="border-y hairline bg-canvas">
       <div className="container-x py-7">

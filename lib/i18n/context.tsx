@@ -3,11 +3,15 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { type Locale, defaultLocale, isLocale, localeMeta } from "./config";
 import { dictionaries, type Dictionary } from "./dictionaries";
+import { homeDictionaries, type HomeDict } from "./home";
+
+/** Diccionario completo (base + extensión de home). */
+export type FullDict = Dictionary & HomeDict;
 
 interface I18nValue {
   locale: Locale;
   setLocale: (l: Locale) => void;
-  t: Dictionary;
+  t: FullDict;
 }
 
 const I18nContext = createContext<I18nValue | null>(null);
@@ -54,8 +58,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const t: FullDict = { ...dictionaries[locale], ...homeDictionaries[locale] };
+
   return (
-    <I18nContext.Provider value={{ locale, setLocale, t: dictionaries[locale] }}>
+    <I18nContext.Provider value={{ locale, setLocale, t }}>
       {children}
     </I18nContext.Provider>
   );
@@ -68,6 +74,6 @@ export function useI18n(): I18nValue {
 }
 
 /** Acceso directo al diccionario del idioma activo: `const t = useT(); t.nav.search`. */
-export function useT(): Dictionary {
+export function useT(): FullDict {
   return useI18n().t;
 }
