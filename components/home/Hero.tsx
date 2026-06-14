@@ -2,7 +2,15 @@ import Link from "next/link";
 import { BadgeCheck, Star, ShieldCheck, ArrowRight } from "lucide-react";
 import { SearchBar } from "@/components/marketplace/SearchBar";
 import { getPlatformStats } from "@/lib/data";
-import { brandImages } from "@/lib/images";
+import { HeroSlideshow } from "@/components/home/HeroSlideshow";
+
+const heroSlides = [
+  { src: "/images/photos/ventanas.webp", alt: "Vivienda reformada con grandes ventanales" },
+  { src: "/images/photos/suelos.webp", alt: "Instalación de suelo de baldosas premium" },
+  { src: "/images/photos/carpinteria.webp", alt: "Armario de carpintería a medida en madera" },
+  { src: "/images/photos/puertas.webp", alt: "Instalación de puerta moderna" },
+  { src: "/images/photos/pavimentacion.webp", alt: "Pavimentación de patio exterior" },
+];
 
 export function Hero() {
   const stats = getPlatformStats();
@@ -41,12 +49,8 @@ export function Hero() {
           {/* Visual lateral con tarjetas de confianza */}
           <div className="relative hidden lg:block">
             <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-elevated ring-1 ring-forest-600/10">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={brandImages.hero.src}
-                alt={brandImages.hero.alt}
-                className="h-full w-full object-cover"
-              />
+              <HeroSlideshow slides={heroSlides} />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/30 via-transparent to-transparent pointer-events-none" />
             </div>
 
             <div className="absolute -left-6 top-10 card shadow-elevated p-3.5 w-52 animate-fade-up">

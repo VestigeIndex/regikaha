@@ -16,7 +16,7 @@ export const categories: Category[] = [
     description:
       "Profesionales y empresas para reformas integrales de viviendas, pisos y locales: distribución, albañilería, instalaciones, acabados y coordinación de gremios bajo un único responsable de obra.",
     icon: "HardHat",
-    image: "/images/categories/reformas-integrales.svg",
+    image: "/images/photos/ventanas.webp",
     popularServices: [
       "Reforma integral de piso",
       "Reforma de local comercial",
@@ -48,7 +48,7 @@ export const categories: Category[] = [
     description:
       "Electricistas autorizados para instalaciones, cuadros eléctricos, boletines, puntos de recarga, domótica y reparaciones. Trabajo seguro y conforme a normativa con certificado cuando aplica.",
     icon: "Zap",
-    image: "/images/categories/electricidad.svg",
+    image: "/images/photos/domotica.webp",
     popularServices: [
       "Instalación eléctrica de vivienda",
       "Boletín eléctrico",
@@ -94,7 +94,7 @@ export const categories: Category[] = [
     description:
       "Instaladores de climatización para aire acondicionado, bombas de calor, aerotermia, suelo radiante y ventilación. Cálculo de potencia, instalación y mantenimiento con garantía.",
     icon: "Wind",
-    image: "/images/categories/climatizacion.svg",
+    image: "/images/photos/climatizacion.webp",
     popularServices: [
       "Instalación de aire acondicionado",
       "Aerotermia",
@@ -112,7 +112,7 @@ export const categories: Category[] = [
     description:
       "Albañiles para obra nueva y reforma: tabiquería, solados y alicatados, recrecidos, derribos controlados, pequeñas obras y trabajos de albañilería en general.",
     icon: "Building2",
-    image: "/images/categories/albanileria.svg",
+    image: "/images/photos/suelos.webp",
     popularServices: ["Tabiquería y derribos", "Solado y alicatado", "Pequeñas obras"],
     featured: false,
   },
@@ -126,7 +126,7 @@ export const categories: Category[] = [
     description:
       "Carpinteros para muebles a medida, armarios, puertas, tarima, cocinas y carpintería de aluminio y PVC. Diseño, fabricación e instalación con materiales seleccionados.",
     icon: "DoorOpen",
-    image: "/images/categories/carpinteria.svg",
+    image: "/images/photos/carpinteria.webp",
     popularServices: ["Armarios a medida", "Puertas interiores", "Tarima y suelo laminado"],
     featured: false,
   },
@@ -140,7 +140,7 @@ export const categories: Category[] = [
     description:
       "Empresas especializadas en fachadas y tejados: rehabilitación, SATE, impermeabilización de cubiertas, reparación de tejados, canalones y trabajos verticales con seguridad certificada.",
     icon: "Home",
-    image: "/images/categories/fachadas-tejados.svg",
+    image: "/images/photos/tejado.webp",
     popularServices: ["Rehabilitación de fachada", "Reparación de tejado", "Aislamiento SATE"],
     featured: true,
   },
@@ -154,7 +154,7 @@ export const categories: Category[] = [
     description:
       "Profesionales de aislamiento térmico y acústico e impermeabilización de cubiertas, terrazas, sótanos y muros. Mejora la eficiencia energética y elimina humedades de forma duradera.",
     icon: "Layers",
-    image: "/images/categories/aislamiento-impermeabilizacion.svg",
+    image: "/images/photos/fachada.webp",
     popularServices: [
       "Impermeabilización de terraza",
       "Aislamiento de cubierta",
@@ -232,7 +232,7 @@ export const categories: Category[] = [
     description:
       "Empresas de mantenimiento técnico e industrial: instalaciones, naves, climatización, electricidad, preventivo y correctivo para comercios, oficinas e industria con contratos a medida.",
     icon: "Factory",
-    image: "/images/categories/mantenimiento-industrial.svg",
+    image: "/images/photos/mantenimiento.webp",
     popularServices: [
       "Contrato de mantenimiento preventivo",
       "Mantenimiento de instalaciones",
