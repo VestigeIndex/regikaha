@@ -1,5 +1,6 @@
 import { Hero } from "@/components/home/Hero";
 import { TrustBand } from "@/components/home/TrustBand";
+import { PhotoMarquee } from "@/components/home/PhotoMarquee";
 import { FeaturedCategories } from "@/components/home/FeaturedCategories";
 import { FeaturedProfessionals } from "@/components/home/FeaturedProfessionals";
 import { HowItWorks } from "@/components/home/HowItWorks";
@@ -16,6 +17,7 @@ export default function HomePage() {
       <Hero />
       <TrustBand />
       <Reveal><FeaturedCategories /></Reveal>
+      <PhotoMarquee />
       <Reveal><FeaturedProfessionals /></Reveal>
       <Reveal><HowItWorks /></Reveal>
       <Reveal><PortfolioStrip /></Reveal>
