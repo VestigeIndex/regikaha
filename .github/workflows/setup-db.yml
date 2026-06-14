@@ -1,0 +1,67 @@
+name: Configurar D1 + R2
+
+# Crea la base de datos D1 (regikaha-db) y el bucket R2 (regikaha-docs),
+# y aplica el esquema. Informa el UUID de la base de datos por anotación
+# (necesario para el binding en wrangler.toml).
+
+on:
+  workflow_dispatch:
+
+env:
+  DB_NAME: regikaha-db
+  BUCKET: regikaha-docs
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Crear / localizar base de datos D1"
+        id: d1
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          api="https://api.cloudflare.com/client/v4"; auth="Authorization: Bearer $CF_API_TOKEN"
+          create=$(curl -s -X POST -H "$auth" -H "Content-Type: application/json" \
+            "$api/accounts/$CF_ACCOUNT_ID/d1/database" --data "{\"name\":\"$DB_NAME\"}")
+          uuid=$(echo "$create" | jq -r '.result.uuid // empty')
+          if [ -z "$uuid" ]; then
+            # ya existe: buscar su uuid
+            uuid=$(curl -s -H "$auth" "$api/accounts/$CF_ACCOUNT_ID/d1/database?name=$DB_NAME" | jq -r '.result[0].uuid // empty')
+          fi
+          echo "::notice title=d1_uuid::${uuid:-none}"
+          [ -n "$uuid" ] || { echo "::error::no se pudo crear/obtener D1 (¿token sin permiso D1?)"; exit 1; }
+          echo "uuid=$uuid" >> "$GITHUB_OUTPUT"
+
+      - name: "Crear bucket R2"
+        if: always()
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          api="https://api.cloudflare.com/client/v4"; auth="Authorization: Bearer $CF_API_TOKEN"
+          res=$(curl -s -X POST -H "$auth" -H "Content-Type: application/json" \
+            "$api/accounts/$CF_ACCOUNT_ID/r2/buckets" --data "{\"name\":\"$BUCKET\"}")
+          echo "::notice title=r2::$(echo "$res" | jq -c '{s:.success, e:(.errors[0].message // "")}')"
+          echo "$res" | jq -e '.success==true' >/dev/null || echo "$res" | grep -qiE "already|exists|duplicate"
+
+      - name: "Aplicar esquema a D1"
+        if: always()
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx --yes wrangler@3 d1 execute "$DB_NAME" --remote --file=db/schema.sql --yes 2>&1 | tail -20
+
+      - name: "Comprobar tablas"
+        if: always()
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          out=$(npx --yes wrangler@3 d1 execute "$DB_NAME" --remote \
+            --command "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;" --json 2>/dev/null | tr -d '\n ' | head -c 400)
+          echo "$out"
+          echo "::notice title=tables::$out"
