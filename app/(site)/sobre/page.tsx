@@ -11,7 +11,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = buildMetadata({
   title: "Sobre RegiKaha",
   description:
-    "RegiKaha es el marketplace español de profesionales verificados para reformas y servicios técnicos. Nuestra misión: que contratar una reforma sea transparente, justo y sin riesgos.",
+    "RegiKaha es el marketplace europeo de profesionales verificados para reformas y servicios técnicos. Nuestra misión: que contratar una reforma sea transparente, justo y sin riesgos.",
   path: "/sobre",
 });
 
@@ -19,7 +19,7 @@ const values = [
   { icon: Scale, title: "Justo por diseño", text: "Ningún profesional paga por aparecer primero. El orden lo decide el mérito." },
   { icon: BadgeCheck, title: "Verificación real", text: "Comprobamos identidad y actividad antes de mostrar el sello de verificado." },
   { icon: HeartHandshake, title: "Confianza mutua", text: "Reseñas verificadas que no se compran ni se borran si son legítimas." },
-  { icon: MapPin, title: "España primero", text: "Profesionales locales por toda España, con cobertura por zona." },
+  { icon: MapPin, title: "Europa por países", text: "Búsqueda europea con cobertura nacional, regional y local." },
 ];
 
 export default function SobrePage() {
@@ -29,7 +29,7 @@ export default function SobrePage() {
       <PageHeader
         eyebrow="Sobre RegiKaha"
         title="Hacemos que contratar una reforma sea transparente y justo"
-        description="RegiKaha nace para resolver un problema real: contratar reformas y servicios técnicos a ciegas, sin saber si el profesional es de fiar ni cuánto debería costar."
+        description="RegiKaha nace para resolver un problema real en toda Europa: contratar reformas y servicios técnicos a ciegas, sin saber si el profesional es de fiar ni cuánto debería costar."
         breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Sobre RegiKaha" }]}
       />
 

@@ -107,9 +107,9 @@ export const subscriptions: Subscription[] = [
   {
     id: "sub-2",
     professionalId: "pro-reformas-atlantico",
-    plan: "yearly",
+    plan: "autonomo_yearly",
     status: "active",
-    priceEur: 499,
+    priceEur: 215.46,
     startedAt: "2026-03-02",
     renewsAt: "2027-03-02",
   },
@@ -125,7 +125,7 @@ export const subscriptions: Subscription[] = [
   {
     id: "sub-4",
     professionalId: "pro-climatic-madrid",
-    plan: "monthly",
+    plan: "europa_monthly",
     status: "active",
     priceEur: 49.95,
     startedAt: "2026-03-20",

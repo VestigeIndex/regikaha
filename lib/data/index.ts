@@ -14,6 +14,7 @@ import {
 import { services, getServicesByProfessional, getServiceBySlug, getServicesByCategory } from "./services";
 import { reviews, getReviewsByProfessional, publishedReviews, pendingReviews } from "./reviews";
 import { portfolioItems, getPortfolioByProfessional } from "./portfolio";
+import { europeMarket } from "@/lib/market";
 
 export {
   categories,
@@ -83,9 +84,28 @@ export function meritScore(p: Professional): number {
   );
 }
 
+function professionalCountryCode(p: Professional): string {
+  return (p.countryCode || europeMarket.primaryCountryCode).toUpperCase();
+}
+
+function professionalCountry(p: Professional): string {
+  return p.country || europeMarket.primaryCountry;
+}
+
+function matchesLocation(p: Professional, locationSlug: string): boolean {
+  const loc = getLocationBySlug(locationSlug);
+  if (!loc || loc.scope === "europe") return true;
+  if (loc.scope === "country") return professionalCountryCode(p) === loc.countryCode;
+  return (
+    p.locationSlug === loc.slug ||
+    (professionalCountryCode(p) === loc.countryCode &&
+      (!loc.city || p.city.toLowerCase() === loc.city.toLowerCase()))
+  );
+}
+
 function matchesFilters(p: Professional, f: SearchFilters): boolean {
   if (f.categoryId && !p.categoryIds.includes(f.categoryId)) return false;
-  if (f.locationSlug && p.locationSlug !== f.locationSlug) return false;
+  if (f.locationSlug && !matchesLocation(p, f.locationSlug)) return false;
   if (f.verifiedOnly && p.verificationStatus !== "verified") return false;
   if (f.withInsurance && !p.insuranceDeclared) return false;
   if (f.withInvoice && !p.invoiceDeclared) return false;
@@ -105,6 +125,8 @@ function matchesFilters(p: Professional, f: SearchFilters): boolean {
       p.description,
       p.city,
       p.province,
+      professionalCountry(p),
+      professionalCountryCode(p),
       ...p.specialties,
       ...p.categoryIds.map((id) => getCategoryById(id)?.name ?? ""),
     ]
@@ -192,4 +214,33 @@ export function getPlatformStats() {
   };
 }
 
-export const languageOptions = ["Español", "Catalán", "Valenciano", "Euskera", "Gallego", "Inglés", "Francés", "Alemán"];
+export const languageOptions = [
+  "Español",
+  "Inglés",
+  "Francés",
+  "Alemán",
+  "Italiano",
+  "Portugués",
+  "Neerlandés",
+  "Polaco",
+  "Rumano",
+  "Griego",
+  "Catalán",
+  "Valenciano",
+  "Euskera",
+  "Gallego",
+  "Búlgaro",
+  "Croata",
+  "Checo",
+  "Danés",
+  "Estonio",
+  "Finés",
+  "Húngaro",
+  "Irlandés",
+  "Letón",
+  "Lituano",
+  "Maltés",
+  "Eslovaco",
+  "Esloveno",
+  "Sueco",
+];

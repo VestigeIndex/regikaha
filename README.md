@@ -6,7 +6,7 @@ instalaciones, mantenimiento, arquitectura, ingeniería y servicios técnicos.
 > Compara profesionales verificados por precio, calidad, portfolio y valoraciones reales.
 > Gratis para clientes · Ranking justo, sin pay-to-win.
 
-Identidad verde · España primero · construido con Next.js.
+Identidad verde · Europa por países · construido con Next.js.
 
 ---
 
@@ -124,4 +124,4 @@ La capa de datos está aislada detrás de interfaces (`lib/types.ts`) para migra
 
 - Los datos de profesionales, reseñas y precios son **mock realistas** para demostración.
 - Los documentos legales son **plantillas** y deben revisarse con asesoría jurídica.
-- Cliente gratis · Profesional 49,95 €/mes o 499 €/año + IVA · Primeros 300 verificados: 5 meses gratis.
+- Cliente gratis · Autónomo Nacional 19,95 €/mes o 215,46 €/año + IVA/VAT · Europa Pro 49,95 €/mes o 539,46 €/año + IVA/VAT · Primeros 300 verificados: 5 meses gratis.

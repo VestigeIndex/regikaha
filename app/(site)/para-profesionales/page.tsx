@@ -7,18 +7,19 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { buildMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { formatIntervalPrice, professionalPlans } from "@/lib/pricing";
 
 export const metadata: Metadata = buildMetadata({
   title: "Para profesionales",
   description:
-    "Consigue clientes para tus servicios de reformas, construcción o mantenimiento. Página SEO propia, portfolio, solicitudes directas y ranking justo. Sin pagar por leads. Primeros 300 verificados: 5 meses gratis.",
+    "Consigue clientes para tus servicios de reformas, construcción o mantenimiento en tu país o en más regiones europeas. Página SEO propia, portfolio, solicitudes directas y ranking justo. Sin pagar por leads.",
   path: "/para-profesionales",
 });
 
 const benefits = [
   { icon: Globe, title: "Página SEO propia", text: "Tu perfil indexable en Google con tu nombre, ciudad y servicios." },
   { icon: FolderKanban, title: "Portfolio y servicios ilimitados", text: "Muestra tus trabajos realizados y publica todos tus servicios." },
-  { icon: Inbox, title: "Solicitudes de clientes", text: "Recibe solicitudes de presupuesto directas, sin intermediarios." },
+  { icon: Inbox, title: "Solicitudes de clientes", text: "Recibe solicitudes reales y responde con pre-presupuestos iniciales no vinculantes." },
   { icon: Star, title: "Reseñas verificadas", text: "Construye reputación con valoraciones reales de clientes." },
   { icon: Scale, title: "Ranking justo", text: "Destaca por mérito. Nadie compra posiciones por encima de ti." },
   { icon: Wallet, title: "Sin pagar por leads", text: "Cuota fija simple. Sin comisiones por mensaje ni por contacto." },
@@ -29,8 +30,8 @@ export default function ParaProfesionalesPage() {
     <>
       <PageHeader
         eyebrow="Para profesionales"
-        title="Consigue clientes para tus servicios de reformas, construcción o mantenimiento"
-        description="Crea tu perfil profesional, publica tus servicios, muestra tu portfolio y recibe solicitudes de clientes que buscan exactamente lo que ofreces."
+        title="Consigue clientes en tu país y escala hacia Europa cuando estés listo"
+        description="Crea tu perfil profesional, publica tus servicios, muestra tu portfolio y recibe solicitudes de clientes según tu zona real de cobertura."
         breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Para profesionales" }]}
       >
         <div className="flex flex-wrap gap-3">
@@ -64,8 +65,8 @@ export default function ParaProfesionalesPage() {
               Primeros {site.founderSlots} verificados: {site.founderFreeMonths} meses gratis
             </h2>
             <p className="mt-4 text-muted leading-relaxed">
-              Únete ahora como miembro fundador de RegiKaha Pro. Después: {site.founderPrice.monthly} o{" "}
-              {site.founderPrice.yearly}.
+              Únete ahora como miembro fundador. Después puedes empezar con {formatIntervalPrice(professionalPlans[0], "monthly")} o ampliar con{" "}
+              {formatIntervalPrice(professionalPlans[1], "monthly")}.
             </p>
             <ul className="mt-5 space-y-2.5">
               {["Sin comisiones por lead", "Sin rankings comprados", "Sin pagar por aparecer primero", "Cancela cuando quieras"].map((t) => (
@@ -79,13 +80,19 @@ export default function ParaProfesionalesPage() {
           </div>
           <div className="card p-7">
             <div className="flex items-center gap-2 text-forest-700">
-              <BadgeCheck size={20} /> <span className="font-semibold">RegiKaha Pro</span>
+              <BadgeCheck size={20} /> <span className="font-semibold">Planes profesionales</span>
             </div>
-            <div className="mt-4 flex items-baseline gap-2">
-              <span className="text-4xl font-bold text-ink">49,95 €</span>
-              <span className="text-muted">/mes + IVA</span>
+            <div className="mt-4 space-y-2">
+              <p className="flex items-baseline justify-between gap-3">
+                <span className="font-medium text-ink">{professionalPlans[0].shortName}</span>
+                <span className="text-lg font-bold text-ink">{formatIntervalPrice(professionalPlans[0], "monthly")}</span>
+              </p>
+              <p className="flex items-baseline justify-between gap-3">
+                <span className="font-medium text-ink">{professionalPlans[1].shortName}</span>
+                <span className="text-lg font-bold text-ink">{formatIntervalPrice(professionalPlans[1], "monthly")}</span>
+              </p>
             </div>
-            <p className="text-sm text-muted mt-1">o 499 €/año + IVA (ahorra ~17%)</p>
+            <p className="text-sm text-muted mt-2">Las tarifas anuales tienen un 10% de descuento.</p>
             <div className="mt-5 rounded-xl bg-mint/60 ring-1 ring-forest-600/12 p-4 text-sm text-forest-800">
               Si estás entre los primeros 300 verificados, tus primeros {site.founderFreeMonths} meses son gratis.
             </div>

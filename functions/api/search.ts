@@ -9,7 +9,7 @@ export async function onRequestGet(context: any) {
   const region = u.searchParams.get("region") || "";
   const q = u.searchParams.get("q") || "";
 
-  const where: string[] = ["p.active_status = 1", "p.verification_status IN ('verified','limited')"];
+  const where: string[] = ["p.active_status = 1", "p.verification_status != 'suspended'"];
   const binds: any[] = [];
   let joins = "";
 
@@ -39,5 +39,18 @@ export async function onRequestGet(context: any) {
     LIMIT 60`;
 
   const rows = await env.DB.prepare(sql).bind(...binds).all();
-  return json({ total: (rows.results || []).length, results: rows.results || [] });
+  const results = rows.results || [];
+  const enriched: any[] = [];
+  for (const p of results) {
+    const [cats, portfolio] = await Promise.all([
+      env.DB.prepare("SELECT category_id FROM professional_categories WHERE professional_id = ?").bind(p.id).all(),
+      env.DB.prepare("SELECT COUNT(*) AS total FROM portfolio_items WHERE professional_id = ?").bind(p.id).first(),
+    ]);
+    enriched.push({
+      ...p,
+      category_ids: (cats.results || []).map((r: any) => r.category_id),
+      portfolio_count: Number(portfolio?.total || 0),
+    });
+  }
+  return json({ total: enriched.length, results: enriched });
 }

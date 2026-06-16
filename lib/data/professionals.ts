@@ -40,7 +40,7 @@ export const professionals: Professional[] = [
     responseTimeHours: 3,
     priceFrom: 4500,
     description:
-      "Empresa de reformas integrales en Valencia con catorce años de experiencia. Coordinamos todos los gremios bajo un único responsable de obra, con presupuesto cerrado y plazos por escrito. Especialistas en reformas de vivienda completa, cocinas y baños con acabados de calidad.",
+      "Empresa de reformas integrales en Valencia con catorce años de experiencia. Coordinamos todos los gremios bajo un único responsable de obra, con pre-presupuesto inicial orientativo y plazos por escrito. Especialistas en reformas de vivienda completa, cocinas y baños con acabados de calidad.",
     shortTagline: "Reformas integrales llave en mano en Valencia",
     logoColor: "#0F5C4A",
     coverImage: "/images/photos/ventanas.webp",
@@ -80,7 +80,7 @@ export const professionals: Professional[] = [
     responseTimeHours: 5,
     priceFrom: 5000,
     description:
-      "Reformamos pisos y locales en Madrid con un equipo propio de oficiales y un jefe de obra asignado a cada proyecto. Trabajamos con planificación detallada, certificados de instalaciones y limpieza final incluida. Presupuesto transparente sin sorpresas.",
+      "Reformamos pisos y locales en Madrid con un equipo propio de oficiales y un jefe de obra asignado a cada proyecto. Trabajamos con planificación detallada, certificados de instalaciones y limpieza final incluida. pre-Pre-presupuesto transparente sin sorpresas.",
     shortTagline: "Reformas de piso y local en Madrid",
     logoColor: "#198C68",
     coverImage: "/images/photos/ventanas.webp",
@@ -440,7 +440,7 @@ export const professionals: Professional[] = [
     responseTimeHours: 3,
     priceFrom: 3500,
     description:
-      "Especialistas en reforma de baños y cocinas en Madrid con presupuesto cerrado en 48 horas. Reformamos baños completos, cambiamos bañera por plato de ducha y renovamos cocinas con muebles y electrodomésticos. Proyecto 3D incluido antes de empezar.",
+      "Especialistas en reforma de baños y cocinas en Madrid con pre-presupuesto inicial orientativo en 48 horas. Reformamos baños completos, cambiamos bañera por plato de ducha y renovamos cocinas con muebles y electrodomésticos. Proyecto 3D incluido antes de empezar.",
     shortTagline: "Reforma de baños y cocinas en Madrid",
     logoColor: "#2AB673",
     coverImage: "/images/categories/banos-cocinas.svg",

@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { key: "search", href: "/buscar" },
+  { label: "Mapa", href: "/mapa" },
   { key: "categories", href: "/categorias" },
   { key: "howItWorks", href: "/como-funciona" },
   { key: "forPros", href: "/para-profesionales" },
@@ -52,7 +53,7 @@ export function Header() {
               href={item.href}
               className="px-3 py-2 text-[0.925rem] font-medium text-ink/80 hover:text-forest-700 rounded-lg hover:bg-forest-500/5 transition-colors"
             >
-              {t.nav[item.key]}
+              {"label" in item ? item.label : t.nav[item.key]}
             </Link>
           ))}
         </nav>
@@ -63,8 +64,8 @@ export function Header() {
             <Search size={16} />
             {t.actions.search}
           </Link>
-          <Link href="/registro" className="btn btn-primary">
-            {t.actions.imPro}
+          <Link href="/publicar-proyecto" className="btn btn-primary">
+            Publicar proyecto gratis
           </Link>
         </div>
 
@@ -92,14 +93,17 @@ export function Header() {
                 onClick={() => setOpen(false)}
                 className="px-3 py-3 text-base font-medium text-ink hover:bg-forest-500/6 rounded-xl"
               >
-                {t.nav[item.key]}
+                {"label" in item ? item.label : t.nav[item.key]}
               </Link>
             ))}
             <div className="h-px bg-[var(--hairline)] my-3" />
             <Link href="/buscar" onClick={() => setOpen(false)} className="btn btn-secondary w-full">
               <Search size={16} /> {t.actions.search}
             </Link>
-            <Link href="/registro" onClick={() => setOpen(false)} className="btn btn-primary w-full mt-2">
+            <Link href="/publicar-proyecto" onClick={() => setOpen(false)} className="btn btn-primary w-full mt-2">
+              Publicar proyecto gratis
+            </Link>
+            <Link href="/registro" onClick={() => setOpen(false)} className="btn btn-secondary w-full mt-2">
               {t.actions.imPro}
             </Link>
           </div>

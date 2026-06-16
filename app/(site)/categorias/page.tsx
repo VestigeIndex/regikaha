@@ -8,7 +8,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Categorías de profesionales",
   description:
-    "Explora todas las categorías de RegiKaha: reformas, baños y cocinas, electricidad, fontanería, pintura, climatización, energía solar, arquitectura y más. Profesionales verificados en toda España.",
+    "Explora todas las categorías de RegiKaha: reformas, baños y cocinas, electricidad, fontanería, pintura, climatización, energía solar, arquitectura y más. Profesionales verificados por país, región y ciudad en Europa.",
   path: "/categorias",
 });
 
@@ -18,7 +18,7 @@ export default function CategoriasPage() {
       <PageHeader
         eyebrow="Categorías"
         title="Todas las categorías de profesionales verificados"
-        description="Desde reformas integrales hasta peritajes técnicos. Encuentra al especialista que necesitas."
+        description="Desde reformas integrales hasta peritajes técnicos. Encuentra al especialista que necesitas por país, región o ciudad."
         breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Categorías" }]}
       />
       <section className="container-x py-14">

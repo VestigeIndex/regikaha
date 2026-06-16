@@ -17,6 +17,7 @@ import { ServiceCard } from "@/components/marketplace/ServiceCard";
 import { PortfolioCard } from "@/components/marketplace/PortfolioCard";
 import { ReviewCard } from "@/components/marketplace/ReviewCard";
 import { QuoteForm } from "@/components/marketplace/QuoteForm";
+import { ServiceAreaMap } from "@/components/marketplace/ServiceAreaMap";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { professionalSchema, breadcrumbSchema, professionalSeoTitle } from "@/lib/seo";
 import { formatPriceFrom, plural } from "@/lib/utils";
@@ -30,9 +31,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const pro = getProfessionalBySlug(slug);
   if (!pro) return { title: "Profesional no encontrado" };
   const primary = getCategoryById(pro.categoryIds[0]);
+  const country = pro.country || "España";
   return {
     title: professionalSeoTitle(pro, primary),
-    description: `${pro.shortTagline}. Compara precios orientativos, portfolio, valoraciones reales (${pro.averageRating}/5) y zona de servicio de ${pro.publicName} en ${pro.city}. Pide presupuesto gratis en RegiKaha.`,
+    description: `${pro.shortTagline}. Compara precios orientativos, portfolio, valoraciones reales (${pro.averageRating}/5) y zona de servicio de ${pro.publicName} en ${pro.city}, ${country}. Pide pre-presupuesto gratis en RegiKaha.`,
     alternates: { canonical: `/profesionales/${pro.slug}` },
   };
 }
@@ -55,6 +57,7 @@ export default async function ProfessionalPage({ params }: { params: Promise<{ s
   const servicesList = getServicesByProfessional(pro.id);
   const reviews = getReviewsByProfessional(pro.id);
   const portfolio = getPortfolioByProfessional(pro.id);
+  const country = pro.country || "España";
 
   const avgSub = (key: (typeof subRatings)[number]["key"]) =>
     reviews.length ? reviews.reduce((s, r) => s + r[key], 0) / reviews.length : 0;
@@ -99,7 +102,7 @@ export default async function ProfessionalPage({ params }: { params: Promise<{ s
 
         {/* Cabecera del perfil */}
         <div className="mt-4 flex flex-col sm:flex-row items-start gap-5">
-          <Avatar name={pro.publicName} color={pro.logoColor} size={92} className="ring-4 ring-white shadow-card" />
+          <Avatar name={pro.publicName} color={pro.logoColor} src={pro.logoImage} size={92} className="ring-4 ring-white shadow-card" />
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2.5">
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink">{pro.publicName}</h1>
@@ -112,7 +115,7 @@ export default async function ProfessionalPage({ params }: { params: Promise<{ s
             </div>
             <p className="mt-1.5 text-muted inline-flex items-center gap-3 flex-wrap">
               <span className="inline-flex items-center gap-1"><Building2 size={15} className="text-forest-500" />{pro.typeLabel}</span>
-              <span className="inline-flex items-center gap-1"><MapPin size={15} className="text-forest-500" />{pro.city}, {pro.province}</span>
+              <span className="inline-flex items-center gap-1"><MapPin size={15} className="text-forest-500" />{pro.city}, {pro.province}, {country}</span>
             </p>
             <div className="mt-2.5">
               <RatingInline value={pro.averageRating} count={pro.reviewCount} size={16} />
@@ -159,11 +162,17 @@ export default async function ProfessionalPage({ params }: { params: Promise<{ s
               </div>
             </section>
 
+            <ServiceAreaMap
+              query={`${pro.serviceArea}, ${pro.city}, ${pro.province}, ${country}`}
+              label={`${pro.serviceArea}, ${country}`}
+              radiusKm={pro.serviceRadiusKm}
+            />
+
             {/* Servicios */}
             {servicesList.length > 0 && (
               <section>
                 <h2 className="text-xl font-bold text-ink">Servicios</h2>
-                <p className="text-sm text-muted mt-1">Precios orientativos. Solicita presupuesto sin compromiso.</p>
+                <p className="text-sm text-muted mt-1">Precios orientativos. Pide una estimación inicial no vinculante.</p>
                 <div className="mt-5 grid sm:grid-cols-2 gap-4">
                   {servicesList.map((s) => (
                     <ServiceCard key={s.id} service={s} pro={pro} />
@@ -234,12 +243,17 @@ export default async function ProfessionalPage({ params }: { params: Promise<{ s
           <aside className="lg:sticky lg:top-24 space-y-4">
             <div className="card p-5">
               <div className="flex items-baseline justify-between">
-                <span className="text-sm text-muted">Presupuesto desde</span>
+                <span className="text-sm text-muted">Estimación desde</span>
                 <span className="text-xl font-bold text-ink">{formatPriceFrom(pro.priceFrom)}</span>
               </div>
               <div className="mt-4 border-t hairline pt-4">
-                <h3 className="font-semibold text-ink mb-3">Solicita presupuesto</h3>
-                <QuoteForm professionalName={pro.publicName} compact />
+                <h3 id="solicitar" className="font-semibold text-ink mb-3">Pide pre-presupuesto gratis</h3>
+                <QuoteForm
+                  professionalName={pro.publicName}
+                  professionalId={pro.id}
+                  categoryId={pro.categoryIds[0]}
+                  compact
+                />
               </div>
             </div>
 

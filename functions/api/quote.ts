@@ -8,8 +8,11 @@ export async function onRequestPost(context: any) {
   try { b = await request.json(); } catch { return bad("JSON inválido"); }
   const email = String(b.clientEmail || b.email || "").trim();
   const description = String(b.description || "").trim();
+  const honeypot = String(b.website || b.companyWebsite || "").trim();
+  if (honeypot) return bad("Solicitud no válida", 400);
   if (!isEmail(email)) return bad("Email no válido");
   if (description.length < 5) return bad("Describe brevemente lo que necesitas");
+  if (description.length > 2400) return bad("La descripción es demasiado larga");
 
   const id = newId("qr_");
   await env.DB.prepare(

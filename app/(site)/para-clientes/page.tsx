@@ -76,7 +76,7 @@ export default function ParaClientesPage() {
           </ol>
           <div className="mt-8 flex items-center justify-center gap-2 text-sm text-muted">
             <FileText size={16} className="text-forest-500" />
-            Solicitar presupuesto es siempre gratis y sin compromiso.
+            Pedir pre-presupuesto es siempre gratis. Las estimaciones iniciales no son vinculantes y se confirman tras revisión técnica.
           </div>
         </div>
       </section>

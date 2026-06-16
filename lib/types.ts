@@ -21,6 +21,18 @@ export type ProfessionalType =
 export type PriceType = "fixed" | "from" | "hour" | "m2" | "project";
 
 export type QuoteStatus = "new" | "contacted" | "quoted" | "won" | "lost" | "closed";
+export type ProjectStatus =
+  | "draft"
+  | "published"
+  | "receiving_pre_estimates"
+  | "in_conversation"
+  | "technical_visit_pending"
+  | "final_quote_received"
+  | "accepted"
+  | "in_progress"
+  | "finished"
+  | "review_pending"
+  | "cancelled";
 
 export type ReviewStatus = "published" | "pending" | "rejected";
 
@@ -45,9 +57,13 @@ export interface Category {
 
 export interface Location {
   slug: string;
-  city: string;
-  province: string;
-  autonomousCommunity: string;
+  label: string;
+  scope: "europe" | "country" | "city";
+  countryCode: string;
+  country: string;
+  city?: string;
+  province?: string;
+  autonomousCommunity?: string;
 }
 
 export interface ServiceItem {
@@ -117,6 +133,8 @@ export interface Professional {
   city: string;
   province: string;
   autonomousCommunity: string;
+  countryCode?: string;
+  country?: string;
   locationSlug: string;
   serviceArea: string;
   serviceRadiusKm: number;
@@ -139,6 +157,7 @@ export interface Professional {
   description: string;
   shortTagline: string;
   logoColor: string;
+  logoImage?: string | null;
   coverImage: string;
   founderMember: boolean;
   activeStatus: boolean;
@@ -158,6 +177,94 @@ export interface QuoteRequest {
   budgetRange: string;
   urgency: Urgency;
   status: QuoteStatus;
+  createdAt: string;
+}
+
+export interface ProjectRequest {
+  id: string;
+  clientId?: string | null;
+  clientType: "particular" | "empresa" | "comunidad" | "administrador_fincas";
+  country: string;
+  city: string;
+  postalCode?: string;
+  categoryId: string;
+  subcategory?: string;
+  description: string;
+  urgency: Urgency;
+  budgetRange?: string;
+  propertyType?: string;
+  approximateMeasures?: string;
+  status: ProjectStatus;
+  createdAt: string;
+}
+
+export interface B2BProjectRequest {
+  id: string;
+  companyId?: string | null;
+  country: string;
+  city: string;
+  requiredSpecialty: string;
+  projectType: string;
+  startDate?: string;
+  duration?: string;
+  teamSize?: string;
+  requiredDocuments: string[];
+  description: string;
+  budgetRange?: string;
+  status: ProjectStatus;
+  createdAt: string;
+}
+
+export interface PreEstimate {
+  id: string;
+  projectId: string;
+  professionalId: string;
+  priceFrom: number;
+  priceTo: number;
+  currency: "EUR";
+  estimatedTime: string;
+  requiresVisit: boolean;
+  visitType: "no_visit" | "free_visit" | "paid_visit" | "video_call" | "technical_measurement";
+  materialsIncluded: "yes" | "no" | "to_confirm";
+  laborIncluded: "yes" | "no" | "to_confirm";
+  notes: string;
+  status: "draft" | "sent" | "accepted" | "discarded";
+  createdAt: string;
+}
+
+export interface CoverageStatusRecord {
+  id: string;
+  country: string;
+  city: string;
+  categoryId: string;
+  status: "sin-cobertura" | "verificando" | "inicial" | "activa" | "fuerte";
+  professionalsCount: number;
+  demandCount: number;
+  lastUpdated: string;
+}
+
+export interface LeadSource {
+  id: string;
+  source: string;
+  professionalName: string;
+  categoryId: string;
+  city: string;
+  country: string;
+  status: "nuevo" | "contactado" | "interesado" | "registrado" | "verificacion_pendiente" | "activo" | "rechazado";
+  notes?: string;
+  campaign?: string;
+  relatedDemandId?: string;
+}
+
+export interface GrowthTask {
+  id: string;
+  type: "captar_profesionales" | "captar_subcontratas" | "seo" | "moderacion";
+  country: string;
+  city: string;
+  categoryId: string;
+  priority: 1 | 2 | 3;
+  status: "open" | "in_progress" | "done";
+  assignedTo?: string;
   createdAt: string;
 }
 
@@ -181,7 +288,7 @@ export interface VerificationRequest {
 export interface Subscription {
   id: string;
   professionalId: string;
-  plan: "monthly" | "yearly" | "founder";
+  plan: "autonomo_monthly" | "autonomo_yearly" | "europa_monthly" | "europa_yearly" | "founder";
   status: "trial" | "active" | "past_due" | "canceled";
   priceEur: number;
   startedAt: string;

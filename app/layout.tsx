@@ -24,9 +24,12 @@ export const metadata: Metadata = {
     "instaladores",
     "arquitectos",
     "energía solar",
-    "presupuesto de reforma",
+    "pre-presupuesto de reforma",
+    "subcontratas construcción",
+    "mapa profesionales reformas",
     "profesionales verificados",
-    "marketplace de reformas España",
+    "marketplace europeo de reformas",
+    "profesionales verificados Europa",
   ],
   authors: [{ name: site.name }],
   creator: site.name,
@@ -63,7 +66,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

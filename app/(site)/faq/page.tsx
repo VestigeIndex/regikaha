@@ -5,6 +5,7 @@ import { Accordion } from "@/components/ui/Accordion";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { faqSchema } from "@/lib/seo";
 import { buildMetadata } from "@/lib/seo";
+import { formatIntervalPrice, professionalPlans } from "@/lib/pricing";
 
 export const metadata: Metadata = buildMetadata({
   title: "Preguntas frecuentes",
@@ -22,7 +23,7 @@ const clientesFaq = [
 ];
 
 const proFaq = [
-  { q: "¿Cuánto cuesta para profesionales?", a: "49,95 €/mes + IVA o 499 €/año + IVA. Sin comisiones por lead ni por mensaje. Los primeros 300 profesionales verificados tienen 5 meses gratis." },
+  { q: "¿Cuánto cuesta para profesionales?", a: `El plan Autónomo Nacional cuesta ${formatIntervalPrice(professionalPlans[0], "monthly")} o ${formatIntervalPrice(professionalPlans[0], "yearly")}. El plan Europa Pro cuesta ${formatIntervalPrice(professionalPlans[1], "monthly")} o ${formatIntervalPrice(professionalPlans[1], "yearly")}. La tarifa anual tiene un 10% de descuento. Sin comisiones por lead ni por mensaje.` },
   { q: "¿Pagáis por cada contacto o lead?", a: "No. RegiKaha es una cuota fija. No cobramos por lead, por mensaje ni por aparecer primero." },
   { q: "¿Cómo consigo mejor posición?", a: "Mejorando tu trabajo real: consigue buenas valoraciones verificadas, responde rápido, completa tu portfolio y mantén tu verificación al día." },
   { q: "¿Qué necesito para verificarme?", a: "Identidad, NIF/CIF, email y teléfono. Si aplica, colegiación, seguros o certificados. Cuanta más información aportes, más confianza generas." },

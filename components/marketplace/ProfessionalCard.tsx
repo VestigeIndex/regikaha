@@ -9,11 +9,12 @@ import { formatPriceFrom } from "@/lib/utils";
 
 export function ProfessionalCard({ pro }: { pro: Professional }) {
   const categoryNames = pro.categoryIds.map((id) => getCategoryById(id)?.name).filter(Boolean) as string[];
+  const country = pro.country || "España";
 
   return (
     <article className="card card-hover flex flex-col p-5 h-full">
       <div className="flex items-start gap-3.5">
-        <Avatar name={pro.publicName} color={pro.logoColor} size={52} />
+        <Avatar name={pro.publicName} color={pro.logoColor} src={pro.logoImage} size={52} />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
             <Link
@@ -27,7 +28,7 @@ export function ProfessionalCard({ pro }: { pro: Professional }) {
           <p className="text-[0.82rem] text-muted mt-0.5">{pro.typeLabel}</p>
           <p className="text-[0.82rem] text-muted inline-flex items-center gap-1 mt-1">
             <MapPin size={13} className="text-forest-500" />
-            {pro.city}, {pro.province}
+            {pro.city}, {pro.province}, {country}
           </p>
         </div>
       </div>

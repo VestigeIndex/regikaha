@@ -31,9 +31,10 @@ export async function generateMetadata({
   const pro = getProfessionalBySlug(slug);
   const svc = pro ? getServiceBySlug(pro.id, service) : undefined;
   if (!pro || !svc) return { title: "Servicio no encontrado" };
+  const country = pro.country || "España";
   return {
-    title: `${svc.title} en ${pro.city} — ${pro.publicName} | ${site.name}`,
-    description: `${svc.description} ${priceTypeLabel(svc.priceType)} ${formatPriceFrom(svc.priceFrom)}. Pide presupuesto a ${pro.publicName}, profesional verificado en RegiKaha.`,
+    title: `${svc.title} en ${pro.city}, ${country} — ${pro.publicName} | ${site.name}`,
+    description: `${svc.description} ${priceTypeLabel(svc.priceType)} ${formatPriceFrom(svc.priceFrom)}. Pide pre-presupuesto inicial a ${pro.publicName}, profesional verificado en RegiKaha.`,
     alternates: { canonical: `/profesionales/${pro.slug}/${svc.slug}` },
   };
 }
@@ -49,6 +50,7 @@ export default async function ServicePage({
   if (!pro || !svc) notFound();
 
   const category = getCategoryById(svc.categoryId);
+  const country = pro.country || "España";
 
   return (
     <article className="pb-8">
@@ -77,7 +79,7 @@ export default async function ServicePage({
             <Link href={`/categorias/${category.slug}`} className="chip mt-5">{category.name}</Link>
           )}
           <h1 className="mt-3 text-3xl lg:text-[2.5rem] font-bold tracking-tight text-ink text-balance max-w-3xl">
-            {svc.title} en {pro.city}
+            {svc.title} en {pro.city}, {country}
           </h1>
           <p className="mt-3 text-muted inline-flex flex-wrap items-center gap-x-4 gap-y-1">
             <span className="inline-flex items-center gap-1"><Clock size={15} className="text-forest-500" />{svc.estimatedTime}</span>
@@ -112,7 +114,7 @@ export default async function ServicePage({
                   <li key={i} className="flex items-start gap-2 text-sm text-muted">
                     <X size={15} className="mt-0.5 shrink-0" /> {i}
                   </li>
-                )) : <li className="text-sm text-muted">Se detalla en el presupuesto.</li>}
+                )) : <li className="text-sm text-muted">Se detalla en el pre-presupuesto inicial.</li>}
               </ul>
             </div>
           </div>
@@ -161,7 +163,14 @@ export default async function ServicePage({
               <span className="text-2xl font-bold text-ink">{formatPriceFrom(svc.priceFrom)}</span>
             </div>
             <div className="mt-4 pt-4 border-t hairline">
-              <QuoteForm professionalName={pro.publicName} serviceTitle={svc.title} compact />
+              <QuoteForm
+                professionalName={pro.publicName}
+                professionalId={pro.id}
+                categoryId={svc.categoryId}
+                serviceId={svc.id}
+                serviceTitle={svc.title}
+                compact
+              />
             </div>
           </div>
 

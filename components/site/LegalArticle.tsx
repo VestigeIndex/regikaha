@@ -5,10 +5,6 @@ export interface LegalSection {
   p: string[];
 }
 
-/**
- * Plantilla de página legal. El contenido es un punto de partida realista y
- * debe ser revisado por un profesional jurídico antes de producción.
- */
 export function LegalArticle({
   title,
   updated,
@@ -40,8 +36,8 @@ export function LegalArticle({
       </div>
 
       <div className="mt-10 rounded-xl bg-canvas ring-1 ring-forest-600/10 p-4 text-xs text-muted">
-        Este documento es una plantilla orientativa para la fase inicial de RegiKaha y debe ser
-        revisado y adaptado por un asesor legal antes de su publicación definitiva.
+        Puedes contactar con RegiKaha para cualquier consulta sobre estas condiciones,
+        privacidad, moderación o retirada de contenidos a través del correo de contacto publicado.
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { site } from "./site";
 import type { Professional, ServiceItem, Category } from "./types";
+import { europeMarket } from "./market";
 
 /** Construye metadata coherente para cualquier página. */
 export function buildMetadata(opts: {
@@ -42,9 +43,9 @@ export function organizationSchema() {
     url: site.url,
     logo: `${site.url}/favicon.svg`,
     description: site.description,
-    areaServed: "ES",
+    areaServed: "EU",
     contactPoint: [
-      { "@type": "ContactPoint", contactType: "customer support", email: site.email, availableLanguage: ["es"] },
+      { "@type": "ContactPoint", contactType: "customer support", email: site.email, availableLanguage: ["es", "en"] },
     ],
   };
 }
@@ -62,7 +63,7 @@ export function professionalSchema(p: Professional, categoryNames: string[]) {
       "@type": "PostalAddress",
       addressLocality: p.city,
       addressRegion: p.province,
-      addressCountry: "ES",
+      addressCountry: p.countryCode || europeMarket.primaryCountryCode,
     },
     knowsAbout: categoryNames,
     knowsLanguage: p.languages,
@@ -131,5 +132,6 @@ export function breadcrumbSchema(items: { name: string; path: string }[]) {
 /** SEO title para la página de un profesional. */
 export function professionalSeoTitle(p: Professional, primaryCategory?: Category): string {
   const cat = primaryCategory?.name ?? "Profesional verificado";
-  return `${p.publicName} — ${cat} en ${p.city} | Verificado | ${site.name}`;
+  const country = p.country || europeMarket.primaryCountry;
+  return `${p.publicName} — ${cat} en ${p.city}, ${country} | Verificado | ${site.name}`;
 }

@@ -7,12 +7,12 @@ export function Footer() {
   return (
     <footer className="mt-24 border-t hairline bg-canvas">
       <div className="container-x py-14">
-        <div className="grid gap-10 lg:grid-cols-[1.4fr_repeat(4,1fr)]">
+        <div className="grid gap-10 lg:grid-cols-[1.4fr_repeat(5,1fr)]">
           <div className="max-w-xs">
             <Logo />
             <p className="mt-4 text-sm text-muted leading-relaxed">
-              Marketplace español de profesionales verificados para reformas, construcción y
-              servicios técnicos. Compara por mérito, nunca por pago.
+              Marketplace europeo de profesionales y subcontratas verificadas para reformas,
+              obras e instalaciones. Pre-presupuestos no vinculantes y ranking por mérito.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
               {trustPoints.map((t) => (

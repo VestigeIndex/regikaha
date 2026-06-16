@@ -6,11 +6,12 @@ import { CtaBand } from "@/components/site/CtaBand";
 import { buildMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { getPlatformStats } from "@/lib/data";
+import { formatIntervalPrice, professionalPlans } from "@/lib/pricing";
 
 export const metadata: Metadata = buildMetadata({
   title: "Oferta fundadores",
   description:
-    "Los primeros 300 profesionales verificados de RegiKaha reciben 5 meses gratis de RegiKaha Pro. Sin comisiones por lead, sin rankings comprados. Únete como miembro fundador.",
+    "Los primeros 300 profesionales verificados de RegiKaha reciben 5 meses gratis. Sin comisiones por lead, sin rankings comprados. Únete como miembro fundador.",
   path: "/fundadores",
 });
 
@@ -24,7 +25,7 @@ export default function FundadoresPage() {
       <PageHeader
         eyebrow="Oferta fundadores"
         title={`Primeros ${site.founderSlots} verificados: ${site.founderFreeMonths} meses gratis`}
-        description="Sé de los primeros en construir tu reputación en RegiKaha. Como miembro fundador, disfrutas de 5 meses gratis de RegiKaha Pro y de la insignia de fundador en tu perfil."
+        description="Sé de los primeros en construir tu reputación en RegiKaha a escala nacional y europea. Como miembro fundador, disfrutas de 5 meses gratis y de la insignia de fundador en tu perfil."
         breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Oferta fundadores" }]}
       >
         <div className="max-w-md">
@@ -46,7 +47,7 @@ export default function FundadoresPage() {
           </span>
           <ul className="mt-5 space-y-3">
             {[
-              `${site.founderFreeMonths} meses gratis de RegiKaha Pro`,
+              `${site.founderFreeMonths} meses gratis en el plan profesional que encaje con tu cobertura`,
               "Insignia de “Fundador” en tu perfil",
               "Antigüedad en el marketplace desde el inicio",
               "Más tiempo para acumular reseñas verificadas",
@@ -66,12 +67,12 @@ export default function FundadoresPage() {
           </span>
           <div className="mt-5 space-y-3">
             <div className="rounded-xl bg-white ring-1 ring-forest-600/10 p-4 flex items-baseline justify-between">
-              <span className="font-medium text-ink">Mensual</span>
-              <span><span className="text-2xl font-bold text-ink">49,95 €</span><span className="text-muted text-sm"> /mes + IVA</span></span>
+              <span className="font-medium text-ink">{professionalPlans[0].name}</span>
+              <span><span className="text-2xl font-bold text-ink">{formatIntervalPrice(professionalPlans[0], "monthly")}</span></span>
             </div>
             <div className="rounded-xl bg-white ring-1 ring-forest-600/10 p-4 flex items-baseline justify-between">
-              <span className="font-medium text-ink">Anual</span>
-              <span><span className="text-2xl font-bold text-ink">499 €</span><span className="text-muted text-sm"> /año + IVA</span></span>
+              <span className="font-medium text-ink">{professionalPlans[1].name}</span>
+              <span><span className="text-2xl font-bold text-ink">{formatIntervalPrice(professionalPlans[1], "monthly")}</span></span>
             </div>
           </div>
           <p className="mt-4 text-sm text-muted">

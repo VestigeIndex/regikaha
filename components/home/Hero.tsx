@@ -33,10 +33,13 @@ export function Hero() {
             <p className="mt-5 text-lg text-muted leading-relaxed max-w-xl">{t.hero.subtitle}</p>
 
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/buscar" className="btn btn-primary text-base">
-                {t.nav.search} <ArrowRight size={18} />
+              <Link href="/publicar-proyecto" className="btn btn-primary text-base">
+                Publicar mi proyecto gratis <ArrowRight size={18} />
               </Link>
-              <Link href="/registro" className="btn btn-secondary text-base">
+              <Link href="/mapa" className="btn btn-secondary text-base">
+                Buscar en el mapa
+              </Link>
+              <Link href="/registro" className="btn btn-ghost text-base">
                 {t.actions.imPro}
               </Link>
             </div>

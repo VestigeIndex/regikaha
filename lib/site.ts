@@ -1,20 +1,27 @@
 /** Configuración central del sitio: identidad, navegación y enlaces. */
 
+import { formatIntervalPrice, professionalPlans } from "./pricing";
+
 export const site = {
   name: "RegiKaha",
   legalName: "RegiKaha",
   url: "https://regikaha.com",
   email: "help@regikaha.com",
-  tagline: "Compara profesionales verificados para reformas y servicios técnicos en toda España",
+  tagline: "Compara profesionales verificados para reformas y servicios técnicos en Europa",
   description:
-    "RegiKaha es el marketplace español de profesionales verificados para reformas, construcción, instalaciones, mantenimiento, arquitectura e ingeniería. Compara por precio, calidad, portfolio y valoraciones reales. Gratis para clientes.",
-  founderPrice: { monthly: "49,95 €/mes + IVA", yearly: "499 €/año + IVA" },
+    "RegiKaha es el marketplace europeo de profesionales verificados para reformas, construcción, instalaciones, mantenimiento, arquitectura e ingeniería. Compara por precio, calidad, zona de cobertura, portfolio y valoraciones reales. Gratis para clientes.",
+  founderPrice: {
+    monthly: formatIntervalPrice(professionalPlans[0], "monthly"),
+    yearly: formatIntervalPrice(professionalPlans[0], "yearly"),
+  },
   founderSlots: 300,
   founderFreeMonths: 5,
 } as const;
 
 export const mainNav = [
   { label: "Buscar profesionales", href: "/buscar" },
+  { label: "Mapa", href: "/mapa" },
+  { label: "Publicar proyecto", href: "/publicar-proyecto" },
   { label: "Categorías", href: "/categorias" },
   { label: "Cómo funciona", href: "/como-funciona" },
   { label: "Para profesionales", href: "/para-profesionales" },
@@ -26,6 +33,8 @@ export const footerNav: { title: string; links: { label: string; href: string }[
     title: "Marketplace",
     links: [
       { label: "Buscar profesionales", href: "/buscar" },
+      { label: "Mapa", href: "/mapa" },
+      { label: "Publicar proyecto gratis", href: "/publicar-proyecto" },
       { label: "Categorías", href: "/categorias" },
       { label: "Trabajos realizados", href: "/trabajos" },
       { label: "Cómo funciona", href: "/como-funciona" },
@@ -35,9 +44,19 @@ export const footerNav: { title: string; links: { label: string; href: string }[
     title: "Para clientes",
     links: [
       { label: "Para clientes", href: "/para-clientes" },
-      { label: "Pedir presupuesto", href: "/buscar" },
+      { label: "Pedir pre-presupuesto", href: "/publicar-proyecto" },
+      { label: "Política de pre-presupuestos", href: "/legal/politica-prepresupuestos" },
       { label: "Preguntas frecuentes", href: "/faq" },
       { label: "Política de reseñas", href: "/legal/politica-resenas" },
+    ],
+  },
+  {
+    title: "B2B",
+    links: [
+      { label: "Para constructoras", href: "/constructoras" },
+      { label: "Publicar subcontrata", href: "/publicar-subcontrata" },
+      { label: "Buscar en el mapa", href: "/mapa" },
+      { label: "Subcontratas", href: "/subcontratas" },
     ],
   },
   {

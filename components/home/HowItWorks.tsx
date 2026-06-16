@@ -5,7 +5,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 const clientSteps = [
   { icon: Search, title: "Busca el servicio que necesitas", text: "Filtra por categoría, zona, valoración y disponibilidad." },
   { icon: GitCompare, title: "Compara profesionales verificados", text: "Revisa portfolios, precios orientativos y reseñas reales." },
-  { icon: MessageSquareQuote, title: "Solicita presupuesto o contacta", text: "Envía tu solicitud gratis a los que más te encajen." },
+  { icon: MessageSquareQuote, title: "Pide pre-presupuesto o contacta", text: "Envía tu solicitud gratis y recibe estimaciones iniciales no vinculantes." },
   { icon: CheckCircle2, title: "Elige con confianza", text: "Decide con más información y menos riesgo." },
 ];
 

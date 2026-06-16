@@ -17,16 +17,16 @@ const en = {
   actions: {
     search: "Search",
     imPro: "I'm a professional",
-    requestQuote: "Request a quote",
+    requestQuote: "Request an initial estimate",
     viewProfile: "View profile",
     viewAll: "View all",
     joinPro: "Join as a professional",
   },
   hero: {
     eyebrow: "Verified professionals across Europe",
-    title: "Compare verified professionals for renovations and technical services",
+    title: "Find verified professionals and subcontractors for renovations, works and installations",
     subtitle:
-      "Find renovation companies, technicians, installers, architects and engineers by price, quality, service area, portfolio and real reviews.",
+      "Publish your project for free, receive non-binding initial estimates, compare professionals on the map and confirm the final quote before hiring.",
   },
   searchBar: { what: "What do you need?", where: "Where?", category: "Category", button: "Search" },
   trust: {
@@ -257,8 +257,8 @@ const sl: Dictionary = {
 
 const es: Dictionary = {
   nav: { search: "Buscar profesionales", categories: "Categorías", howItWorks: "Cómo funciona", forPros: "Para profesionales", pricing: "Precios" },
-  actions: { search: "Buscar", imPro: "Soy profesional", requestQuote: "Solicitar presupuesto", viewProfile: "Ver perfil", viewAll: "Ver todos", joinPro: "Unirme como profesional" },
-  hero: { eyebrow: "Profesionales verificados en toda Europa", title: "Compara profesionales verificados para reformas y servicios técnicos", subtitle: "Encuentra empresas de reformas, técnicos, instaladores, arquitectos e ingenieros por precio, calidad, zona de trabajo, portfolio y valoraciones reales." },
+  actions: { search: "Buscar", imPro: "Soy profesional", requestQuote: "Pedir pre-presupuesto", viewProfile: "Ver perfil", viewAll: "Ver todos", joinPro: "Unirme como profesional" },
+  hero: { eyebrow: "Profesionales y subcontratas verificadas en Europa", title: "Encuentra profesionales y subcontratas verificadas para reformas, obras e instalaciones", subtitle: "Publica tu proyecto gratis, recibe pre-presupuestos iniciales, compara profesionales en el mapa y confirma el presupuesto definitivo antes de contratar." },
   searchBar: { what: "¿Qué necesitas?", where: "¿Dónde?", category: "Categoría", button: "Buscar" },
   trust: { verified: "Profesionales verificados", realReviews: "Valoraciones reales", noPaidRanking: "Sin rankings comprados", freeForClients: "Gratis para clientes" },
   lang: { label: "Idioma" },

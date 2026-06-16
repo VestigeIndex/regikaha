@@ -16,7 +16,7 @@ export const reviews: Review[] = [
     punctualityRating: 4,
     professionalismRating: 5,
     comment:
-      "Reformaron nuestro piso entero y el resultado es espectacular. Cumplieron el presupuesto cerrado y nos avisaban de cada fase. El jefe de obra estuvo siempre disponible.",
+      "Reformaron nuestro piso entero y el resultado es espectacular. Cumplieron el pre-presupuesto inicial orientativo y nos avisaban de cada fase. El jefe de obra estuvo siempre disponible.",
     reply: "Muchas gracias, Laura. Fue un placer trabajar con vosotros. ¡A disfrutar la casa nueva!",
     status: "published",
     verified: true,
@@ -256,7 +256,7 @@ export const reviews: Review[] = [
     punctualityRating: 5,
     professionalismRating: 5,
     comment:
-      "El proyecto 3D nos convenció y el resultado fue idéntico a lo que vimos. Presupuesto cerrado respetado al euro.",
+      "El proyecto 3D nos convenció y el resultado fue idéntico a lo que vimos. pre-presupuesto inicial orientativo respetado al euro.",
     reply: null,
     status: "published",
     verified: true,

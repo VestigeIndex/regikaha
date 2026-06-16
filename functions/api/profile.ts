@@ -22,6 +22,15 @@ export async function onRequestPost(context: any) {
     invoice_declared: b.invoiceDeclared !== undefined ? (b.invoiceDeclared ? 1 : 0) : undefined,
     offers_urgent: b.offersUrgent !== undefined ? (b.offersUrgent ? 1 : 0) : undefined,
   };
+  if (b.publicName || b.tagline || b.city || b.country) {
+    const name = String(b.publicName || pro.public_name || "Profesional RegiKaha").trim();
+    const city = String(b.city || pro.city || "").trim();
+    const country = String(b.country || pro.country || "Europa").trim().toUpperCase();
+    map.seo_title = `${name} - profesional verificado en ${city || country} | RegiKaha`;
+    map.seo_description = String(b.tagline || b.description || pro.short_tagline || pro.description || "")
+      .trim()
+      .slice(0, 160);
+  }
   const sets: string[] = [];
   const vals: any[] = [];
   for (const k of Object.keys(map)) {

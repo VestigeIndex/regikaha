@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Search, MapPin, LayoutGrid } from "lucide-react";
 import { categories } from "@/lib/data/categories";
-import { locations } from "@/lib/data/locations";
+import { citySearchLocations, countrySearchLocations } from "@/lib/data/locations";
+import { europeMarket } from "@/lib/market";
 import { useT } from "@/lib/i18n/context";
 import { cn } from "@/lib/utils";
 
@@ -53,10 +54,17 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "inline" })
           className="w-full bg-transparent text-sm outline-none text-ink cursor-pointer"
           aria-label={t.searchBar.where}
         >
-          <option value="">{t.searchBar.where}</option>
-          {locations.map((l) => (
-            <option key={l.slug} value={l.slug}>{l.city}</option>
-          ))}
+          <option value="">{europeMarket.label}</option>
+          <optgroup label="País">
+            {countrySearchLocations.map((l) => (
+              <option key={l.slug} value={l.slug}>{l.label}</option>
+            ))}
+          </optgroup>
+          <optgroup label="Ciudad o región">
+            {citySearchLocations.map((l) => (
+              <option key={l.slug} value={l.slug}>{l.label}</option>
+            ))}
+          </optgroup>
         </select>
       </label>
 
