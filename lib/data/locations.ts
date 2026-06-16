@@ -30,11 +30,16 @@ const cityLocations: Location[] = [
   { slug: "munich", label: "Múnich, Alemania", scope: "city", countryCode: "DE", country: "Alemania", city: "Múnich", province: "Baviera" },
   { slug: "milan", label: "Milán, Italia", scope: "city", countryCode: "IT", country: "Italia", city: "Milán", province: "Lombardía" },
   { slug: "roma", label: "Roma, Italia", scope: "city", countryCode: "IT", country: "Italia", city: "Roma", province: "Lacio" },
+  { slug: "zurich", label: "Zúrich, Suiza", scope: "city", countryCode: "CH", country: "Suiza", city: "Zúrich", province: "Zúrich" },
+  { slug: "geneva", label: "Ginebra, Suiza", scope: "city", countryCode: "CH", country: "Suiza", city: "Ginebra", province: "Ginebra" },
   { slug: "amsterdam", label: "Ámsterdam, Países Bajos", scope: "city", countryCode: "NL", country: "Países Bajos", city: "Ámsterdam", province: "Holanda Septentrional" },
+  { slug: "rotterdam", label: "Róterdam, Países Bajos", scope: "city", countryCode: "NL", country: "Países Bajos", city: "Róterdam", province: "Holanda Meridional" },
   { slug: "bruselas", label: "Bruselas, Bélgica", scope: "city", countryCode: "BE", country: "Bélgica", city: "Bruselas", province: "Bruselas-Capital" },
+  { slug: "amberes", label: "Amberes, Bélgica", scope: "city", countryCode: "BE", country: "Bélgica", city: "Amberes", province: "Flandes" },
   { slug: "dublin", label: "Dublín, Irlanda", scope: "city", countryCode: "IE", country: "Irlanda", city: "Dublín", province: "Leinster" },
-  { slug: "viena", label: "Viena, Austria", scope: "city", countryCode: "AT", country: "Austria", city: "Viena", province: "Viena" },
-  { slug: "varsovia", label: "Varsovia, Polonia", scope: "city", countryCode: "PL", country: "Polonia", city: "Varsovia", province: "Mazovia" },
+  { slug: "cork", label: "Cork, Irlanda", scope: "city", countryCode: "IE", country: "Irlanda", city: "Cork", province: "Munster" },
+  { slug: "london", label: "Londres, Reino Unido", scope: "city", countryCode: "GB", country: "Reino Unido", city: "Londres", province: "Inglaterra" },
+  { slug: "manchester", label: "Mánchester, Reino Unido", scope: "city", countryCode: "GB", country: "Reino Unido", city: "Mánchester", province: "Inglaterra" },
 ];
 
 export const locations: Location[] = [...countryLocations, ...cityLocations];

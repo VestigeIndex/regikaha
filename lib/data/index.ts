@@ -214,33 +214,3 @@ export function getPlatformStats() {
   };
 }
 
-export const languageOptions = [
-  "Español",
-  "Inglés",
-  "Francés",
-  "Alemán",
-  "Italiano",
-  "Portugués",
-  "Neerlandés",
-  "Polaco",
-  "Rumano",
-  "Griego",
-  "Catalán",
-  "Valenciano",
-  "Euskera",
-  "Gallego",
-  "Búlgaro",
-  "Croata",
-  "Checo",
-  "Danés",
-  "Estonio",
-  "Finés",
-  "Húngaro",
-  "Irlandés",
-  "Letón",
-  "Lituano",
-  "Maltés",
-  "Eslovaco",
-  "Esloveno",
-  "Sueco",
-];

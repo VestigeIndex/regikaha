@@ -51,7 +51,7 @@ export function HeroSlideshow({ slides, interval = 5000 }: { slides: Slide[]; in
             key={i}
             type="button"
             onClick={() => setIndex(i)}
-            aria-label={`Imagen ${i + 1}`}
+            aria-label={`#${i + 1}`}
             className={cn(
               "h-1.5 rounded-full transition-all",
               i === index ? "w-5 bg-white" : "w-1.5 bg-white/55 hover:bg-white/80",

@@ -1,5 +1,8 @@
-import { coverageLabel, type CoverageStatus } from "@/lib/geo";
+"use client";
+
+import type { CoverageStatus } from "@/lib/geo";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n/context";
 
 const styles: Record<CoverageStatus, string> = {
   fuerte: "bg-forest-700 text-white border-forest-700",
@@ -10,9 +13,10 @@ const styles: Record<CoverageStatus, string> = {
 };
 
 export function CoverageBadge({ status, className }: { status: CoverageStatus; className?: string }) {
+  const t = useT();
   return (
     <span className={cn("inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold", styles[status], className)}>
-      {coverageLabel(status)}
+      {t.ui.badges.coverage[status]}
     </span>
   );
 }

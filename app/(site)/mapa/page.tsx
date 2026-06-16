@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { PageHeader } from "@/components/site/PageHeader";
+import { LocalizedPageHeader } from "@/components/site/LocalizedPageHeader";
 import { MapSearchPage } from "@/components/marketplace/MapSearchPage";
+import { SearchFallback } from "@/components/marketplace/LocalizedMarketSections";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -14,13 +15,8 @@ export const metadata: Metadata = buildMetadata({
 export default function MapaPage() {
   return (
     <>
-      <PageHeader
-        eyebrow="Mapa europeo"
-        title="Busca profesionales cerca de ti"
-        description="Explora profesionales, empresas y subcontratas verificadas por zona, categoría, valoración y disponibilidad. Si no hay cobertura, puedes publicar tu proyecto y activamos captación local."
-        breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Mapa" }]}
-      />
-      <Suspense fallback={<div className="container-x py-16 text-center text-muted">Preparando mapa…</div>}>
+      <LocalizedPageHeader id="map" />
+      <Suspense fallback={<SearchFallback kind="map" />}>
         <MapSearchPage mode="map" />
       </Suspense>
     </>

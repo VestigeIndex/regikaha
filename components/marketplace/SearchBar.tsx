@@ -5,13 +5,25 @@ import { useState } from "react";
 import { Search, MapPin, LayoutGrid } from "lucide-react";
 import { categories } from "@/lib/data/categories";
 import { citySearchLocations, countrySearchLocations } from "@/lib/data/locations";
-import { europeMarket } from "@/lib/market";
-import { useT } from "@/lib/i18n/context";
+import { useI18n, useT } from "@/lib/i18n/context";
+import { useContent } from "@/lib/i18n/useLocalizedContent";
 import { cn } from "@/lib/utils";
+
+function locationLabel(
+  location: (typeof citySearchLocations)[number] | (typeof countrySearchLocations)[number],
+  locale: string,
+) {
+  const countries = new Intl.DisplayNames([locale], { type: "region" });
+  const country = countries.of(location.countryCode) || location.country;
+  if (location.scope === "country") return country;
+  return location.city ? `${location.city}, ${country}` : country;
+}
 
 export function SearchBar({ variant = "hero" }: { variant?: "hero" | "inline" }) {
   const router = useRouter();
+  const { locale } = useI18n();
   const t = useT();
+  const content = useContent();
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("");
   const [loc, setLoc] = useState("");
@@ -54,15 +66,15 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "inline" })
           className="w-full bg-transparent text-sm outline-none text-ink cursor-pointer"
           aria-label={t.searchBar.where}
         >
-          <option value="">{europeMarket.label}</option>
-          <optgroup label="País">
+          <option value="">{t.ui.searchPage.allEurope}</option>
+          <optgroup label={t.ui.searchPage.countryGroup}>
             {countrySearchLocations.map((l) => (
-              <option key={l.slug} value={l.slug}>{l.label}</option>
+              <option key={l.slug} value={l.slug}>{locationLabel(l, locale)}</option>
             ))}
           </optgroup>
-          <optgroup label="Ciudad o región">
+          <optgroup label={t.ui.searchPage.cityRegionGroup}>
             {citySearchLocations.map((l) => (
-              <option key={l.slug} value={l.slug}>{l.label}</option>
+              <option key={l.slug} value={l.slug}>{locationLabel(l, locale)}</option>
             ))}
           </optgroup>
         </select>
@@ -78,7 +90,7 @@ export function SearchBar({ variant = "hero" }: { variant?: "hero" | "inline" })
         >
           <option value="">{t.searchBar.category}</option>
           {categories.map((c) => (
-            <option key={c.id} value={c.id}>{c.name}</option>
+            <option key={c.id} value={c.id}>{content.categories[c.id].name}</option>
           ))}
         </select>
       </label>

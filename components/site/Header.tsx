@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { key: "search", href: "/buscar" },
-  { label: "Mapa", href: "/mapa" },
+  { key: "map", href: "/mapa" },
   { key: "categories", href: "/categorias" },
   { key: "howItWorks", href: "/como-funciona" },
   { key: "forPros", href: "/para-profesionales" },
@@ -53,7 +53,7 @@ export function Header() {
               href={item.href}
               className="px-3 py-2 text-[0.925rem] font-medium text-ink/80 hover:text-forest-700 rounded-lg hover:bg-forest-500/5 transition-colors"
             >
-              {"label" in item ? item.label : t.nav[item.key]}
+              {t.ui.nav[item.key]}
             </Link>
           ))}
         </nav>
@@ -65,7 +65,7 @@ export function Header() {
             {t.actions.search}
           </Link>
           <Link href="/publicar-proyecto" className="btn btn-primary">
-            Publicar proyecto gratis
+            {t.ui.nav.publishProjectFree}
           </Link>
         </div>
 
@@ -75,7 +75,7 @@ export function Header() {
             type="button"
             onClick={() => setOpen((v) => !v)}
             className="grid place-items-center h-10 w-10 rounded-lg text-ink hover:bg-forest-500/8"
-            aria-label={open ? "Cerrar menú" : "Abrir menú"}
+            aria-label={open ? t.ui.nav.closeMenu : t.ui.nav.openMenu}
             aria-expanded={open}
           >
             {open ? <X size={22} /> : <Menu size={22} />}
@@ -93,7 +93,7 @@ export function Header() {
                 onClick={() => setOpen(false)}
                 className="px-3 py-3 text-base font-medium text-ink hover:bg-forest-500/6 rounded-xl"
               >
-                {"label" in item ? item.label : t.nav[item.key]}
+                {t.ui.nav[item.key]}
               </Link>
             ))}
             <div className="h-px bg-[var(--hairline)] my-3" />
@@ -101,7 +101,7 @@ export function Header() {
               <Search size={16} /> {t.actions.search}
             </Link>
             <Link href="/publicar-proyecto" onClick={() => setOpen(false)} className="btn btn-primary w-full mt-2">
-              Publicar proyecto gratis
+              {t.ui.nav.publishProjectFree}
             </Link>
             <Link href="/registro" onClick={() => setOpen(false)} className="btn btn-secondary w-full mt-2">
               {t.actions.imPro}

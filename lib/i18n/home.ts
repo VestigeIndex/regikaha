@@ -138,5 +138,5 @@ const sv: HomeDict = {
 };
 
 export const homeDictionaries: Record<Locale, HomeDict> = {
-  bg, hr, cs, da, nl, en, et, fi, fr, de, el, hu, ga, it, lv, lt, mt, pl, pt, ro, sk, sl, es, sv,
+  es, fr, it, pt, de, nl, en,
 };

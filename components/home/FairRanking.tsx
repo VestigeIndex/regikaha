@@ -1,19 +1,10 @@
-import { Scale, XCircle, CheckCircle2 } from "lucide-react";
+"use client";
 
-const noList = [
-  "Ranking comprado",
-  "Pago por aparecer primero",
-  "Comisión por lead o por mensaje",
-  "Créditos artificiales",
-];
-const yesList = [
-  "Calidad y trabajos reales",
-  "Valoraciones verificadas",
-  "Precio justo y transparente",
-  "Rapidez de respuesta",
-];
+import { Scale, XCircle, CheckCircle2 } from "lucide-react";
+import { useT } from "@/lib/i18n/context";
 
 export function FairRanking() {
+  const t = useT();
   return (
     <section className="relative overflow-hidden bg-gradient-brand text-white">
       <div className="absolute inset-0 bg-grid-soft bg-grid opacity-10" />
@@ -21,40 +12,37 @@ export function FairRanking() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-mint">
-              <Scale size={15} /> Ranking justo
+              <Scale size={15} /> {t.ui.homeSections.fairRanking.eyebrow}
             </span>
             <h2 className="mt-3 text-3xl lg:text-[2.4rem] font-bold tracking-tight text-balance">
-              En RegiKaha nadie paga por aparecer primero
+              {t.ui.homeSections.fairRanking.title}
             </h2>
-            <p className="mt-4 text-white/85 leading-relaxed max-w-xl">
-              Los profesionales destacan por su reputación, calidad, precio justo, trabajos reales y
-              valoraciones verificadas. Todos compiten por mérito, con las mismas reglas.
-            </p>
-            <p className="mt-4 text-white/85 leading-relaxed max-w-xl">
-              Las valoraciones son verificadas. Ningún profesional puede pagar para mejorar su
-              puntuación, ocultar opiniones legítimas o comprar posiciones.
-            </p>
+            {t.ui.homeSections.fairRanking.paragraphs.map((paragraph) => (
+              <p key={paragraph} className="mt-4 text-white/85 leading-relaxed max-w-xl">
+                {paragraph}
+              </p>
+            ))}
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="rounded-2xl bg-white/10 ring-1 ring-white/15 p-5 backdrop-blur">
-              <p className="font-semibold text-white/90 mb-3">Lo que no hacemos</p>
+              <p className="font-semibold text-white/90 mb-3">{t.ui.homeSections.fairRanking.noTitle}</p>
               <ul className="space-y-2.5">
-                {noList.map((t) => (
-                  <li key={t} className="flex items-start gap-2 text-sm text-white/85">
+                {t.ui.homeSections.fairRanking.noList.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-white/85">
                     <XCircle size={17} className="text-white/60 shrink-0 mt-0.5" />
-                    {t}
+                    {item}
                   </li>
                 ))}
               </ul>
             </div>
             <div className="rounded-2xl bg-white p-5 text-ink shadow-elevated">
-              <p className="font-semibold mb-3">Lo que premia el ranking</p>
+              <p className="font-semibold mb-3">{t.ui.homeSections.fairRanking.yesTitle}</p>
               <ul className="space-y-2.5">
-                {yesList.map((t) => (
-                  <li key={t} className="flex items-start gap-2 text-sm text-ink/80">
+                {t.ui.homeSections.fairRanking.yesList.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-ink/80">
                     <CheckCircle2 size={17} className="text-forest-600 shrink-0 mt-0.5" />
-                    {t}
+                    {item}
                   </li>
                 ))}
               </ul>

@@ -8,11 +8,11 @@ import { HeroSlideshow } from "@/components/home/HeroSlideshow";
 import { useT } from "@/lib/i18n/context";
 
 const heroSlides = [
-  { src: "/images/photos/ventanas.webp", alt: "Reforma con grandes ventanales" },
-  { src: "/images/photos/suelos.webp", alt: "Instalación de suelo premium" },
-  { src: "/images/photos/carpinteria.webp", alt: "Armario de carpintería a medida" },
-  { src: "/images/photos/puertas.webp", alt: "Instalación de puerta moderna" },
-  { src: "/images/photos/pavimentacion.webp", alt: "Pavimentación de patio exterior" },
+  { src: "/images/photos/ventanas.webp", alt: "" },
+  { src: "/images/photos/suelos.webp", alt: "" },
+  { src: "/images/photos/carpinteria.webp", alt: "" },
+  { src: "/images/photos/puertas.webp", alt: "" },
+  { src: "/images/photos/pavimentacion.webp", alt: "" },
 ];
 
 export function Hero() {
@@ -34,10 +34,10 @@ export function Hero() {
 
             <div className="mt-7 flex flex-wrap gap-3">
               <Link href="/publicar-proyecto" className="btn btn-primary text-base">
-                Publicar mi proyecto gratis <ArrowRight size={18} />
+                {t.ui.actions.publishProjectFree} <ArrowRight size={18} />
               </Link>
               <Link href="/mapa" className="btn btn-secondary text-base">
-                Buscar en el mapa
+                {t.ui.actions.searchMap}
               </Link>
               <Link href="/registro" className="btn btn-ghost text-base">
                 {t.actions.imPro}

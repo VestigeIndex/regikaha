@@ -1,5 +1,8 @@
+"use client";
+
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n/context";
 
 /** Estrellas de valoración con relleno parcial para decimales. */
 export function Stars({
@@ -45,8 +48,9 @@ export function RatingInline({
   count: number;
   size?: number;
 }) {
+  const t = useT();
   if (count === 0) {
-    return <span className="text-sm text-muted">Sin valoraciones todavía</span>;
+    return <span className="text-sm text-muted">{t.ui.common.noRatings}</span>;
   }
   return (
     <span className="inline-flex items-center gap-1.5 text-sm">

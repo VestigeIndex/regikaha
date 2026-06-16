@@ -6,9 +6,9 @@ import { GoogleConnectButton } from "@/components/auth/GoogleConnectButton";
 import { categories } from "@/lib/data/categories";
 import { integrations } from "@/lib/integrations";
 import { europeanCountryOptions } from "@/lib/market";
+import { useI18n, useT } from "@/lib/i18n/context";
+import { useContent } from "@/lib/i18n/useLocalizedContent";
 import { cn } from "@/lib/utils";
-
-const steps = ["Tu actividad", "Datos y zona", "Verificación"];
 
 type RegisterForm = {
   type: string;
@@ -53,6 +53,10 @@ const initialForm: RegisterForm = {
 };
 
 export function RegistroForm() {
+  const { locale } = useI18n();
+  const t = useT();
+  const content = useContent();
+  const steps = t.ui.register.steps;
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
   const [pending, setPending] = useState(false);
@@ -72,7 +76,7 @@ export function RegistroForm() {
     setPending(true);
     setError(null);
     try {
-      if (!selectedCats.length) throw new Error("Selecciona al menos una categoría profesional");
+      if (!selectedCats.length) throw new Error(t.ui.register.selectCategoryError);
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -85,10 +89,10 @@ export function RegistroForm() {
         }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "No se pudo crear el perfil");
+      if (!res.ok) throw new Error(data.error || t.ui.register.unableToCreate);
       setDone(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo crear el perfil");
+      setError(err instanceof Error ? err.message : t.ui.register.unableToCreate);
     } finally {
       setPending(false);
     }
@@ -109,14 +113,13 @@ export function RegistroForm() {
         <span className="mx-auto grid place-items-center h-16 w-16 rounded-2xl bg-forest-500/12 text-forest-600">
           <PartyPopper size={32} />
         </span>
-        <h2 className="mt-5 text-2xl font-bold text-ink">¡Bienvenido a RegiKaha!</h2>
+        <h2 className="mt-5 text-2xl font-bold text-ink">{t.ui.register.welcomeTitle}</h2>
         <p className="mt-3 text-muted leading-relaxed">
-          Tu perfil profesional ya está creado. Desde el panel puedes completar servicios,
-          logo, fotos de trabajos, mapa de operación y presupuestos iniciales.
+          {t.ui.register.welcomeText}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <a href="/panel" className="btn btn-primary">Ir a mi panel</a>
-          <a href="/panel/servicios" className="btn btn-secondary">Crear servicios</a>
+          <a href="/panel" className="btn btn-primary">{t.ui.register.goPanel}</a>
+          <a href="/panel/servicios" className="btn btn-secondary">{t.ui.register.createServices}</a>
         </div>
       </div>
     );
@@ -146,29 +149,29 @@ export function RegistroForm() {
 
         {step === 0 && (
           <div className="space-y-5 animate-fade-in">
-            <Legend icon={Building2} title="¿A qué te dedicas?" subtitle="Elige el tipo de profesional y tus categorías." />
+            <Legend icon={Building2} title={t.ui.register.legendActivityTitle} subtitle={t.ui.register.legendActivitySubtitle} />
             <div className="rounded-2xl bg-canvas p-4 ring-1 ring-forest-600/10">
-              <p className="text-sm font-semibold text-ink">Conecta tu cuenta profesional</p>
+              <p className="text-sm font-semibold text-ink">{t.ui.register.connectTitle}</p>
               <p className="text-sm text-muted mt-1">
-                Usa Google para iniciar sesión más rápido y dejar tu email verificado desde el primer paso.
+                {t.ui.register.connectText}
               </p>
               <div className="mt-3">
                 <GoogleConnectButton clientId={integrations.googleClientId} redirectTo="/registro" />
               </div>
             </div>
-            <Field label="Tipo de profesional">
+            <Field label={t.ui.register.professionalType}>
               <select className="reg-input" required value={form.type} onChange={(e) => update("type", e.target.value)}>
-                <option value="empresa_reformas">Empresa de reformas</option>
-                <option value="autonomo">Autónomo especializado</option>
-                <option value="instalador">Instalador autorizado</option>
-                <option value="estudio_arquitectura">Estudio de arquitectura</option>
-                <option value="ingenieria">Ingeniería / peritación</option>
-                <option value="multiservicio">Empresa multiservicio</option>
+                <option value="empresa_reformas">{t.ui.register.proTypes.empresa_reformas}</option>
+                <option value="autonomo">{t.ui.register.proTypes.autonomo}</option>
+                <option value="instalador">{t.ui.register.proTypes.instalador}</option>
+                <option value="estudio_arquitectura">{t.ui.register.proTypes.estudio_arquitectura}</option>
+                <option value="ingenieria">{t.ui.register.proTypes.ingenieria}</option>
+                <option value="multiservicio">{t.ui.register.proTypes.multiservicio}</option>
               </select>
             </Field>
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-muted mb-2">
-                Categorías ({selectedCats.length} seleccionadas)
+                {t.ui.common.categories} ({selectedCats.length} {t.ui.register.selectedCategories})
               </p>
               <div className="flex flex-wrap gap-2">
                 {categories.map((c) => (
@@ -183,12 +186,12 @@ export function RegistroForm() {
                         : "bg-white text-ink ring-forest-600/15 hover:bg-mint",
                     )}
                   >
-                    {c.name}
+                    {content.categories[c.id].name}
                   </button>
                 ))}
               </div>
             </div>
-            <Field label="Años de experiencia">
+            <Field label={t.ui.register.yearsExperience}>
               <input type="number" min={0} className="reg-input" value={form.yearsExperience} onChange={(e) => update("yearsExperience", e.target.value)} required />
             </Field>
           </div>
@@ -196,48 +199,47 @@ export function RegistroForm() {
 
         {step === 1 && (
           <div className="space-y-5 animate-fade-in">
-            <Legend icon={MapPin} title="Tus datos y zona de trabajo" subtitle="Para mostrar tu perfil y que te encuentren clientes en Europa, país y ciudad." />
+            <Legend icon={MapPin} title={t.ui.register.legendDataTitle} subtitle={t.ui.register.legendDataSubtitle} />
             <div className="grid sm:grid-cols-2 gap-4">
-              <Field label="Nombre comercial"><input className="reg-input" value={form.publicName} onChange={(e) => update("publicName", e.target.value)} placeholder="Ej. Reformas Costa" required /></Field>
-              <Field label="Nombre o razón social"><input className="reg-input" value={form.legalName} onChange={(e) => update("legalName", e.target.value)} placeholder="Ej. Reformas Costa S.L." required /></Field>
-              <Field label="NIF / CIF / VAT"><input className="reg-input" value={form.nifCif} onChange={(e) => update("nifCif", e.target.value)} placeholder="B-12345678" required /></Field>
-              <Field label="Teléfono"><input type="tel" className="reg-input" value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="+34 6XX XXX XXX" required /></Field>
-              <Field label="Email"><input type="email" className="reg-input" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="tu@email.com" required /></Field>
-              <Field label="Contraseña"><input type="password" className="reg-input" value={form.password} onChange={(e) => update("password", e.target.value)} placeholder="Mínimo 8 caracteres" /></Field>
-              <Field label="País">
+              <Field label={t.ui.register.publicName}><input className="reg-input" value={form.publicName} onChange={(e) => update("publicName", e.target.value)} required /></Field>
+              <Field label={t.ui.register.legalName}><input className="reg-input" value={form.legalName} onChange={(e) => update("legalName", e.target.value)} required /></Field>
+              <Field label={t.ui.register.nifCifVat}><input className="reg-input" value={form.nifCif} onChange={(e) => update("nifCif", e.target.value)} required /></Field>
+              <Field label={t.ui.common.phone}><input type="tel" className="reg-input" value={form.phone} onChange={(e) => update("phone", e.target.value)} required /></Field>
+              <Field label={t.ui.common.email}><input type="email" className="reg-input" value={form.email} onChange={(e) => update("email", e.target.value)} required /></Field>
+              <Field label={t.ui.register.password}><input type="password" className="reg-input" value={form.password} onChange={(e) => update("password", e.target.value)} /></Field>
+              <Field label={t.ui.common.country}>
                 <select className="reg-input" value={form.country} onChange={(e) => update("country", e.target.value)} required>
                   {europeanCountryOptions.map((country) => (
-                    <option key={country.code} value={country.code}>{country.name}</option>
+                    <option key={country.code} value={country.code}>{localizedCountry(country.code, locale)}</option>
                   ))}
                 </select>
               </Field>
-              <Field label="Región / provincia"><input className="reg-input" value={form.region} onChange={(e) => update("region", e.target.value)} placeholder="Ej. Comunidad de Madrid" required /></Field>
-              <Field label="Ciudad"><input className="reg-input" value={form.city} onChange={(e) => update("city", e.target.value)} placeholder="Ej. Madrid" required /></Field>
-              <Field label="Zona de servicio"><input className="reg-input" value={form.serviceArea} onChange={(e) => update("serviceArea", e.target.value)} placeholder="Ej. Madrid y alrededores" required /></Field>
+              <Field label={t.ui.common.region}><input className="reg-input" value={form.region} onChange={(e) => update("region", e.target.value)} required /></Field>
+              <Field label={t.ui.common.city}><input className="reg-input" value={form.city} onChange={(e) => update("city", e.target.value)} required /></Field>
+              <Field label={t.ui.register.serviceArea}><input className="reg-input" value={form.serviceArea} onChange={(e) => update("serviceArea", e.target.value)} required /></Field>
             </div>
-            <Field label="Titular SEO corto"><input className="reg-input" value={form.tagline} onChange={(e) => update("tagline", e.target.value)} placeholder="Ej. Reformas integrales con estimación inicial clara" required /></Field>
-            <Field label="Descripción pública">
-              <textarea className="reg-input resize-none" rows={4} value={form.description} onChange={(e) => update("description", e.target.value)} placeholder="Describe tu experiencia, tipo de trabajos y zonas donde operas." required />
+            <Field label={t.ui.register.seoTagline}><input className="reg-input" value={form.tagline} onChange={(e) => update("tagline", e.target.value)} required /></Field>
+            <Field label={t.ui.register.publicDescription}>
+              <textarea className="reg-input resize-none" rows={4} value={form.description} onChange={(e) => update("description", e.target.value)} required />
             </Field>
           </div>
         )}
 
         {step === 2 && (
           <div className="space-y-5 animate-fade-in">
-            <Legend icon={ShieldCheck} title="Verificación y normas" subtitle="La verificación genera confianza y mejora tu posición por mérito." />
+            <Legend icon={ShieldCheck} title={t.ui.register.verificationTitle} subtitle={t.ui.register.verificationSubtitle} />
             <div className="space-y-3">
-              <Toggle label="Tengo seguro de responsabilidad civil" on={form.insuranceDeclared} onChange={(v) => update("insuranceDeclared", v)} />
-              <Toggle label="Trabajo con factura" on={form.invoiceDeclared} onChange={(v) => update("invoiceDeclared", v)} />
-              <Toggle label="Puedo aportar documentación profesional / colegiación si aplica" on={form.docsDeclared} onChange={(v) => update("docsDeclared", v)} />
-              <Toggle label="Atiendo urgencias" on={form.offersUrgent} onChange={(v) => update("offersUrgent", v)} />
+              <Toggle label={t.ui.register.insurance} on={form.insuranceDeclared} onChange={(v) => update("insuranceDeclared", v)} />
+              <Toggle label={t.ui.register.invoice} on={form.invoiceDeclared} onChange={(v) => update("invoiceDeclared", v)} />
+              <Toggle label={t.ui.register.professionalDocs} on={form.docsDeclared} onChange={(v) => update("docsDeclared", v)} />
+              <Toggle label={t.ui.register.urgent} on={form.offersUrgent} onChange={(v) => update("offersUrgent", v)} />
             </div>
             <label className="flex items-start gap-3 rounded-xl bg-canvas p-4 cursor-pointer">
               <input type="checkbox" required className="mt-1 accent-[var(--primary)]" />
               <span className="text-sm text-ink/85">
-                Acepto las{" "}
-                <a href="/legal/terminos-profesionales" className="underline text-forest-700">condiciones para profesionales</a>,
-                la <a href="/legal/politica-verificacion" className="underline text-forest-700">política de verificación</a> y
-                el ranking justo de RegiKaha (sin pagos por posición).
+                {t.ui.register.termsText}
+                <a href="/legal/terminos-profesionales" className="underline text-forest-700">{t.ui.register.proTerms}</a>,{" "}
+                <a href="/legal/politica-verificacion" className="underline text-forest-700">{t.ui.register.verificationPolicy}</a> {t.ui.register.fairRanking}
               </span>
             </label>
           </div>
@@ -246,16 +248,24 @@ export function RegistroForm() {
         <div className="mt-7 flex items-center justify-between gap-3">
           {step > 0 ? (
             <button type="button" onClick={() => setStep((s) => s - 1)} className="btn btn-ghost">
-              <ArrowLeft size={16} /> Atrás
+              <ArrowLeft size={16} /> {t.ui.actions.back}
             </button>
           ) : <span />}
           <button type="submit" disabled={pending} className="btn btn-primary disabled:opacity-60">
-            {step < steps.length - 1 ? <>Continuar <ArrowRight size={16} /></> : <>{pending ? "Creando..." : "Crear mi perfil"} <Check size={16} /></>}
+            {step < steps.length - 1 ? <>{t.ui.actions.continue} <ArrowRight size={16} /></> : <>{pending ? t.ui.register.creating : t.ui.register.createProfile} <Check size={16} /></>}
           </button>
         </div>
       </form>
     </div>
   );
+}
+
+function localizedCountry(code: string, locale: string) {
+  try {
+    return new Intl.DisplayNames([locale], { type: "region" }).of(code) || code;
+  } catch {
+    return code;
+  }
 }
 
 function Legend({ icon: Icon, title, subtitle }: { icon: typeof Building2; title: string; subtitle: string }) {

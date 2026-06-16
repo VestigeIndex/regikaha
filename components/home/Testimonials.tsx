@@ -6,16 +6,20 @@ import { Stars } from "@/components/ui/Stars";
 import { Avatar } from "@/components/ui/Avatar";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { publishedReviews, getProfessionalById } from "@/lib/data";
+import { useT } from "@/lib/i18n/context";
+import { useContent } from "@/lib/i18n/useLocalizedContent";
 
 const featured = publishedReviews
   .filter((r) => r.rating >= 4 && r.comment.length > 60)
   .slice(0, 7)
   .map((r) => {
     const pro = getProfessionalById(r.professionalId);
-    return { ...r, proName: pro?.publicName ?? "Profesional", proColor: pro?.logoColor ?? "#198C68" };
+    return { ...r, proName: pro?.publicName, proColor: pro?.logoColor ?? "#198C68" };
   });
 
 export function Testimonials() {
+  const t = useT();
+  const content = useContent();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const count = featured.length;
@@ -34,9 +38,9 @@ export function Testimonials() {
     <section className="bg-canvas border-y hairline">
       <div className="container-x py-16 lg:py-20">
         <SectionHeading
-          eyebrow="Testimonios"
-          title="Lo que dicen los clientes de RegiKaha"
-          description="Reseñas verificadas de clientes con un servicio realizado. Sin valoraciones compradas."
+          eyebrow={t.ui.homeSections.testimonials.eyebrow}
+          title={t.ui.homeSections.testimonials.title}
+          description={t.ui.homeSections.testimonials.description}
           align="center"
         />
 
@@ -47,24 +51,27 @@ export function Testimonials() {
         >
           <div className="overflow-hidden">
             <div className="slide-track" style={{ transform: `translateX(-${index * 100}%)` }}>
-              {featured.map((r) => (
+              {featured.map((r) => {
+                const localized = content.reviews[r.id];
+                return (
                 <figure key={r.id} className="w-full shrink-0 px-1">
                   <div className="card p-7 sm:p-9 text-center relative">
                     <Quote size={40} className="mx-auto text-forest-200" />
                     <Stars value={r.rating} size={18} className="justify-center mt-4" />
                     <blockquote className="mt-4 text-lg sm:text-xl text-ink leading-relaxed text-balance">
-                      “{r.comment}”
+                      “{localized.comment}”
                     </blockquote>
                     <figcaption className="mt-6 flex items-center justify-center gap-3">
-                      <Avatar name={r.clientName} color={r.proColor} size={40} />
+                      <Avatar name={localized.clientName} color={r.proColor} size={40} />
                       <div className="text-left">
-                        <p className="font-semibold text-ink text-sm">{r.clientName}</p>
-                        <p className="text-xs text-muted">{r.serviceLabel} · {r.proName}</p>
+                        <p className="font-semibold text-ink text-sm">{localized.clientName}</p>
+                        <p className="text-xs text-muted">{localized.serviceLabel} · {r.proName ?? t.ui.cards.reviewProfessionalFallback}</p>
                       </div>
                     </figcaption>
                   </div>
                 </figure>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -73,7 +80,7 @@ export function Testimonials() {
               type="button"
               onClick={() => go(index - 1)}
               className="grid place-items-center h-10 w-10 rounded-full bg-white ring-1 ring-forest-600/15 text-forest-700 hover:bg-mint transition-colors"
-              aria-label="Testimonio anterior"
+              aria-label={t.ui.homeSections.testimonials.previous}
             >
               <ChevronLeft size={18} />
             </button>
@@ -83,7 +90,7 @@ export function Testimonials() {
                   key={i}
                   type="button"
                   onClick={() => go(i)}
-                  aria-label={`Ir al testimonio ${i + 1}`}
+                  aria-label={`${t.ui.homeSections.testimonials.goTo} ${i + 1}`}
                   className={
                     "h-2 rounded-full transition-all " +
                     (i === index ? "w-6 bg-forest-600" : "w-2 bg-forest-300/60 hover:bg-forest-400")
@@ -95,7 +102,7 @@ export function Testimonials() {
               type="button"
               onClick={() => go(index + 1)}
               className="grid place-items-center h-10 w-10 rounded-full bg-white ring-1 ring-forest-600/15 text-forest-700 hover:bg-mint transition-colors"
-              aria-label="Siguiente testimonio"
+              aria-label={t.ui.homeSections.testimonials.next}
             >
               <ChevronRight size={18} />
             </button>

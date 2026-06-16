@@ -15,10 +15,10 @@ export function FinalCTA() {
         <p className="mt-4 text-muted leading-relaxed max-w-xl mx-auto">{t.finalCta.text}</p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">
           <Link href="/publicar-proyecto" className="btn btn-primary text-base">
-            Publicar proyecto gratis <ArrowRight size={18} />
+            {t.ui.actions.publishProjectFree} <ArrowRight size={18} />
           </Link>
           <Link href="/mapa" className="btn btn-secondary text-base">
-            Buscar en el mapa
+            {t.ui.actions.searchMap}
           </Link>
           <Link href="/registro" className="btn btn-secondary text-base">
             {t.actions.joinPro}

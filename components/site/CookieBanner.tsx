@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Cookie } from "lucide-react";
+import { useT } from "@/lib/i18n/context";
 
 const KEY = "regikaha-cookie-consent";
 
 export function CookieBanner() {
+  const t = useT();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -36,19 +38,18 @@ export function CookieBanner() {
             <Cookie size={20} />
           </span>
           <p className="text-sm text-ink/80 leading-relaxed flex-1">
-            Usamos cookies necesarias para que RegiKaha funcione y, con tu permiso, cookies para
-            mejorar la experiencia. Consulta nuestra{" "}
+            {t.ui.cookie.textBeforeLink}
             <Link href="/legal/cookies" className="underline text-forest-700 hover:text-forest-800">
-              política de cookies
+              {t.ui.cookie.link}
             </Link>
-            .
+            {t.ui.cookie.textAfterLink}
           </p>
           <div className="flex gap-2 shrink-0 w-full sm:w-auto">
             <button onClick={() => decide("rejected")} className="btn btn-secondary text-sm flex-1 sm:flex-none">
-              Rechazar
+              {t.ui.actions.reject}
             </button>
             <button onClick={() => decide("accepted")} className="btn btn-primary text-sm flex-1 sm:flex-none">
-              Aceptar
+              {t.ui.actions.accept}
             </button>
           </div>
         </div>

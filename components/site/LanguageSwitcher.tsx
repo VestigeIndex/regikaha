@@ -6,7 +6,17 @@ import { useI18n } from "@/lib/i18n/context";
 import { localeList, localeMeta } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
 
-/** Selector de idioma con banderas para las 24 lenguas de la UE. */
+function Flag({ country, label }: { country: string; label: string }) {
+  return (
+    <span
+      className={cn("fi rounded-[2px] shadow-[0_0_0_1px_rgba(15,92,74,0.16)]", `fi-${country}`)}
+      aria-label={label}
+      role="img"
+    />
+  );
+}
+
+/** Selector de idioma con banderas SVG para los idiomas operativos. */
 export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   const { locale, setLocale, t } = useI18n();
   const [open, setOpen] = useState(false);
@@ -34,7 +44,7 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
         aria-expanded={open}
       >
         <Globe size={16} className="text-forest-500" />
-        <span className="text-base leading-none" aria-hidden="true">{current.flag}</span>
+        <Flag country={current.flagCountry} label={current.english} />
         {!compact && <span className="uppercase text-xs">{current.code}</span>}
         <ChevronDown size={14} className={cn("transition-transform", open && "rotate-180")} />
       </button>
@@ -56,7 +66,7 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
                     l.code === locale ? "bg-forest-500/10 text-forest-800 font-medium" : "text-ink/80 hover:bg-forest-500/6",
                   )}
                 >
-                  <span className="text-base leading-none" aria-hidden="true">{l.flag}</span>
+                  <Flag country={l.flagCountry} label={l.english} />
                   <span className="flex-1 text-left">{l.native}</span>
                   {l.code === locale && <Check size={15} className="text-forest-600" />}
                 </button>

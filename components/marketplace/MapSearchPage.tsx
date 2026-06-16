@@ -5,10 +5,13 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Building2, Crosshair, ListFilter, Map, MapPin, Search, SlidersHorizontal, Star, X } from "lucide-react";
 import type { Professional, SearchFilters, SortOption } from "@/lib/types";
-import { categories, languageOptions, searchProfessionals } from "@/lib/data";
+import { categories, searchProfessionals } from "@/lib/data";
 import { citySearchLocations, countrySearchLocations, getLocationBySlug } from "@/lib/data/locations";
-import { europeMarket, europeanCountryOptions } from "@/lib/market";
-import { coverageStatus, primaryCategoryName } from "@/lib/geo";
+import { europeanCountryOptions } from "@/lib/market";
+import { coverageStatus } from "@/lib/geo";
+import { type Locale } from "@/lib/i18n/config";
+import { useI18n, useT } from "@/lib/i18n/context";
+import { useContent, useLocalizedProfessional } from "@/lib/i18n/useLocalizedContent";
 import { cn } from "@/lib/utils";
 import { ProfessionalCard } from "@/components/marketplace/ProfessionalCard";
 import { CoverageBadge } from "@/components/marketplace/CoverageBadge";
@@ -16,49 +19,35 @@ import { FavoriteButton } from "@/components/marketplace/FavoriteButton";
 import { CompareButton } from "@/components/marketplace/CompareButton";
 import { RegiKahaMap } from "@/components/map/RegiKahaMap";
 
-const sortLabels: Record<SortOption, string> = {
-  relevance: "Más relevante",
-  rating: "Mejor valoración",
-  price: "Precio orientativo",
-  projects: "Más proyectos",
-  response: "Respuesta rápida",
-  experience: "Más experiencia",
-};
-
-const proTypes: { value: string; label: string }[] = [
-  { value: "", label: "Cualquier tipo" },
-  { value: "empresa_reformas", label: "Empresa de reformas" },
-  { value: "autonomo", label: "Autónomo" },
-  { value: "instalador", label: "Instalador" },
-  { value: "estudio_arquitectura", label: "Arquitectura" },
-  { value: "ingenieria", label: "Ingeniería" },
-  { value: "multiservicio", label: "Multiservicio" },
-];
-
-function countryName(code: string): string {
-  return europeanCountryOptions.find((country) => country.code === code)?.name || code || europeMarket.primaryCountry;
+function countryName(code: string, locale: Locale): string {
+  try {
+    return new Intl.DisplayNames([locale], { type: "region" }).of(code.toUpperCase()) || code;
+  } catch {
+    return europeanCountryOptions.find((country) => country.code === code)?.name || code;
+  }
 }
 
 function parseLanguages(value: unknown): string[] {
   if (Array.isArray(value)) return value.map(String);
-  if (typeof value !== "string") return ["Español"];
+  if (typeof value !== "string") return [];
   try {
     const parsed = JSON.parse(value);
-    return Array.isArray(parsed) && parsed.length ? parsed.map(String) : ["Español"];
+    return Array.isArray(parsed) && parsed.length ? parsed.map(String) : [];
   } catch {
-    return ["Español"];
+    return [];
   }
 }
 
-function mapRemoteProfessional(row: any): Professional {
-  const countryCode = row.country || europeMarket.primaryCountryCode;
+function mapRemoteProfessional(row: any, locale: Locale, professionalLabel: string): Professional {
+  const countryCode = row.country || "ES";
+  const country = countryName(countryCode, locale);
   return {
     id: row.id,
     userId: row.user_id || "",
     slug: row.slug,
     type: row.type || "autonomo",
-    typeLabel: row.type_label || "Profesional",
-    publicName: row.public_name || "Profesional RegiKaha",
+    typeLabel: row.type_label || professionalLabel,
+    publicName: row.public_name || `${professionalLabel} RegiKaha`,
     legalName: row.legal_name || "",
     nifCif: row.nif_cif || "",
     email: row.email || "",
@@ -67,9 +56,9 @@ function mapRemoteProfessional(row: any): Professional {
     province: row.region || "",
     autonomousCommunity: row.region || "",
     countryCode,
-    country: countryName(countryCode),
-    locationSlug: (row.city || row.country || "europa").toString().toLowerCase(),
-    serviceArea: [row.city, row.region, countryName(countryCode)].filter(Boolean).join(", "),
+    country,
+    locationSlug: (row.city || row.country || "market").toString().toLowerCase(),
+    serviceArea: [row.city, row.region, country].filter(Boolean).join(", "),
     serviceRadiusKm: Number(row.service_radius_km || 30),
     categoryIds: row.category_ids || [],
     specialties: [],
@@ -97,6 +86,9 @@ function mapRemoteProfessional(row: any): Professional {
 }
 
 export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) {
+  const { locale } = useI18n();
+  const t = useT();
+  const content = useContent();
   const params = useSearchParams();
   const [filters, setFilters] = useState<SearchFilters>({});
   const [sort, setSort] = useState<SortOption>("relevance");
@@ -134,7 +126,7 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
         if (!res.ok) return;
         const data = await res.json();
         if (!cancelled) {
-          setRemoteResults((data.results || []).map(mapRemoteProfessional));
+          setRemoteResults((data.results || []).map((row: any) => mapRemoteProfessional(row, locale, t.ui.nav.forPros)));
           setRemoteLoaded(true);
         }
       } catch {
@@ -145,7 +137,7 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
     return () => {
       cancelled = true;
     };
-  }, [remoteQuery]);
+  }, [locale, remoteQuery, t.ui.nav.forPros]);
 
   const results = useMemo(() => {
     if (!remoteLoaded) return localResults;
@@ -175,73 +167,75 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-ink inline-flex items-center gap-2">
-          <SlidersHorizontal size={17} className="text-forest-600" /> Filtros
+          <SlidersHorizontal size={17} className="text-forest-600" /> {t.ui.searchPage.filters}
         </h2>
         {activeCount > 0 && (
           <button onClick={clearAll} className="text-xs font-medium text-forest-700 hover:underline">
-            Limpiar ({activeCount})
+            {t.ui.searchPage.clear} ({activeCount})
           </button>
         )}
       </div>
 
-      <Field label="Buscar">
+      <Field label={t.ui.searchPage.searchLabel}>
         <div className="flex items-center gap-2 rounded-xl bg-canvas px-3 py-2.5">
           <Search size={16} className="text-forest-500" />
           <input
             value={filters.query ?? ""}
             onChange={(e) => update("query", e.target.value || undefined)}
-            placeholder="Servicio, obra, subcontrata..."
+            placeholder={t.ui.searchPage.searchPlaceholder}
             className="w-full bg-transparent text-sm outline-none text-ink placeholder:text-muted"
           />
         </div>
       </Field>
 
-      <Field label="Ubicación">
+      <Field label={t.ui.searchPage.locationLabel}>
         <Select value={filters.locationSlug ?? ""} onChange={(value) => update("locationSlug", value || undefined)}>
-          <option value="">{europeMarket.label}</option>
-          <optgroup label="País">
+          <option value="">{t.ui.searchPage.allEurope}</option>
+          <optgroup label={t.ui.searchPage.countryGroup}>
             {countrySearchLocations.map((location) => (
-              <option key={location.slug} value={location.slug}>{location.label}</option>
+              <option key={location.slug} value={location.slug}>{countryName(location.countryCode, locale)}</option>
             ))}
           </optgroup>
-          <optgroup label="Ciudad o región">
+          <optgroup label={t.ui.searchPage.cityRegionGroup}>
             {citySearchLocations.map((location) => (
-              <option key={location.slug} value={location.slug}>{location.label}</option>
+              <option key={location.slug} value={location.slug}>
+                {[location.city, countryName(location.countryCode, locale)].filter(Boolean).join(", ")}
+              </option>
             ))}
           </optgroup>
         </Select>
       </Field>
 
-      <Field label="Categoría">
+      <Field label={t.ui.common.category}>
         <Select value={filters.categoryId ?? ""} onChange={(value) => update("categoryId", value || undefined)}>
-          <option value="">Todas las categorías</option>
+          <option value="">{t.ui.searchPage.allCategories}</option>
           {categories.map((category) => (
-            <option key={category.id} value={category.id}>{category.name}</option>
+            <option key={category.id} value={category.id}>{content.categories[category.id].name}</option>
           ))}
         </Select>
       </Field>
 
-      <Field label="Tipo de profesional">
+      <Field label={t.ui.searchPage.proTypeLabel}>
         <Select
           value={filters.professionalType ?? ""}
           onChange={(value) => update("professionalType", (value || undefined) as SearchFilters["professionalType"])}
         >
-          {proTypes.map((type) => (
+          {t.ui.searchPage.proTypes.map((type) => (
             <option key={type.value} value={type.value}>{type.label}</option>
           ))}
         </Select>
       </Field>
 
-      <Field label="Idioma">
+      <Field label={t.ui.searchPage.languageLabel}>
         <Select value={filters.language ?? ""} onChange={(value) => update("language", value || undefined)}>
-          <option value="">Cualquier idioma</option>
-          {languageOptions.slice(0, 12).map((language) => (
-            <option key={language} value={language}>{language}</option>
+          <option value="">{t.ui.searchPage.anyLanguage}</option>
+          {content.languageOptions.map((language) => (
+            <option key={language.value} value={language.value}>{language.label}</option>
           ))}
         </Select>
       </Field>
 
-      <Field label="Valoración mínima">
+      <Field label={t.ui.searchPage.minRating}>
         <div className="flex gap-1.5">
           {[0, 3, 4, 4.5].map((rating) => (
             <button
@@ -254,19 +248,19 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
                   : "bg-white text-ink ring-forest-600/15 hover:bg-mint",
               )}
             >
-              {rating === 0 ? "Todas" : <>{rating}<Star size={11} fill="currentColor" /></>}
+              {rating === 0 ? t.ui.common.all : <>{rating}<Star size={11} fill="currentColor" /></>}
             </button>
           ))}
         </div>
       </Field>
 
-      <Field label="Características">
+      <Field label={t.ui.searchPage.features}>
         <div className="space-y-2.5">
-          <Check label="Solo verificados" checked={!!filters.verifiedOnly} onChange={() => toggle("verifiedOnly")} />
-          <Check label="Trabaja con factura" checked={!!filters.withInvoice} onChange={() => toggle("withInvoice")} />
-          <Check label="Con seguro de R. C." checked={!!filters.withInsurance} onChange={() => toggle("withInsurance")} />
-          <Check label="Atiende urgencias" checked={!!filters.urgentOnly} onChange={() => toggle("urgentOnly")} />
-          <Check label="Con portfolio" checked={!!filters.withPortfolio} onChange={() => toggle("withPortfolio")} />
+          <Check label={t.ui.searchPage.verifiedOnly} checked={!!filters.verifiedOnly} onChange={() => toggle("verifiedOnly")} />
+          <Check label={t.ui.searchPage.withInvoice} checked={!!filters.withInvoice} onChange={() => toggle("withInvoice")} />
+          <Check label={t.ui.searchPage.withInsurance} checked={!!filters.withInsurance} onChange={() => toggle("withInsurance")} />
+          <Check label={t.ui.searchPage.urgentOnly} checked={!!filters.urgentOnly} onChange={() => toggle("urgentOnly")} />
+          <Check label={t.ui.searchPage.withPortfolio} checked={!!filters.withPortfolio} onChange={() => toggle("withPortfolio")} />
         </div>
       </Field>
     </div>
@@ -278,25 +272,25 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
         <div className="flex flex-wrap items-center gap-2">
           <CoverageBadge status={coverage} />
           <span className="text-sm text-muted">
-            <strong className="text-ink">{results.length}</strong> profesionales y empresas visibles en esta búsqueda.
+            <strong className="text-ink">{results.length}</strong> {t.ui.searchPage.visibleSummary}
           </span>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link href="/publicar-proyecto" className="btn btn-primary text-sm">
-            Publicar mi proyecto gratis
+            {t.ui.actions.publishProjectFree}
           </Link>
           <Link href="/registro" className="btn btn-secondary text-sm">
-            Soy profesional en esta zona
+            {t.ui.actions.imProZone}
           </Link>
         </div>
       </div>
 
       <div className="lg:hidden mb-4 grid grid-cols-2 gap-2 rounded-xl bg-canvas p-1">
         <button onClick={() => setMobileView("list")} className={cn("rounded-lg px-3 py-2 text-sm font-semibold", mobileView === "list" ? "bg-white shadow-soft text-ink" : "text-muted")}>
-          Lista
+          {t.ui.searchPage.list}
         </button>
         <button onClick={() => setMobileView("map")} className={cn("rounded-lg px-3 py-2 text-sm font-semibold", mobileView === "map" ? "bg-white shadow-soft text-ink" : "text-muted")}>
-          Mapa
+          {t.ui.searchPage.map}
         </button>
       </div>
 
@@ -308,13 +302,13 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
         <div className={cn("min-w-0", mobileView === "map" && "hidden lg:block")}>
           <div className="mb-4 flex items-center justify-between gap-3 flex-wrap">
             <button onClick={() => setFiltersOpen(true)} className="lg:hidden btn btn-secondary text-sm py-2">
-              <ListFilter size={15} /> Filtros{activeCount > 0 ? ` (${activeCount})` : ""}
+              <ListFilter size={15} /> {t.ui.searchPage.filters}{activeCount > 0 ? ` (${activeCount})` : ""}
             </button>
             <label className="ml-auto inline-flex items-center gap-2 text-sm">
-              <span className="text-muted hidden sm:inline">Ordenar:</span>
+              <span className="text-muted hidden sm:inline">{t.ui.searchPage.sort}</span>
               <Select value={sort} onChange={(value) => setSort(value as SortOption)} compact>
-                {(Object.keys(sortLabels) as SortOption[]).map((key) => (
-                  <option key={key} value={key}>{sortLabels[key]}</option>
+                {(Object.keys(t.ui.searchPage.sortLabels) as SortOption[]).map((key) => (
+                  <option key={key} value={key}>{t.ui.searchPage.sortLabels[key]}</option>
                 ))}
               </Select>
             </label>
@@ -345,17 +339,17 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
             </div>
             {selected && (
               <div className="border-t hairline p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-muted">Seleccionado en el mapa</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted">{t.ui.searchPage.selectedOnMap}</p>
                 <div className="mt-2 flex items-start justify-between gap-3">
                   <div>
                     <h3 className="font-bold text-ink">{selected.publicName}</h3>
-                    <p className="text-sm text-muted">{primaryCategoryName(selected)} · {selected.city || selected.serviceArea}</p>
+                    <SelectedMeta professional={selected} />
                   </div>
-                  <span className="chip">{selected.averageRating ? `${selected.averageRating}/5` : "Nuevo"}</span>
+                  <span className="chip">{selected.averageRating ? `${selected.averageRating}/5` : t.ui.common.new}</span>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <Link href={`/profesionales/${selected.slug}`} className="btn btn-primary text-sm py-2">Ver perfil</Link>
-                  <Link href={`/profesionales/${selected.slug}#solicitar`} className="btn btn-secondary text-sm py-2">Pedir pre-presupuesto</Link>
+                  <Link href={`/profesionales/${selected.slug}`} className="btn btn-primary text-sm py-2">{t.ui.actions.viewProfile}</Link>
+                  <Link href={`/profesionales/${selected.slug}#solicitar`} className="btn btn-secondary text-sm py-2">{t.ui.actions.requestPreEstimate}</Link>
                   <FavoriteButton compact />
                   <CompareButton compact />
                 </div>
@@ -366,9 +360,9 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
       </div>
 
       <section className="mt-8 grid gap-4 lg:grid-cols-3">
-        <InfoCard icon={Map} title="Mapa europeo" text="Explora profesionales, empresas y subcontratas por país, ciudad, categoría, valoración y disponibilidad." />
-        <InfoCard icon={Crosshair} title="Zonas sin cobertura" text="Si aún no hay profesionales en una zona, capturamos tu demanda y activamos captación local." />
-        <InfoCard icon={Building2} title="B2B y subcontratas" text="Constructoras y empresas pueden publicar necesidades de subcontrata por especialidad y ciudad." />
+        <InfoCard icon={Map} title={t.ui.searchPage.infoCards[0].title} text={t.ui.searchPage.infoCards[0].text} />
+        <InfoCard icon={Crosshair} title={t.ui.searchPage.infoCards[1].title} text={t.ui.searchPage.infoCards[1].text} />
+        <InfoCard icon={Building2} title={t.ui.searchPage.infoCards[2].title} text={t.ui.searchPage.infoCards[2].text} />
       </section>
 
       {filtersOpen && (
@@ -376,14 +370,14 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
           <div className="absolute inset-0 bg-ink/40" onClick={() => setFiltersOpen(false)} />
           <div className="relative ml-auto h-full w-[88%] max-w-sm bg-white overflow-y-auto p-5 animate-fade-in">
             <div className="flex items-center justify-between mb-4">
-              <span className="font-semibold text-ink">Filtros</span>
-              <button onClick={() => setFiltersOpen(false)} className="grid place-items-center h-9 w-9 rounded-lg hover:bg-canvas" aria-label="Cerrar filtros">
+              <span className="font-semibold text-ink">{t.ui.searchPage.filters}</span>
+              <button onClick={() => setFiltersOpen(false)} className="grid place-items-center h-9 w-9 rounded-lg hover:bg-canvas" aria-label={t.ui.nav.closeMenu}>
                 <X size={20} />
               </button>
             </div>
             {filtersUI}
             <button onClick={() => setFiltersOpen(false)} className="btn btn-primary w-full mt-6">
-              Ver {results.length} {results.length === 1 ? "resultado" : "resultados"}
+              {t.ui.searchPage.showResults} {results.length} {results.length === 1 ? t.ui.common.result : t.ui.common.results}
             </button>
           </div>
         </div>
@@ -392,17 +386,32 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
   );
 }
 
+function SelectedMeta({ professional }: { professional: Professional }) {
+  const content = useContent();
+  const displayProfessional = useLocalizedProfessional(professional);
+  const primaryCategory = displayProfessional.categoryIds[0]
+    ? content.categories[displayProfessional.categoryIds[0]]?.name
+    : undefined;
+
+  return (
+    <p className="text-sm text-muted">
+      {[primaryCategory, displayProfessional.city || displayProfessional.serviceArea].filter(Boolean).join(" · ")}
+    </p>
+  );
+}
+
 function NoCoverageState() {
+  const t = useT();
   return (
     <div className="card p-8 text-center">
       <MapPin size={28} className="mx-auto text-forest-600" />
-      <h2 className="mt-3 font-bold text-ink">Estamos verificando profesionales en esta zona</h2>
+      <h2 className="mt-3 font-bold text-ink">{t.ui.searchPage.noCoverageTitle}</h2>
       <p className="mt-2 text-sm text-muted leading-relaxed">
-        Publica tu proyecto gratis y te avisaremos cuando haya opciones disponibles. También activaremos captación de profesionales fundadores en esa ciudad y categoría.
+        {t.ui.searchPage.noCoverageText}
       </p>
       <div className="mt-5 flex flex-wrap justify-center gap-2">
-        <Link href="/publicar-proyecto" className="btn btn-primary text-sm">Publicar proyecto gratis</Link>
-        <Link href="/registro" className="btn btn-secondary text-sm">Soy profesional en esta zona</Link>
+        <Link href="/publicar-proyecto" className="btn btn-primary text-sm">{t.ui.actions.publishProjectFree}</Link>
+        <Link href="/registro" className="btn btn-secondary text-sm">{t.ui.actions.imProZone}</Link>
       </div>
     </div>
   );

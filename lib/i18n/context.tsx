@@ -4,9 +4,10 @@ import { createContext, useContext, useState, useEffect, useCallback, type React
 import { type Locale, defaultLocale, isLocale, localeMeta } from "./config";
 import { dictionaries, type Dictionary } from "./dictionaries";
 import { homeDictionaries, type HomeDict } from "./home";
+import { uiDictionaries, type UiDict } from "./ui";
 
 /** Diccionario completo (base + extensión de home). */
-export type FullDict = Dictionary & HomeDict;
+export type FullDict = Dictionary & HomeDict & { ui: UiDict };
 
 interface I18nValue {
   locale: Locale;
@@ -58,7 +59,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const t: FullDict = { ...dictionaries[locale], ...homeDictionaries[locale] };
+  const t: FullDict = { ...dictionaries[locale], ...homeDictionaries[locale], ui: uiDictionaries[locale] };
 
   return (
     <I18nContext.Provider value={{ locale, setLocale, t }}>

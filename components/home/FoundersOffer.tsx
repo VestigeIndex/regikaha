@@ -1,9 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { Sparkles, Check } from "lucide-react";
 import { site } from "@/lib/site";
 import { getPlatformStats } from "@/lib/data";
+import { useT } from "@/lib/i18n/context";
 
 export function FoundersOffer() {
+  const t = useT();
   const stats = getPlatformStats();
   const claimed = site.founderSlots - stats.foundersRemaining;
   const pct = Math.min(100, Math.round((claimed / site.founderSlots) * 100));
@@ -16,21 +20,23 @@ export function FoundersOffer() {
         <div className="relative p-8 sm:p-12 grid lg:grid-cols-2 gap-10 items-center">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full bg-forest-500/20 text-mint px-3 py-1 text-xs font-semibold ring-1 ring-forest-500/30">
-              <Sparkles size={14} /> Oferta fundadores
+              <Sparkles size={14} /> {t.ui.homeSections.founders.eyebrow}
             </span>
             <h2 className="mt-4 text-3xl lg:text-[2.3rem] font-bold tracking-tight text-balance">
-              Los primeros {site.founderSlots} profesionales verificados:{" "}
-              <span className="text-mint">{site.founderFreeMonths} meses gratis</span>
+              {t.ui.homeSections.founders.titleBefore} {site.founderSlots} {t.ui.cards.categoryCountPlural}{" "}
+              {t.ui.badges.verified.toLowerCase()}:{" "}
+              <span className="text-mint">{site.founderFreeMonths} {t.ui.homeSections.founders.titleHighlight}</span>
             </h2>
             <p className="mt-4 text-white/80 leading-relaxed max-w-xl">
-              Únete como miembro fundador de RegiKaha Pro. Después: {site.founderPrice.monthly} o{" "}
-              {site.founderPrice.yearly}. Sin comisiones por lead. Sin rankings comprados.
+              {t.ui.homeSections.founders.textBeforeMonthly} {site.founderPrice.monthly}{" "}
+              {t.ui.homeSections.founders.textBetweenPrices} {site.founderPrice.yearly}.{" "}
+              {t.ui.homeSections.founders.textAfterYearly}
             </p>
 
             <div className="mt-6 max-w-md">
               <div className="flex justify-between text-sm text-white/70 mb-2">
-                <span>{claimed} plazas reservadas</span>
-                <span>{stats.foundersRemaining} disponibles</span>
+                <span>{claimed} {t.ui.homeSections.founders.reserved}</span>
+                <span>{stats.foundersRemaining} {t.ui.homeSections.founders.available}</span>
               </div>
               <div className="h-2.5 rounded-full bg-white/15 overflow-hidden">
                 <div className="h-full rounded-full bg-gradient-to-r from-forest-500 to-mint" style={{ width: `${pct}%` }} />
@@ -38,22 +44,15 @@ export function FoundersOffer() {
             </div>
 
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/registro" className="btn btn-white text-base">Unirme como fundador</Link>
+              <Link href="/registro" className="btn btn-white text-base">{t.ui.homeSections.founders.join}</Link>
               <Link href="/fundadores" className="btn text-base text-white ring-1 ring-white/25 hover:bg-white/10">
-                Ver condiciones
+                {t.ui.homeSections.founders.conditions}
               </Link>
             </div>
           </div>
 
           <ul className="space-y-3">
-            {[
-              "Página profesional con SEO propio",
-              "Portfolio y servicios ilimitados",
-              "Solicitudes de clientes directas",
-              "Reseñas verificadas",
-              "Ranking justo, sin pagar por leads",
-              "Cuota fija simple, sin sorpresas",
-            ].map((b) => (
+            {t.ui.homeSections.founders.benefits.map((b) => (
               <li key={b} className="flex items-center gap-3 rounded-xl bg-white/8 ring-1 ring-white/10 px-4 py-3">
                 <span className="grid place-items-center h-6 w-6 rounded-full bg-forest-500 text-white shrink-0">
                   <Check size={14} />

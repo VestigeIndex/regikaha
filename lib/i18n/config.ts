@@ -1,21 +1,23 @@
 /**
  * Configuración i18n de RegiKaha — nivel europeo.
  *
- * Cubre las 24 lenguas oficiales de la Unión Europea. Cada idioma debe tener
- * el diccionario COMPLETO (sin fallback): la completitud se fuerza por tipos
- * en `dictionaries.ts` (cada locale se tipa como `Dictionary`), de modo que si
- * falta una clave el build falla.
+ * Cubre los idiomas operativos de los países objetivo:
+ * España, Francia, Italia, Portugal, Suiza, Alemania, Países Bajos,
+ * Bélgica, Irlanda y Reino Unido.
+ *
+ * Cada idioma debe tener el diccionario COMPLETO (sin fallback): la completitud
+ * se fuerza por tipos en los diccionarios, de modo que si falta una clave el
+ * build falla.
  */
 
 export const locales = [
-  "bg", "hr", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "hu",
-  "ga", "it", "lv", "lt", "mt", "pl", "pt", "ro", "sk", "sl", "es", "sv",
+  "es", "fr", "it", "pt", "de", "nl", "en",
 ] as const;
 
 export type Locale = (typeof locales)[number];
 
-/** Idioma por defecto (base del contenido). Se detecta el del navegador en cliente. */
-export const defaultLocale: Locale = "en";
+/** Idioma por defecto del mercado inicial. Se detecta el del navegador en cliente. */
+export const defaultLocale: Locale = "es";
 
 export interface LocaleMeta {
   code: Locale;
@@ -23,37 +25,20 @@ export interface LocaleMeta {
   native: string;
   /** Nombre en inglés (para accesibilidad). */
   english: string;
-  /** Bandera (emoji) representativa. */
-  flag: string;
+  /** Código ISO 3166 usado por flag-icons para renderizar SVG real. */
+  flagCountry: string;
   /** Dirección del texto. */
   dir: "ltr" | "rtl";
 }
 
 export const localeMeta: Record<Locale, LocaleMeta> = {
-  bg: { code: "bg", native: "Български", english: "Bulgarian", flag: "🇧🇬", dir: "ltr" },
-  hr: { code: "hr", native: "Hrvatski", english: "Croatian", flag: "🇭🇷", dir: "ltr" },
-  cs: { code: "cs", native: "Čeština", english: "Czech", flag: "🇨🇿", dir: "ltr" },
-  da: { code: "da", native: "Dansk", english: "Danish", flag: "🇩🇰", dir: "ltr" },
-  nl: { code: "nl", native: "Nederlands", english: "Dutch", flag: "🇳🇱", dir: "ltr" },
-  en: { code: "en", native: "English", english: "English", flag: "🇪🇺", dir: "ltr" },
-  et: { code: "et", native: "Eesti", english: "Estonian", flag: "🇪🇪", dir: "ltr" },
-  fi: { code: "fi", native: "Suomi", english: "Finnish", flag: "🇫🇮", dir: "ltr" },
-  fr: { code: "fr", native: "Français", english: "French", flag: "🇫🇷", dir: "ltr" },
-  de: { code: "de", native: "Deutsch", english: "German", flag: "🇩🇪", dir: "ltr" },
-  el: { code: "el", native: "Ελληνικά", english: "Greek", flag: "🇬🇷", dir: "ltr" },
-  hu: { code: "hu", native: "Magyar", english: "Hungarian", flag: "🇭🇺", dir: "ltr" },
-  ga: { code: "ga", native: "Gaeilge", english: "Irish", flag: "🇮🇪", dir: "ltr" },
-  it: { code: "it", native: "Italiano", english: "Italian", flag: "🇮🇹", dir: "ltr" },
-  lv: { code: "lv", native: "Latviešu", english: "Latvian", flag: "🇱🇻", dir: "ltr" },
-  lt: { code: "lt", native: "Lietuvių", english: "Lithuanian", flag: "🇱🇹", dir: "ltr" },
-  mt: { code: "mt", native: "Malti", english: "Maltese", flag: "🇲🇹", dir: "ltr" },
-  pl: { code: "pl", native: "Polski", english: "Polish", flag: "🇵🇱", dir: "ltr" },
-  pt: { code: "pt", native: "Português", english: "Portuguese", flag: "🇵🇹", dir: "ltr" },
-  ro: { code: "ro", native: "Română", english: "Romanian", flag: "🇷🇴", dir: "ltr" },
-  sk: { code: "sk", native: "Slovenčina", english: "Slovak", flag: "🇸🇰", dir: "ltr" },
-  sl: { code: "sl", native: "Slovenščina", english: "Slovenian", flag: "🇸🇮", dir: "ltr" },
-  es: { code: "es", native: "Español", english: "Spanish", flag: "🇪🇸", dir: "ltr" },
-  sv: { code: "sv", native: "Svenska", english: "Swedish", flag: "🇸🇪", dir: "ltr" },
+  es: { code: "es", native: "Español", english: "Spanish", flagCountry: "es", dir: "ltr" },
+  fr: { code: "fr", native: "Français", english: "French", flagCountry: "fr", dir: "ltr" },
+  it: { code: "it", native: "Italiano", english: "Italian", flagCountry: "it", dir: "ltr" },
+  pt: { code: "pt", native: "Português", english: "Portuguese", flagCountry: "pt", dir: "ltr" },
+  de: { code: "de", native: "Deutsch", english: "German", flagCountry: "de", dir: "ltr" },
+  nl: { code: "nl", native: "Nederlands", english: "Dutch", flagCountry: "nl", dir: "ltr" },
+  en: { code: "en", native: "English", english: "English", flagCountry: "gb", dir: "ltr" },
 };
 
 export const localeList: LocaleMeta[] = locales.map((l) => localeMeta[l]);

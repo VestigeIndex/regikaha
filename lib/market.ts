@@ -1,20 +1,20 @@
 export const europeMarket = {
-  label: "Toda Europa",
+  label: "Mercados activos",
   description:
-    "RegiKaha está planteado como marketplace europeo: búsqueda por toda Europa, por país y por ciudad o región.",
+    "RegiKaha opera inicialmente en España, Francia, Italia, Portugal, Suiza, Alemania, Países Bajos, Bélgica, Irlanda y Reino Unido.",
   primaryCountry: "España",
   primaryCountryCode: "ES",
 } as const;
 
 export const europeanCountryOptions = [
   { code: "ES", name: "España" },
-  { code: "PT", name: "Portugal" },
   { code: "FR", name: "Francia" },
   { code: "IT", name: "Italia" },
+  { code: "PT", name: "Portugal" },
+  { code: "CH", name: "Suiza" },
   { code: "DE", name: "Alemania" },
   { code: "NL", name: "Países Bajos" },
   { code: "BE", name: "Bélgica" },
   { code: "IE", name: "Irlanda" },
-  { code: "AT", name: "Austria" },
-  { code: "PL", name: "Polonia" },
+  { code: "GB", name: "Reino Unido" },
 ] as const;

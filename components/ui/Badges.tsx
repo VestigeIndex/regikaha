@@ -1,9 +1,13 @@
+"use client";
+
 import { BadgeCheck, ShieldCheck, FileText, Clock, AlertTriangle } from "lucide-react";
 import type { VerificationStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n/context";
 
 /** Insignia "Verificado" — el sello de confianza del marketplace. */
 export function VerifiedBadge({ size = "md" }: { size?: "sm" | "md" }) {
+  const t = useT();
   return (
     <span
       className={cn(
@@ -13,7 +17,7 @@ export function VerifiedBadge({ size = "md" }: { size?: "sm" | "md" }) {
       )}
     >
       <BadgeCheck size={size === "sm" ? 13 : 15} className="text-forest-600" />
-      Verificado
+      {t.ui.badges.verified}
     </span>
   );
 }
@@ -26,14 +30,16 @@ const statusMap: Record<VerificationStatus, { label: string; cls: string }> = {
 };
 
 export function StatusBadge({ status }: { status: VerificationStatus }) {
+  const t = useT();
   const s = statusMap[status];
+  const labels = t.ui.badges;
   return (
     <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ring-1", s.cls)}>
       {status === "verified" && <BadgeCheck size={14} />}
       {status === "pending" && <Clock size={14} />}
       {status === "limited" && <AlertTriangle size={14} />}
       {status === "suspended" && <AlertTriangle size={14} />}
-      {s.label}
+      {labels[status]}
     </span>
   );
 }

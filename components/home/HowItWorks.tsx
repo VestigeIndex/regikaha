@@ -1,33 +1,36 @@
+"use client";
+
 import Link from "next/link";
 import { Search, GitCompare, MessageSquareQuote, CheckCircle2, UserPlus, BadgeCheck, FolderOpen, Inbox } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { useT } from "@/lib/i18n/context";
 
-const clientSteps = [
-  { icon: Search, title: "Busca el servicio que necesitas", text: "Filtra por categoría, zona, valoración y disponibilidad." },
-  { icon: GitCompare, title: "Compara profesionales verificados", text: "Revisa portfolios, precios orientativos y reseñas reales." },
-  { icon: MessageSquareQuote, title: "Pide pre-presupuesto o contacta", text: "Envía tu solicitud gratis y recibe estimaciones iniciales no vinculantes." },
-  { icon: CheckCircle2, title: "Elige con confianza", text: "Decide con más información y menos riesgo." },
-];
+const clientIcons = [Search, GitCompare, MessageSquareQuote, CheckCircle2];
+const professionalIcons = [UserPlus, BadgeCheck, FolderOpen, Inbox];
 
-const proSteps = [
-  { icon: UserPlus, title: "Crea tu perfil", text: "Página profesional con SEO propio en minutos." },
-  { icon: BadgeCheck, title: "Verifica tu actividad", text: "Genera confianza con el sello de verificado." },
-  { icon: FolderOpen, title: "Publica servicios y portfolio", text: "Muestra tus trabajos realizados y precios desde." },
-  { icon: Inbox, title: "Recibe solicitudes", text: "Clientes que buscan exactamente lo que ofreces." },
-];
 
 export function HowItWorks() {
+  const t = useT();
+  const clientSteps = t.ui.homeSections.howItWorks.clientSteps.map((step, index) => ({
+    ...step,
+    icon: clientIcons[index],
+  }));
+  const proSteps = t.ui.homeSections.howItWorks.professionalSteps.map((step, index) => ({
+    ...step,
+    icon: professionalIcons[index],
+  }));
+
   return (
     <section className="container-x py-16 lg:py-20">
       <SectionHeading
-        eyebrow="Cómo funciona"
-        title="Simple para clientes, justo para profesionales"
+        eyebrow={t.ui.homeSections.howItWorks.eyebrow}
+        title={t.ui.homeSections.howItWorks.title}
         align="center"
       />
 
       <div className="mt-12 grid lg:grid-cols-2 gap-10">
         <div className="card p-6 sm:p-8">
-          <h3 className="text-lg font-bold text-ink">Para clientes</h3>
+          <h3 className="text-lg font-bold text-ink">{t.ui.homeSections.howItWorks.clientsTitle}</h3>
           <ol className="mt-6 space-y-5">
             {clientSteps.map((s, i) => (
               <li key={s.title} className="flex gap-4">
@@ -44,11 +47,11 @@ export function HowItWorks() {
               </li>
             ))}
           </ol>
-          <Link href="/buscar" className="btn btn-primary mt-7 w-full">Buscar profesionales</Link>
+          <Link href="/buscar" className="btn btn-primary mt-7 w-full">{t.ui.homeSections.howItWorks.clientCta}</Link>
         </div>
 
         <div className="card p-6 sm:p-8 bg-gradient-to-b from-mint/40 to-white">
-          <h3 className="text-lg font-bold text-ink">Para profesionales</h3>
+          <h3 className="text-lg font-bold text-ink">{t.ui.homeSections.howItWorks.professionalsTitle}</h3>
           <ol className="mt-6 space-y-5">
             {proSteps.map((s, i) => (
               <li key={s.title} className="flex gap-4">
@@ -65,7 +68,7 @@ export function HowItWorks() {
               </li>
             ))}
           </ol>
-          <Link href="/registro" className="btn btn-secondary mt-7 w-full">Crear mi perfil profesional</Link>
+          <Link href="/registro" className="btn btn-secondary mt-7 w-full">{t.ui.homeSections.howItWorks.professionalCta}</Link>
         </div>
       </div>
     </section>

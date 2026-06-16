@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/ui/JsonLd";
 import { organizationSchema } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { I18nProvider } from "@/lib/i18n/context";
+import { DomTextLocalizer } from "@/components/site/DomTextLocalizer";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -76,7 +77,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={organizationSchema()} />
       </head>
       <body className="min-h-screen bg-white text-ink antialiased">
-        <I18nProvider>{children}</I18nProvider>
+        <I18nProvider>
+          <DomTextLocalizer />
+          {children}
+        </I18nProvider>
       </body>
     </html>
   );

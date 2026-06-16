@@ -4,11 +4,15 @@ import { useState } from "react";
 import { CheckCircle2, Send } from "lucide-react";
 import { categories } from "@/lib/data/categories";
 import { europeanCountryOptions } from "@/lib/market";
-import { preEstimateDisclaimer } from "@/lib/preestimate";
+import { useI18n, useT } from "@/lib/i18n/context";
+import { useContent } from "@/lib/i18n/useLocalizedContent";
 
 type Mode = "client" | "b2b";
 
 export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
+  const { locale } = useI18n();
+  const t = useT();
+  const content = useContent();
   const [sent, setSent] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,11 +31,11 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
         body: JSON.stringify(payload),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "No se pudo publicar la solicitud");
+      if (!res.ok) throw new Error(data.error || t.ui.projectForm.unableToPublish);
       setSent(true);
       e.currentTarget.reset();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo publicar la solicitud");
+      setError(err instanceof Error ? err.message : t.ui.projectForm.unableToPublish);
     } finally {
       setPending(false);
     }
@@ -41,15 +45,13 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
     return (
       <div className="card p-8 text-center">
         <CheckCircle2 size={38} className="mx-auto text-forest-600" />
-        <h2 className="mt-4 text-xl font-bold text-ink">Solicitud publicada</h2>
+        <h2 className="mt-4 text-xl font-bold text-ink">{t.ui.projectForm.sentTitle}</h2>
         <p className="mt-2 text-muted">
-          {mode === "client"
-            ? "Hemos registrado tu proyecto. Si hay cobertura, los profesionales podrán responder con pre-presupuestos iniciales."
-            : "Hemos registrado la necesidad B2B y abierto una tarea de captación de subcontratas en esa zona."}
+          {mode === "client" ? t.ui.projectForm.sentClient : t.ui.projectForm.sentB2b}
         </p>
         <div className="mt-5 flex justify-center gap-2 flex-wrap">
-          <a href="/mapa" className="btn btn-primary">Ver mapa</a>
-          <button onClick={() => setSent(false)} className="btn btn-secondary">Publicar otra</button>
+          <a href="/mapa" className="btn btn-primary">{t.ui.actions.searchMap}</a>
+          <button onClick={() => setSent(false)} className="btn btn-secondary">{t.ui.actions.publishAnother}</button>
         </div>
       </div>
     );
@@ -61,97 +63,105 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
       {error && <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
 
       <div className="grid sm:grid-cols-2 gap-4">
-        <Input name="name" label={mode === "client" ? "Nombre" : "Persona de contacto"} required />
-        <Input name="email" label="Email" type="email" required />
-        <Input name="phone" label="Teléfono" type="tel" />
-        {mode === "b2b" && <Input name="companyType" label="Tipo de empresa" placeholder="Constructora, promotora, estudio..." required />}
+        <Input name="name" label={mode === "client" ? t.ui.common.name : t.ui.projectForm.contactPerson} required />
+        <Input name="email" label={t.ui.common.email} type="email" required />
+        <Input name="phone" label={t.ui.common.phone} type="tel" />
+        {mode === "b2b" && <Input name="companyType" label={t.ui.projectForm.companyType} placeholder={t.ui.projectForm.companyTypePlaceholder} required />}
         {mode === "client" && (
-          <Select name="clientType" label="Tipo de cliente">
-            <option value="particular">Particular</option>
-            <option value="empresa">Empresa</option>
-            <option value="comunidad">Comunidad de vecinos</option>
-            <option value="administrador_fincas">Administrador de fincas</option>
+          <Select name="clientType" label={t.ui.projectForm.clientType}>
+            <option value="particular">{t.ui.projectForm.clientTypes.particular}</option>
+            <option value="empresa">{t.ui.projectForm.clientTypes.empresa}</option>
+            <option value="comunidad">{t.ui.projectForm.clientTypes.comunidad}</option>
+            <option value="administrador_fincas">{t.ui.projectForm.clientTypes.administrador_fincas}</option>
           </Select>
         )}
-        <Select name="country" label="País">
+        <Select name="country" label={t.ui.common.country}>
           {europeanCountryOptions.map((country) => (
-            <option key={country.code} value={country.code}>{country.name}</option>
+            <option key={country.code} value={country.code}>{localizedCountry(country.code, locale)}</option>
           ))}
         </Select>
-        <Input name="city" label="Ciudad / zona" required />
-        {mode === "client" && <Input name="postalCode" label="Código postal" />}
+        <Input name="city" label={t.ui.projectForm.cityZone} required />
+        {mode === "client" && <Input name="postalCode" label={t.ui.projectForm.postalCode} />}
         {mode === "client" ? (
-          <Select name="categoryId" label="Categoría">
+          <Select name="categoryId" label={t.ui.common.category}>
             {categories.map((category) => (
-              <option key={category.id} value={category.id}>{category.name}</option>
+              <option key={category.id} value={category.id}>{content.categories[category.id].name}</option>
             ))}
           </Select>
         ) : (
-          <Select name="requiredSpecialty" label="Especialidad requerida">
+          <Select name="requiredSpecialty" label={t.ui.projectForm.requiredSpecialty}>
             {categories.map((category) => (
-              <option key={category.id} value={category.id}>{category.name}</option>
+              <option key={category.id} value={category.id}>{content.categories[category.id].name}</option>
             ))}
-            <option value="maquinaria">Maquinaria</option>
-            <option value="seguridad-prl">Seguridad y PRL</option>
-            <option value="limpieza-final">Limpieza final de obra</option>
+            <option value="maquinaria">{t.ui.projectForm.extraSpecialties.machinery}</option>
+            <option value="seguridad-prl">{t.ui.projectForm.extraSpecialties.safety}</option>
+            <option value="limpieza-final">{t.ui.projectForm.extraSpecialties.cleaning}</option>
           </Select>
         )}
         {mode === "client" ? (
-          <Input name="subcategory" label="Subcategoría" placeholder="Baño, cocina, urgencia, licencia..." />
+          <Input name="subcategory" label={t.ui.projectForm.subcategory} placeholder={t.ui.projectForm.subcategoryPlaceholder} />
         ) : (
-          <Input name="projectType" label="Tipo de proyecto" placeholder="Obra nueva, reforma, local, nave..." />
+          <Input name="projectType" label={t.ui.projectForm.projectType} placeholder={t.ui.projectForm.projectTypePlaceholder} />
         )}
         {mode === "client" ? (
-          <Select name="propertyType" label="Tipo de inmueble">
-            <option value="vivienda">Vivienda</option>
-            <option value="local">Local</option>
-            <option value="oficina">Oficina</option>
-            <option value="comunidad">Comunidad</option>
-            <option value="nave">Nave</option>
+          <Select name="propertyType" label={t.ui.projectForm.propertyType}>
+            <option value="vivienda">{t.ui.projectForm.propertyTypes.vivienda}</option>
+            <option value="local">{t.ui.projectForm.propertyTypes.local}</option>
+            <option value="oficina">{t.ui.projectForm.propertyTypes.oficina}</option>
+            <option value="comunidad">{t.ui.projectForm.propertyTypes.comunidad}</option>
+            <option value="nave">{t.ui.projectForm.propertyTypes.nave}</option>
           </Select>
         ) : (
-          <Input name="teamSize" label="Equipo necesario" placeholder="2 oficiales, cuadrilla, empresa completa..." />
+          <Input name="teamSize" label={t.ui.projectForm.teamSize} placeholder={t.ui.projectForm.teamSizePlaceholder} />
         )}
-        <Select name="urgency" label={mode === "client" ? "Urgencia" : "Inicio estimado"}>
-          <option value="flexible">Flexible</option>
-          <option value="this_month">Este mes</option>
-          <option value="urgent">Urgente</option>
+        <Select name="urgency" label={mode === "client" ? t.ui.projectForm.urgency : t.ui.projectForm.estimatedStart}>
+          <option value="flexible">{t.ui.common.flexible}</option>
+          <option value="this_month">{t.ui.common.thisMonth}</option>
+          <option value="urgent">{t.ui.common.urgent}</option>
         </Select>
-        {mode === "b2b" && <Input name="duration" label="Duración aproximada" />}
-        <Select name="budgetRange" label="Rango orientativo opcional">
-          <option value="">Sin definir</option>
-          <option value="menos-1000">Menos de 1.000 €</option>
-          <option value="1000-5000">1.000 € - 5.000 €</option>
-          <option value="5000-15000">5.000 € - 15.000 €</option>
-          <option value="15000-50000">15.000 € - 50.000 €</option>
-          <option value="mas-50000">Más de 50.000 €</option>
+        {mode === "b2b" && <Input name="duration" label={t.ui.projectForm.duration} />}
+        <Select name="budgetRange" label={t.ui.projectForm.budgetRange}>
+          <option value="">{t.ui.common.noneDefined}</option>
+          <option value="menos-1000">{t.ui.projectForm.budgetOptions.under1000}</option>
+          <option value="1000-5000">{t.ui.projectForm.budgetOptions.from1000To5000}</option>
+          <option value="5000-15000">{t.ui.projectForm.budgetOptions.from5000To15000}</option>
+          <option value="15000-50000">{t.ui.projectForm.budgetOptions.from15000To50000}</option>
+          <option value="mas-50000">{t.ui.projectForm.budgetOptions.over50000}</option>
         </Select>
       </div>
 
-      {mode === "client" && <Input name="approximateMeasures" label="Medidas aproximadas" placeholder="Ej. baño 4 m², piso 90 m²..." />}
+      {mode === "client" && <Input name="approximateMeasures" label={t.ui.projectForm.approximateMeasures} placeholder={t.ui.projectForm.approximateMeasuresPlaceholder} />}
       <Textarea
         name="description"
-        label={mode === "client" ? "Describe tu proyecto" : "Describe la partida o subcontrata necesaria"}
-        placeholder={mode === "client" ? "Qué necesitas, estado actual, plazos, materiales, fotos disponibles..." : "Especialidad, alcance, documentación requerida, fechas y condiciones de obra..."}
+        label={mode === "client" ? t.ui.projectForm.clientDescription : t.ui.projectForm.b2bDescription}
+        placeholder={mode === "client" ? t.ui.projectForm.clientDescriptionPlaceholder : t.ui.projectForm.b2bDescriptionPlaceholder}
         required
       />
 
       {mode === "client" ? (
         <label className="flex items-start gap-3 rounded-xl bg-canvas p-4 cursor-pointer">
           <input name="acceptsPreEstimate" type="checkbox" required className="mt-1 accent-[var(--primary)]" />
-          <span className="text-sm text-ink/85">{preEstimateDisclaimer}</span>
+          <span className="text-sm text-ink/85">{t.ui.projectForm.preEstimateDisclaimer}</span>
         </label>
       ) : (
         <p className="rounded-xl bg-canvas p-4 text-sm text-muted">
-          Publicaremos la necesidad como demanda B2B y activaremos captación de subcontratas verificables en esa zona.
+          {t.ui.projectForm.b2bNotice}
         </p>
       )}
 
       <button type="submit" disabled={pending} className="btn btn-primary w-full disabled:opacity-60">
-        <Send size={16} /> {pending ? "Publicando..." : mode === "client" ? "Publicar mi proyecto gratis" : "Publicar necesidad de subcontrata"}
+        <Send size={16} /> {pending ? t.ui.projectForm.publishing : mode === "client" ? t.ui.projectForm.publishClient : t.ui.projectForm.publishB2b}
       </button>
     </form>
   );
+}
+
+function localizedCountry(code: string, locale: string) {
+  try {
+    return new Intl.DisplayNames([locale], { type: "region" }).of(code) || code;
+  } catch {
+    return code;
+  }
 }
 
 function Input({ name, label, type = "text", placeholder, required }: { name: string; label: string; type?: string; placeholder?: string; required?: boolean }) {
