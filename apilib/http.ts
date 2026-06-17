@@ -48,6 +48,14 @@ export async function getSessionUser(env: any, request: Request): Promise<any | 
   return row || null;
 }
 
+/** Exige sesión con rol admin para APIs internas. */
+export async function requireAdmin(env: any, request: Request): Promise<any | Response> {
+  const user = await getSessionUser(env, request);
+  if (!user) return bad("No autenticado", 401);
+  if (user.role !== "admin") return bad("No autorizado", 403);
+  return user;
+}
+
 export function isEmail(s: string): boolean {
   return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s);
 }

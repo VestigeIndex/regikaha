@@ -258,7 +258,7 @@ export default async function ProfessionalPage({ params }: { params: Promise<{ s
             </div>
 
             <div className="card p-5">
-              <a href="#" className="btn btn-secondary w-full">
+              <a href="#solicitar" className="btn btn-secondary w-full">
                 <Phone size={16} /> Contactar
               </a>
               <ul className="mt-4 space-y-2.5 text-sm">

@@ -1,5 +1,6 @@
 import { json, bad, isEmail } from "../../apilib/http";
 import { newId } from "../../apilib/auth";
+import { isActiveCountryCode } from "../../lib/market";
 
 function clean(value: unknown, max = 600): string {
   return String(value || "").trim().slice(0, max);
@@ -48,8 +49,9 @@ export async function onRequestPost(context: any) {
   const categoryId = clean(b.categoryId || b.category, 120);
   if (clean(b.website, 200)) return bad("Solicitud no válida");
   if (!isEmail(email)) return bad("Email no válido");
-  if (description.length < 10) return bad("Describe un poco más el proyecto");
+  if (description.length < 20) return bad("Describe un poco más el proyecto");
   if (!country || !city || !categoryId) return bad("Faltan país, ciudad o categoría");
+  if (!isActiveCountryCode(country)) return bad("País no disponible todavía en RegiKaha");
   if (String(b.acceptsPreEstimate) !== "true" && b.acceptsPreEstimate !== true) {
     return bad("Debes aceptar recibir pre-presupuestos no vinculantes");
   }

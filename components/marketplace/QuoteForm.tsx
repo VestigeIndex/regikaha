@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { CheckCircle2, Send } from "lucide-react";
-import { useT } from "@/lib/i18n/context";
+import { europeanCountryOptions } from "@/lib/market";
+import { useI18n, useT } from "@/lib/i18n/context";
 
 /**
  * Formulario de solicitud de pre-presupuesto no vinculante.
@@ -22,6 +23,7 @@ export function QuoteForm({
   serviceTitle?: string;
   compact?: boolean;
 }) {
+  const { locale } = useI18n();
   const t = useT();
   const [sent, setSent] = useState(false);
   const [pending, setPending] = useState(false);
@@ -94,8 +96,12 @@ export function QuoteForm({
       </div>
       <Input name="email" label={t.ui.common.email} placeholder="email@example.com" type="email" required />
       <div className={compact ? "space-y-3" : "grid sm:grid-cols-2 gap-3"}>
-        <Input name="city" label={t.ui.common.city} placeholder={t.ui.quoteForm.cityPlaceholder} required />
-        <Input name="country" label={t.ui.common.country} placeholder={t.ui.quoteForm.countryPlaceholder} required />
+        <Input name="city" label={t.ui.common.city} placeholder={t.ui.quoteForm.cityPlaceholder} minLength={2} required />
+        <Select name="country" label={t.ui.common.country}>
+          {europeanCountryOptions.map((country) => (
+            <option key={country.code} value={country.code}>{localizedCountry(country.code, locale)}</option>
+          ))}
+        </Select>
       </div>
       {!compact && (
         <div className="grid sm:grid-cols-2 gap-3">
@@ -118,6 +124,8 @@ export function QuoteForm({
         <textarea
           name="description"
           required
+          minLength={20}
+          maxLength={2400}
           rows={compact ? 3 : 4}
           placeholder={t.ui.quoteForm.descriptionPlaceholder}
           className="mt-1.5 w-full rounded-xl bg-canvas px-3.5 py-3 text-sm text-ink outline-none ring-1 ring-transparent focus:ring-forest-500 placeholder:text-muted resize-none"
@@ -166,12 +174,14 @@ function Input({
   placeholder,
   type = "text",
   required,
+  minLength,
 }: {
   name: string;
   label: string;
   placeholder?: string;
   type?: string;
   required?: boolean;
+  minLength?: number;
 }) {
   return (
     <div>
@@ -183,9 +193,18 @@ function Input({
         name={name}
         type={type}
         required={required}
+        minLength={minLength}
         placeholder={placeholder}
         className="mt-1.5 w-full rounded-xl bg-canvas px-3.5 py-2.5 text-sm text-ink outline-none ring-1 ring-transparent focus:ring-forest-500 placeholder:text-muted"
       />
     </div>
   );
+}
+
+function localizedCountry(code: string, locale: string) {
+  try {
+    return new Intl.DisplayNames([locale], { type: "region" }).of(code) || code;
+  } catch {
+    return code;
+  }
 }

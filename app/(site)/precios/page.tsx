@@ -15,12 +15,12 @@ import {
 export const metadata: Metadata = buildMetadata({
   title: "Precios",
   description:
-    "RegiKaha es gratis para clientes. Para profesionales: Autónomo Nacional por 19,95 €/mes o Europa Pro por 49,95 €/mes, con tarifa anual al 10% de descuento. Sin comisiones por lead ni rankings comprados.",
+    "RegiKaha es gratis para clientes. Para profesionales: Autónomo Nacional por 19,95 €/mes o Multi-mercado Pro por 49,95 €/mes, con tarifa anual al 10% de descuento. Sin comisiones por lead ni rankings comprados.",
   path: "/precios",
 });
 
 const clientFeatures = [
-  "Buscar en toda Europa o filtrar por país, región y ciudad",
+  "Buscar en mercados activos o filtrar por país, región y ciudad",
   "Comparar profesionales por portfolio, precio orientativo y reseñas",
   "Pedir pre-presupuesto sin compromiso",
   "Leer y dejar valoraciones verificadas",
@@ -40,8 +40,8 @@ export default function PreciosPage() {
     <>
       <PageHeader
         eyebrow="Precios"
-        title="Tarifas reales para crecer por país o por Europa"
-        description="Gratis para clientes. Para profesionales, una cuota ajustada a tu capacidad operativa: nacional si trabajas dentro de un país, europea si quieres abrir más regiones y mercados."
+        title="Tarifas reales para crecer por país o por mercados activos"
+        description="Gratis para clientes. Para profesionales, una cuota ajustada a tu capacidad operativa: nacional si trabajas dentro de un país, multi-mercado si quieres abrir más regiones y países activos."
         breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Precios" }]}
       />
 

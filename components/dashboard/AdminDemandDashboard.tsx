@@ -10,12 +10,18 @@ import { coverageStatus } from "@/lib/geo";
 export function AdminDemandDashboard() {
   const [data, setData] = useState<any>({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
       const res = await fetch("/api/admin/demand");
       const body = await res.json().catch(() => ({}));
-      if (res.ok) setData(body);
+      if (res.ok) {
+        setData(body);
+        setError(null);
+      } else {
+        setError(body.error || "No tienes permisos para ver el panel interno.");
+      }
       setLoading(false);
     }
     load().catch(() => setLoading(false));
@@ -30,9 +36,15 @@ export function AdminDemandDashboard() {
     <>
       <DashboardHeader
         title="Panel de demanda y cobertura"
-        subtitle="Control interno de solicitudes, zonas sin oferta, captación y cobertura europea."
+        subtitle="Control interno de solicitudes, zonas sin oferta, captación y cobertura en mercados activos."
         action={<Link href="/admin/profesionales" className="btn btn-secondary text-sm">Profesionales</Link>}
       />
+
+      {error && (
+        <div className="mb-5 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={<BarChart3 size={19} />} label="Demandas cliente" value={loading ? "..." : demandTotal} />

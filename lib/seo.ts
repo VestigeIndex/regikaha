@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { site } from "./site";
 import type { Professional, ServiceItem, Category } from "./types";
-import { europeMarket } from "./market";
+import { activeMarkets, europeMarket } from "./market";
 
 /** Construye metadata coherente para cualquier página. */
 export function buildMetadata(opts: {
@@ -43,7 +43,7 @@ export function organizationSchema() {
     url: site.url,
     logo: `${site.url}/favicon.svg`,
     description: site.description,
-    areaServed: "EU",
+    areaServed: activeMarkets.map((market) => ({ "@type": "Country", name: market.name })),
     contactPoint: [
       { "@type": "ContactPoint", contactType: "customer support", email: site.email, availableLanguage: ["es", "en"] },
     ],

@@ -48,7 +48,7 @@ export async function onRequestGet(context: any) {
 
   const origin = new URL(context.request.url).origin;
   const area = row.service_area || [row.city, row.region, row.country].filter(Boolean).join(", ");
-  const title = `${row.title} en ${area || "Europa"} | ${row.public_name} | RegiKaha`;
+  const title = `${row.title} en ${area || "mercados activos"} | ${row.public_name} | RegiKaha`;
   const description = String(row.description || "").slice(0, 160);
   const includes = jsonArray(row.includes);
   const excludes = jsonArray(row.excludes);
@@ -58,7 +58,7 @@ export async function onRequestGet(context: any) {
     "@type": "Service",
     name: row.title,
     description,
-    areaServed: area || "Europe",
+    areaServed: area || "Active markets",
     provider: {
       "@type": "HomeAndConstructionBusiness",
       name: row.public_name,
@@ -74,7 +74,7 @@ export async function onRequestGet(context: any) {
     <script type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>
     ${styles()}
   </head><body>
-    <header class="hero"><div class="wrap"><a class="brand" href="/">RegiKaha</a><h1 class="h1">${esc(row.title)}</h1><p>${esc(row.public_name)} · ${esc(area || "Europa")}</p></div></header>
+    <header class="hero"><div class="wrap"><a class="brand" href="/">RegiKaha</a><h1 class="h1">${esc(row.title)}</h1><p>${esc(row.public_name)} · ${esc(area || "mercados activos")}</p></div></header>
     <main class="wrap grid">
       <article class="card">
         <span class="chip">Servicio profesional</span>

@@ -162,6 +162,8 @@ export interface Professional {
   founderMember: boolean;
   activeStatus: boolean;
   joinedAt: string;
+  source?: "seed" | "real";
+  isSeedProfile?: boolean;
 }
 
 export interface QuoteRequest {

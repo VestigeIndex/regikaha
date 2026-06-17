@@ -8,7 +8,7 @@ export const generatedUiDictionaries = {
       "map": "Mapa",
       "publishProject": "Publicar proyecto",
       "categories": "Categorías",
-      "howItWorks": "como funciona",
+      "howItWorks": "Cómo funciona",
       "forPros": "Para profesionales",
       "pricing": "Precios",
       "publishProjectFree": "Publicar proyecto gratis",
@@ -20,7 +20,7 @@ export const generatedUiDictionaries = {
       "searchMap": "Buscar en el mapa",
       "publishProjectFree": "Publicar proyecto gratis",
       "publishAnother": "Publicar proyecto nuevo",
-      "imPro": "soy un profesional",
+      "imPro": "Soy profesional",
       "imProZone": "Soy profesional (zona)",
       "joinPro": "Únete como profesional",
       "viewProfile": "Ver perfil",
@@ -36,7 +36,7 @@ export const generatedUiDictionaries = {
       "cancel": "Cancelar",
       "continue": "Continuar",
       "back": "Atrás",
-      "send": "enviar",
+      "send": "Enviar",
       "sending": "Enviando...",
       "loading": "Cargando..."
     },
@@ -46,10 +46,10 @@ export const generatedUiDictionaries = {
       "phone": "Teléfono",
       "name": "Nombre",
       "country": "País",
-      "city": "ciudad",
+      "city": "Ciudad",
       "region": "Región",
       "location": "Ubicación",
-      "category": "categoría",
+      "category": "Categoría",
       "categories": "Categorías",
       "language": "Idioma",
       "description": "Descripción",
@@ -73,7 +73,7 @@ export const generatedUiDictionaries = {
       "breadcrumbs": "Pan rallado"
     },
     "footer": {
-      "tagline": "Mercado europeo de profesionales verificados y subcontratistas en reformas, obras e instalaciones. Estimaciones iniciales no vinculantes y ranking basado en méritos.",
+      "tagline": "Mercado de profesionales y subcontratas verificadas en mercados europeos seleccionados. Estimaciones iniciales no vinculantes y ranking por mérito.",
       "rights": "Todos los derechos reservados.",
       "columns": [
         {
@@ -254,7 +254,7 @@ export const generatedUiDictionaries = {
       "locationLabel": "Ubicación",
       "countryGroup": "País",
       "cityRegionGroup": "Ciudad / Región",
-      "allEurope": "Europa",
+      "allEurope": "Todos los mercados activos",
       "allCategories": "Todas las categorias",
       "proTypeLabel": "tipo profesional",
       "languageLabel": "Idioma",
@@ -336,7 +336,7 @@ export const generatedUiDictionaries = {
         "fallback": "Cargando búsqueda..."
       },
       "map": {
-        "eyebrow": "mapa europeo",
+      "eyebrow": "Mapa de mercados activos",
         "title": "Encuentra profesionales cerca de ti",
         "description": "Explore profesionales, empresas y subcontratistas verificados por área, categoría, calificación y disponibilidad. Si no hay cobertura, publica tu proyecto y activamos la adquisición local.",
         "breadcrumb": "Mapa",
@@ -466,7 +466,7 @@ export const generatedUiDictionaries = {
       "selectCategoryError": "Selecciona al menos una categoría profesional",
       "yearsExperience": "Años de experiencia",
       "legendDataTitle": "Tus datos y área de trabajo",
-      "legendDataSubtitle": "Así aparece tu perfil y los clientes pueden encontrarte por país y ciudad en toda Europa.",
+      "legendDataSubtitle": "Así aparece tu perfil y los clientes pueden encontrarte por país y ciudad en los mercados activos.",
       "publicName": "Nombre público",
       "legalName": "Nombre legal",
       "nifCifVat": "NIF / CIF / VAT",
@@ -512,7 +512,7 @@ export const generatedUiDictionaries = {
       },
       "adminDemand": {
         "title": "Panel de demanda y cobertura",
-        "subtitle": "Control interno de solicitudes, áreas sin oferta, adquisición y cobertura europea.",
+        "subtitle": "Control interno de solicitudes, áreas sin oferta, adquisición y cobertura en mercados activos.",
         "professionalsAction": "Profesionales",
         "clientDemand": "Demanda del cliente",
         "b2bDemand": "Demanda de B2B",
@@ -900,7 +900,7 @@ export const generatedUiDictionaries = {
       "breadcrumbs": "Fil d'Ariane"
     },
     "footer": {
-      "tagline": "Place de marché européenne des professionnels et sous-traitants vérifiés en rénovation, travaux et installations. Estimations initiales sans engagement et classement au mérite.",
+      "tagline": "Place de marché de professionnels et sous-traitants vérifiés dans des marchés européens sélectionnés. Estimations initiales sans engagement et classement au mérite.",
       "rights": "Tous droits réservés.",
       "columns": [
         {
@@ -1081,7 +1081,7 @@ export const generatedUiDictionaries = {
       "locationLabel": "Emplacement",
       "countryGroup": "Pays",
       "cityRegionGroup": "Ville / Région",
-      "allEurope": "Europe",
+      "allEurope": "Tous les marchés actifs",
       "allCategories": "Toutes les catégories",
       "proTypeLabel": "Type professionnel",
       "languageLabel": "Langue",
@@ -1163,7 +1163,7 @@ export const generatedUiDictionaries = {
         "fallback": "Chargement de la recherche..."
       },
       "map": {
-        "eyebrow": "Carte européenne",
+        "eyebrow": "Carte des marchés actifs",
         "title": "Trouvez des professionnels près de chez vous",
         "description": "Explorez les professionnels, entreprises et sous-traitants vérifiés par domaine, catégorie, note et disponibilité. S'il n'y a pas de couverture, publiez votre projet et nous activons l'acquisition locale.",
         "breadcrumb": "Carte",
@@ -1293,7 +1293,7 @@ export const generatedUiDictionaries = {
       "selectCategoryError": "Sélectionnez au moins une catégorie professionnelle",
       "yearsExperience": "Années d'expérience",
       "legendDataTitle": "Vos coordonnées et espace de travail",
-      "legendDataSubtitle": "Ainsi, votre profil apparaît et les clients peuvent vous trouver par pays et par ville à travers l'Europe.",
+      "legendDataSubtitle": "Ainsi, votre profil apparaît et les clients peuvent vous trouver par pays et par ville dans les marchés actifs.",
       "publicName": "Nom public",
       "legalName": "Nom légal",
       "nifCifVat": "NIF / CIF / VAT",
@@ -1727,7 +1727,7 @@ export const generatedUiDictionaries = {
       "breadcrumbs": "Pangrattato"
     },
     "footer": {
-      "tagline": "Mercato europeo per professionisti e subappaltatori verificati in ristrutturazioni, lavori e installazioni. Preventivo iniziale non vincolante e graduatoria di merito.",
+      "tagline": "Mercato di professionisti e subappaltatori verificati in mercati europei selezionati. Preventivi iniziali non vincolanti e graduatoria di merito.",
       "rights": "Tutti i diritti riservati.",
       "columns": [
         {
@@ -1908,7 +1908,7 @@ export const generatedUiDictionaries = {
       "locationLabel": "Posizione",
       "countryGroup": "Paese",
       "cityRegionGroup": "Città/Regione",
-      "allEurope": "Europa",
+      "allEurope": "Tutti i mercati attivi",
       "allCategories": "Tutte le categorie",
       "proTypeLabel": "Tipo professionale",
       "languageLabel": "Lingua",
@@ -1990,7 +1990,7 @@ export const generatedUiDictionaries = {
         "fallback": "Caricamento ricerca..."
       },
       "map": {
-        "eyebrow": "Mappa europea",
+        "eyebrow": "Mappa dei mercati attivi",
         "title": "Trova professionisti vicino a te",
         "description": "Esplora professionisti, aziende e subappaltatori verificati per area, categoria, valutazione e disponibilità. Se non c'è copertura, pubblica il tuo progetto e noi attiviamo l'acquisizione locale.",
         "breadcrumb": "Mappa",
@@ -2120,7 +2120,7 @@ export const generatedUiDictionaries = {
       "selectCategoryError": "Seleziona almeno una categoria professionale",
       "yearsExperience": "Anni di esperienza",
       "legendDataTitle": "I tuoi dati e l'area di lavoro",
-      "legendDataSubtitle": "Quindi appare il tuo profilo e i clienti possono trovarti per paese e città in tutta Europa.",
+      "legendDataSubtitle": "Così appare il tuo profilo e i clienti possono trovarti per paese e città nei mercati attivi.",
       "publicName": "Nome pubblico",
       "legalName": "Nome legale",
       "nifCifVat": "NIF / CIF / VAT",
@@ -2554,7 +2554,7 @@ export const generatedUiDictionaries = {
       "breadcrumbs": "Pão ralado"
     },
     "footer": {
-      "tagline": "Mercado europeu para profissionais e subempreiteiros verificados em renovações, obras e instalações. Estimativas iniciais não vinculativas e classificação baseada no mérito.",
+      "tagline": "Mercado de profissionais e subempreiteiros verificados em mercados europeus selecionados. Estimativas iniciais não vinculativas e classificação por mérito.",
       "rights": "Todos os direitos reservados.",
       "columns": [
         {
@@ -2735,7 +2735,7 @@ export const generatedUiDictionaries = {
       "locationLabel": "Localização",
       "countryGroup": "País",
       "cityRegionGroup": "Cidade/Região",
-      "allEurope": "Europa",
+      "allEurope": "Todos os mercados ativos",
       "allCategories": "Todas as categorias",
       "proTypeLabel": "Tipo profissional",
       "languageLabel": "Idioma",
@@ -2817,7 +2817,7 @@ export const generatedUiDictionaries = {
         "fallback": "Carregando pesquisa..."
       },
       "map": {
-        "eyebrow": "Mapa europeu",
+        "eyebrow": "Mapa dos mercados ativos",
         "title": "Encontre profissionais perto de você",
         "description": "Explore profissionais, empresas e subcontratados verificados por área, categoria, classificação e disponibilidade. Caso não haja cobertura, publique seu projeto e ativamos a aquisição local.",
         "breadcrumb": "Mapa",
@@ -2947,7 +2947,7 @@ export const generatedUiDictionaries = {
       "selectCategoryError": "Selecione pelo menos uma categoria profissional",
       "yearsExperience": "Anos de experiência",
       "legendDataTitle": "Seus dados e área de trabalho",
-      "legendDataSubtitle": "Assim, o seu perfil aparece e os clientes podem encontrá-lo por país e cidade em toda a Europa.",
+      "legendDataSubtitle": "Assim, o seu perfil aparece e os clientes podem encontrá-lo por país e cidade nos mercados ativos.",
       "publicName": "Nome público",
       "legalName": "Nome legal",
       "nifCifVat": "NIF / CIF / VAT",
@@ -3381,7 +3381,7 @@ export const generatedUiDictionaries = {
       "breadcrumbs": "Semmelbrösel"
     },
     "footer": {
-      "tagline": "Europäischer Marktplatz für geprüfte Fachleute und Subunternehmer für Renovierungen, Arbeiten und Installationen. Unverbindliche Erstschätzungen und leistungsbezogenes Ranking.",
+      "tagline": "Marktplatz für geprüfte Fachleute und Subunternehmer in ausgewählten europäischen Märkten. Unverbindliche Erstschätzungen und leistungsbezogenes Ranking.",
       "rights": "Alle Rechte vorbehalten.",
       "columns": [
         {
@@ -3562,7 +3562,7 @@ export const generatedUiDictionaries = {
       "locationLabel": "Standort",
       "countryGroup": "Land",
       "cityRegionGroup": "Stadt/Region",
-      "allEurope": "Europa",
+      "allEurope": "Alle aktiven Märkte",
       "allCategories": "Alle Kategorien",
       "proTypeLabel": "Professioneller Typ",
       "languageLabel": "Sprache",
@@ -3644,7 +3644,7 @@ export const generatedUiDictionaries = {
         "fallback": "Suche wird geladen..."
       },
       "map": {
-        "eyebrow": "Europakarte",
+        "eyebrow": "Karte der aktiven Märkte",
         "title": "Finden Sie Fachleute in Ihrer Nähe",
         "description": "Entdecken Sie geprüfte Fachleute, Unternehmen und Subunternehmer nach Region, Kategorie, Bewertung und Verfügbarkeit. Sollte keine Abdeckung vorhanden sein, veröffentlichen Sie Ihr Projekt und wir aktivieren die lokale Akquise.",
         "breadcrumb": "Karte",
@@ -3774,7 +3774,7 @@ export const generatedUiDictionaries = {
       "selectCategoryError": "Wählen Sie mindestens eine Berufskategorie aus",
       "yearsExperience": "Jahrelange Erfahrung",
       "legendDataTitle": "Ihre Daten und Ihr Arbeitsbereich",
-      "legendDataSubtitle": "So erscheint Ihr Profil und Kunden können Sie nach Land und Stadt in ganz Europa finden.",
+      "legendDataSubtitle": "So erscheint Ihr Profil und Kunden können Sie nach Land und Stadt in den aktiven Märkten finden.",
       "publicName": "Öffentlicher Name",
       "legalName": "Offizieller Name",
       "nifCifVat": "NIF / CIF / VAT",
@@ -4143,7 +4143,7 @@ export const generatedUiDictionaries = {
       "map": "Kaart",
       "publishProject": "Project publiceren",
       "categories": "Categorieën",
-      "howItWorks": "hoe het werkt",
+      "howItWorks": "Hoe het werkt",
       "forPros": "Voor professionals",
       "pricing": "Prijzen",
       "publishProjectFree": "Publiceer het project gratis",
@@ -4171,7 +4171,7 @@ export const generatedUiDictionaries = {
       "cancel": "Annuleer",
       "continue": "Ga door",
       "back": "terug",
-      "send": "verzenden",
+      "send": "Verzenden",
       "sending": "Verzenden...",
       "loading": "Laden..."
     },
@@ -4181,10 +4181,10 @@ export const generatedUiDictionaries = {
       "phone": "Telefoon",
       "name": "Naam",
       "country": "Land",
-      "city": "stad",
+      "city": "Stad",
       "region": "Regio",
       "location": "Locatie",
-      "category": "categorie",
+      "category": "Categorie",
       "categories": "Categorieën",
       "language": "Taal",
       "description": "Beschrijving",
@@ -4208,7 +4208,7 @@ export const generatedUiDictionaries = {
       "breadcrumbs": "broodkruimels"
     },
     "footer": {
-      "tagline": "Europese markt voor geverifieerde professionals en onderaannemers in renovaties, werken en installaties. Niet-bindende initiële schattingen en op verdiensten gebaseerde rangschikking.",
+      "tagline": "Markt voor geverifieerde professionals en onderaannemers in geselecteerde Europese markten. Vrijblijvende eerste schattingen en rangschikking op verdienste.",
       "rights": "Alle rechten voorbehouden.",
       "columns": [
         {
@@ -4389,7 +4389,7 @@ export const generatedUiDictionaries = {
       "locationLabel": "Locatie",
       "countryGroup": "Land",
       "cityRegionGroup": "Stad/regio",
-      "allEurope": "Europa",
+      "allEurope": "Alle actieve markten",
       "allCategories": "Alle categorieën",
       "proTypeLabel": "professionele soort",
       "languageLabel": "Taal",
@@ -4471,7 +4471,7 @@ export const generatedUiDictionaries = {
         "fallback": "Zoekopdracht laden..."
       },
       "map": {
-        "eyebrow": "europese kaart",
+        "eyebrow": "Kaart van actieve markten",
         "title": "Vind professionals bij u in de buurt",
         "description": "Ontdek geverifieerde professionals, bedrijven en onderaannemers op gebied, categorie, kwalificatie en beschikbaarheid. Indien er geen berichtgeving is, publiceert u uw project en activeren wij lokale acquisitie.",
         "breadcrumb": "Kaart",
@@ -4601,7 +4601,7 @@ export const generatedUiDictionaries = {
       "selectCategoryError": "Selecteer minimaal één beroepscategorie",
       "yearsExperience": "Jarenlange ervaring",
       "legendDataTitle": "Uw gegevens en werkgebied",
-      "legendDataSubtitle": "Zo verschijnt jouw profiel en kunnen klanten jou vinden per land en stad in heel Europa.",
+      "legendDataSubtitle": "Zo verschijnt jouw profiel en kunnen klanten jou vinden per land en stad in de actieve markten.",
       "publicName": "Publieke naam",
       "legalName": "Wettelijke naam",
       "nifCifVat": "NIF / CIF / VAT",
@@ -4970,7 +4970,7 @@ export const generatedUiDictionaries = {
       "map": "Map",
       "publishProject": "Publish project",
       "categories": "Categories",
-      "howItWorks": "how it works",
+      "howItWorks": "How it works",
       "forPros": "For professionals",
       "pricing": "Prices",
       "publishProjectFree": "Publish project for free",
@@ -4998,7 +4998,7 @@ export const generatedUiDictionaries = {
       "cancel": "Cancel",
       "continue": "Continue",
       "back": "back",
-      "send": "send",
+      "send": "Send",
       "sending": "Sending...",
       "loading": "Loading..."
     },
@@ -5008,10 +5008,10 @@ export const generatedUiDictionaries = {
       "phone": "Telephone",
       "name": "Name",
       "country": "Country",
-      "city": "city",
+      "city": "City",
       "region": "Region",
       "location": "Location",
-      "category": "category",
+      "category": "Category",
       "categories": "Categories",
       "language": "Language",
       "description": "Description",
@@ -5035,7 +5035,7 @@ export const generatedUiDictionaries = {
       "breadcrumbs": "breadcrumbs"
     },
     "footer": {
-      "tagline": "European market for verified professionals and subcontractors in renovations, works and installations. Non-binding initial estimates and merit-based ranking.",
+      "tagline": "Market for verified professionals and subcontractors in selected European markets. Non-binding initial estimates and merit-based ranking.",
       "rights": "All rights reserved.",
       "columns": [
         {
@@ -5216,7 +5216,7 @@ export const generatedUiDictionaries = {
       "locationLabel": "Location",
       "countryGroup": "Country",
       "cityRegionGroup": "City/Region",
-      "allEurope": "Europe",
+      "allEurope": "All active markets",
       "allCategories": "All categories",
       "proTypeLabel": "professional type",
       "languageLabel": "Language",
@@ -5298,7 +5298,7 @@ export const generatedUiDictionaries = {
         "fallback": "Loading search..."
       },
       "map": {
-        "eyebrow": "european map",
+        "eyebrow": "Active markets map",
         "title": "Find professionals near you",
         "description": "Explore verified professionals, companies and subcontractors by area, category, qualification and availability. If there is no coverage, publish your project and we activate local acquisition.",
         "breadcrumb": "Map",
@@ -5428,7 +5428,7 @@ export const generatedUiDictionaries = {
       "selectCategoryError": "Select at least one professional category",
       "yearsExperience": "Years of experience",
       "legendDataTitle": "Your data and work area",
-      "legendDataSubtitle": "This is how your profile appears and clients can find you by country and city throughout Europe.",
+      "legendDataSubtitle": "This is how your profile appears and clients can find you by country and city in the active markets.",
       "publicName": "Public name",
       "legalName": "Legal name",
       "nifCifVat": "NIF / CIF / VAT",
@@ -5474,7 +5474,7 @@ export const generatedUiDictionaries = {
       },
       "adminDemand": {
         "title": "Demand and coverage panel",
-        "subtitle": "Internal control of requests, areas without offer, acquisition and European coverage.",
+        "subtitle": "Internal control of requests, areas without supply, acquisition and active-market coverage.",
         "professionalsAction": "Professionals",
         "clientDemand": "Customer demand",
         "b2bDemand": "B2B Lawsuit",

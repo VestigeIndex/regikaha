@@ -7,9 +7,9 @@ export const site = {
   legalName: "RegiKaha",
   url: "https://regikaha.com",
   email: "help@regikaha.com",
-  tagline: "Compara profesionales verificados para reformas y servicios técnicos en Europa",
+  tagline: "Compara profesionales verificados para reformas y servicios técnicos en mercados europeos seleccionados",
   description:
-    "RegiKaha es el marketplace europeo de profesionales verificados para reformas, construcción, instalaciones, mantenimiento, arquitectura e ingeniería. Compara por precio, calidad, zona de cobertura, portfolio y valoraciones reales. Gratis para clientes.",
+    "RegiKaha conecta clientes con profesionales verificados para reformas, construcción, instalaciones, mantenimiento, arquitectura e ingeniería en mercados europeos seleccionados. Compara por precio, calidad, zona de cobertura, portfolio y valoraciones reales. Gratis para clientes.",
   founderPrice: {
     monthly: formatIntervalPrice(professionalPlans[0], "monthly"),
     yearly: formatIntervalPrice(professionalPlans[0], "yearly"),

@@ -46,12 +46,12 @@ export const professionalPlans: ProfessionalPlan[] = [
   },
   {
     id: "europa_pro",
-    name: "Europa Pro",
-    shortName: "Europa",
+    name: "Multi-mercado Pro",
+    shortName: "Multi-mercado",
     badge: "Para crecer por regiones y países",
     audience: "Empresas, estudios y profesionales multi-región",
     description:
-      "Visibilidad ampliada para quienes pueden atender varias regiones, trabajar en distintos países europeos o captar proyectos de mayor alcance.",
+      "Visibilidad ampliada para quienes pueden atender varias regiones, trabajar en distintos países activos o captar proyectos de mayor alcance.",
     monthlyPrice: 49.95,
     yearlyPrice: 539.46,
     monthlyLookupKey: "regikaha_europa_monthly",
@@ -60,7 +60,7 @@ export const professionalPlans: ProfessionalPlan[] = [
     yearlySecretName: "STRIPE_PRICE_EUROPA_YEARLY",
     features: [
       "Todo lo incluido en Autónomo Nacional",
-      "Cobertura multi-región y europea",
+      "Cobertura multi-región y multi-mercado",
       "Más zonas de servicio activas",
       "Perfil preparado para búsquedas transfronterizas",
       "Prioridad de revisión en verificación",
@@ -95,9 +95,9 @@ export function subscriptionPlanLabel(plan: string): string {
     case "autonomo_yearly":
       return "Autónomo Nacional anual";
     case "europa_monthly":
-      return "Europa Pro mensual";
+      return "Multi-mercado Pro mensual";
     case "europa_yearly":
-      return "Europa Pro anual";
+      return "Multi-mercado Pro anual";
     case "founder":
       return "Fundador";
     default:

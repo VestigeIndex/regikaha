@@ -1,4 +1,5 @@
 import { json } from "../../apilib/http";
+import { isActiveCountryCode } from "../../lib/market";
 
 // GET /api/search?cat=&country=&region=&q= — cruza servicio (categoría) + zona.
 export async function onRequestGet(context: any) {
@@ -8,6 +9,10 @@ export async function onRequestGet(context: any) {
   const country = (u.searchParams.get("country") || "").toUpperCase();
   const region = u.searchParams.get("region") || "";
   const q = u.searchParams.get("q") || "";
+
+  if (country && !isActiveCountryCode(country)) {
+    return json({ total: 0, results: [] });
+  }
 
   const where: string[] = ["p.active_status = 1", "p.verification_status != 'suspended'"];
   const binds: any[] = [];

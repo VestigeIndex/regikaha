@@ -25,7 +25,7 @@ export default function FundadoresPage() {
       <PageHeader
         eyebrow="Oferta fundadores"
         title={`Primeros ${site.founderSlots} verificados: ${site.founderFreeMonths} meses gratis`}
-        description="Sé de los primeros en construir tu reputación en RegiKaha a escala nacional y europea. Como miembro fundador, disfrutas de 5 meses gratis y de la insignia de fundador en tu perfil."
+        description="Sé de los primeros en construir tu reputación en RegiKaha a escala nacional y en mercados activos. Como miembro fundador, disfrutas de 5 meses gratis y de la insignia de fundador en tu perfil."
         breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Oferta fundadores" }]}
       >
         <div className="max-w-md">

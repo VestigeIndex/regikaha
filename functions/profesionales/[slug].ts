@@ -54,7 +54,7 @@ export async function onRequestGet(context: any) {
   const origin = new URL(context.request.url).origin;
   const publicName = p.public_name || "Profesional RegiKaha";
   const area = [p.city, p.region, p.country].filter(Boolean).join(", ");
-  const title = p.seo_title || `${publicName} - profesional verificado en ${area || "Europa"} | RegiKaha`;
+  const title = p.seo_title || `${publicName} - profesional verificado en ${area || "mercados activos"} | RegiKaha`;
   const description = p.seo_description || p.short_tagline || String(p.description || "").slice(0, 155);
   const schema = {
     "@context": "https://schema.org",
@@ -62,7 +62,7 @@ export async function onRequestGet(context: any) {
     name: publicName,
     description,
     url: `${origin}/profesionales/${p.slug}`,
-    areaServed: area || "Europe",
+    areaServed: area || "Active markets",
     address: { "@type": "PostalAddress", addressLocality: p.city, addressRegion: p.region, addressCountry: p.country },
     knowsAbout: categories,
     knowsLanguage: jsonArray(p.languages),
@@ -83,7 +83,7 @@ export async function onRequestGet(context: any) {
       <h3>${esc(item.title)}</h3>
       <p class="muted">${esc(item.location || "")}</p>
     </article>`).join("");
-  const mapQuery = encodeURIComponent(area || "Europe");
+  const mapQuery = encodeURIComponent(area || "Active markets");
 
   const html = `<!doctype html><html lang="es"><head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -94,7 +94,7 @@ export async function onRequestGet(context: any) {
     <script type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>
     ${styles()}
   </head><body>
-    <header class="hero"><div class="wrap top"><a class="brand" href="/">RegiKaha</a><span class="pill">Profesional europeo</span></div></header>
+    <header class="hero"><div class="wrap top"><a class="brand" href="/">RegiKaha</a><span class="pill">Profesional verificado</span></div></header>
     <main class="wrap head">
       <article class="card main">
         <div class="profile">
@@ -102,7 +102,7 @@ export async function onRequestGet(context: any) {
           <div>
             <h1 class="h1">${esc(publicName)}</h1>
             <p class="muted">${esc(p.short_tagline || "")}</p>
-            <p>📍 ${esc(area || "Europa")} · responde en ${esc(p.response_time_hours || 24)} h</p>
+            <p>📍 ${esc(area || "mercados activos")} · responde en ${esc(p.response_time_hours || 24)} h</p>
             <div class="chips">${categories.map((c: string) => `<span class="chip">${esc(c)}</span>`).join("")}</div>
           </div>
         </div>

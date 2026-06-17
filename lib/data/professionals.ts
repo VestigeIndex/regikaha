@@ -7,7 +7,7 @@ import type { Professional } from "@/lib/types";
  * para que el panel de administración tenga casos reales que gestionar.
  * El orden NO determina ranking: el orden se calcula por mérito en `index.ts`.
  */
-export const professionals: Professional[] = [
+const seedProfessionals: Professional[] = [
   {
     id: "pro-reformas-costa",
     userId: "user-1001",
@@ -649,6 +649,12 @@ export const professionals: Professional[] = [
     joinedAt: "2026-05-22",
   },
 ];
+
+export const professionals: Professional[] = seedProfessionals.map((professional) => ({
+  ...professional,
+  source: "seed",
+  isSeedProfile: true,
+}));
 
 export function getProfessionalBySlug(slug: string): Professional | undefined {
   return professionals.find((p) => p.slug === slug);

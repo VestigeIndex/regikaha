@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 import { categories, publicProfessionals, getServicesByProfessional } from "@/lib/data";
+import { activeMarkets } from "@/lib/market";
 
 export const dynamic = "force-static";
 
@@ -16,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/para-profesionales", priority: 0.8, freq: "monthly" },
     { path: "/precios", priority: 0.8, freq: "monthly" },
     { path: "/fundadores", priority: 0.8, freq: "weekly" },
+    { path: "/mercados", priority: 0.8, freq: "weekly" },
     { path: "/trabajos", priority: 0.6, freq: "weekly" },
     { path: "/sobre", priority: 0.5, freq: "monthly" },
     { path: "/faq", priority: 0.6, freq: "monthly" },
@@ -43,6 +45,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.7,
+    });
+  }
+
+  for (const market of activeMarkets) {
+    entries.push({
+      url: `${site.url}/mercados/${market.slug}`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.75,
     });
   }
 

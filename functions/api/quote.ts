@@ -1,5 +1,6 @@
 import { json, bad, isEmail } from "../../apilib/http";
 import { newId } from "../../apilib/auth";
+import { isActiveCountryCode } from "../../lib/market";
 
 // POST /api/quote — solicitud de presupuesto de un cliente.
 export async function onRequestPost(context: any) {
@@ -8,10 +9,14 @@ export async function onRequestPost(context: any) {
   try { b = await request.json(); } catch { return bad("JSON inválido"); }
   const email = String(b.clientEmail || b.email || "").trim();
   const description = String(b.description || "").trim();
+  const country = String(b.country || "").trim().toUpperCase();
+  const city = String(b.city || "").trim();
   const honeypot = String(b.website || b.companyWebsite || "").trim();
   if (honeypot) return bad("Solicitud no válida", 400);
   if (!isEmail(email)) return bad("Email no válido");
-  if (description.length < 5) return bad("Describe brevemente lo que necesitas");
+  if (!country || !city) return bad("Faltan país o ciudad");
+  if (!isActiveCountryCode(country)) return bad("País no disponible todavía en RegiKaha");
+  if (description.length < 20) return bad("Describe brevemente lo que necesitas");
   if (description.length > 2400) return bad("La descripción es demasiado larga");
 
   const id = newId("qr_");
@@ -22,7 +27,7 @@ export async function onRequestPost(context: any) {
   ).bind(
     id, b.professionalId || null, b.categoryId || null, b.serviceId || null,
     String(b.name || b.clientName || ""), email, String(b.phone || ""),
-    String(b.country || "").toUpperCase(), String(b.region || ""), String(b.city || ""),
+    country, String(b.region || ""), city,
     description, String(b.budgetRange || ""), String(b.urgency || "flexible"),
   ).run();
 

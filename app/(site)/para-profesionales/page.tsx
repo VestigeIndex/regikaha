@@ -12,7 +12,7 @@ import { formatIntervalPrice, professionalPlans } from "@/lib/pricing";
 export const metadata: Metadata = buildMetadata({
   title: "Para profesionales",
   description:
-    "Consigue clientes para tus servicios de reformas, construcción o mantenimiento en tu país o en más regiones europeas. Página SEO propia, portfolio, solicitudes directas y ranking justo. Sin pagar por leads.",
+    "Consigue clientes para tus servicios de reformas, construcción o mantenimiento en tu país o en más regiones de los mercados activos. Página SEO propia, portfolio, solicitudes directas y ranking justo. Sin pagar por leads.",
   path: "/para-profesionales",
 });
 
@@ -30,7 +30,7 @@ export default function ParaProfesionalesPage() {
     <>
       <PageHeader
         eyebrow="Para profesionales"
-        title="Consigue clientes en tu país y escala hacia Europa cuando estés listo"
+        title="Consigue clientes en tu país y escala a más mercados cuando estés listo"
         description="Crea tu perfil profesional, publica tus servicios, muestra tu portfolio y recibe solicitudes de clientes según tu zona real de cobertura."
         breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Para profesionales" }]}
       >

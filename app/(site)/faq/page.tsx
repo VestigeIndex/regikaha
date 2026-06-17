@@ -23,7 +23,7 @@ const clientesFaq = [
 ];
 
 const proFaq = [
-  { q: "¿Cuánto cuesta para profesionales?", a: `El plan Autónomo Nacional cuesta ${formatIntervalPrice(professionalPlans[0], "monthly")} o ${formatIntervalPrice(professionalPlans[0], "yearly")}. El plan Europa Pro cuesta ${formatIntervalPrice(professionalPlans[1], "monthly")} o ${formatIntervalPrice(professionalPlans[1], "yearly")}. La tarifa anual tiene un 10% de descuento. Sin comisiones por lead ni por mensaje.` },
+  { q: "¿Cuánto cuesta para profesionales?", a: `El plan Autónomo Nacional cuesta ${formatIntervalPrice(professionalPlans[0], "monthly")} o ${formatIntervalPrice(professionalPlans[0], "yearly")}. El plan Multi-mercado Pro cuesta ${formatIntervalPrice(professionalPlans[1], "monthly")} o ${formatIntervalPrice(professionalPlans[1], "yearly")}. La tarifa anual tiene un 10% de descuento. Sin comisiones por lead ni por mensaje.` },
   { q: "¿Pagáis por cada contacto o lead?", a: "No. RegiKaha es una cuota fija. No cobramos por lead, por mensaje ni por aparecer primero." },
   { q: "¿Cómo consigo mejor posición?", a: "Mejorando tu trabajo real: consigue buenas valoraciones verificadas, responde rápido, completa tu portfolio y mantén tu verificación al día." },
   { q: "¿Qué necesito para verificarme?", a: "Identidad, NIF/CIF, email y teléfono. Si aplica, colegiación, seguros o certificados. Cuanta más información aportes, más confianza generas." },

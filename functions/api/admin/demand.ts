@@ -1,4 +1,4 @@
-import { json } from "../../../apilib/http";
+import { json, requireAdmin } from "../../../apilib/http";
 
 async function all(env: any, sql: string, ...binds: any[]) {
   const rows = await env.DB.prepare(sql).bind(...binds).all();
@@ -6,7 +6,10 @@ async function all(env: any, sql: string, ...binds: any[]) {
 }
 
 export async function onRequestGet(context: any) {
-  const { env } = context;
+  const { env, request } = context;
+  const admin = await requireAdmin(env, request);
+  if (admin instanceof Response) return admin;
+
   const [
     byCountry,
     byCity,

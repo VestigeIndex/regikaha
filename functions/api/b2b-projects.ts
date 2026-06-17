@@ -1,5 +1,6 @@
 import { json, bad, isEmail } from "../../apilib/http";
 import { newId } from "../../apilib/auth";
+import { isActiveCountryCode } from "../../lib/market";
 
 function clean(value: unknown, max = 600): string {
   return String(value || "").trim().slice(0, max);
@@ -18,7 +19,8 @@ export async function onRequestPost(context: any) {
   if (clean(b.website, 200)) return bad("Solicitud no válida");
   if (!isEmail(email)) return bad("Email de empresa no válido");
   if (!country || !city || !requiredSpecialty) return bad("Faltan país, ciudad o especialidad");
-  if (description.length < 10) return bad("Describe un poco más la necesidad de subcontrata");
+  if (!isActiveCountryCode(country)) return bad("País no disponible todavía en RegiKaha");
+  if (description.length < 20) return bad("Describe un poco más la necesidad de subcontrata");
 
   const requestId = newId("b2b_");
   await env.DB.batch([

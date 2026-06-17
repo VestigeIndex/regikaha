@@ -101,7 +101,7 @@ export function ProfileManager() {
   }, []);
 
   const mapLabel = useMemo(
-    () => [form.city, form.region, form.country].filter(Boolean).join(", ") || "Europa",
+    () => [form.city, form.region, form.country].filter(Boolean).join(", ") || "Mercados activos",
     [form.city, form.region, form.country],
   );
 

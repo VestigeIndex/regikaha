@@ -8,7 +8,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Buscar profesionales y subcontratas en el mapa",
   description:
-    "Busca profesionales, empresas y subcontratas verificadas para reformas, obras e instalaciones en Europa. Compara en el mapa y pide pre-presupuestos iniciales no vinculantes.",
+    "Busca profesionales, empresas y subcontratas verificadas para reformas, obras e instalaciones en mercados europeos activos. Compara en el mapa y pide pre-presupuestos iniciales no vinculantes.",
   path: "/buscar",
 });
 
