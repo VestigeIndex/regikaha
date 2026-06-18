@@ -69,11 +69,13 @@ export const professionalPlans: ProfessionalPlan[] = [
   },
 ];
 
-export function formatEuro(value: number): string {
-  return `${value.toLocaleString("es-ES", {
+export function formatEuro(value: number, locale = "es-ES"): string {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "EUR",
     minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
     maximumFractionDigits: 2,
-  })} €`;
+  }).format(value);
 }
 
 export function formatIntervalPrice(plan: ProfessionalPlan, interval: BillingInterval): string {

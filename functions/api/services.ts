@@ -1,6 +1,6 @@
 import { json, bad } from "../../apilib/http";
 import { slugify, newId } from "../../apilib/auth";
-import { getCurrentProfessional, safeJsonArray, textLines } from "../../apilib/professional";
+import { getCurrentProfessional, getSubscriptionAccess, safeJsonArray, textLines } from "../../apilib/professional";
 
 const priceTypes = new Set(["fixed", "from", "hour", "m2", "project"]);
 
@@ -30,7 +30,7 @@ export async function onRequestGet(context: any) {
   if (current instanceof Response) return current;
 
   const rows = await context.env.DB.prepare(
-    `SELECT * FROM services WHERE professional_id = ? AND is_active = 1 ORDER BY title COLLATE NOCASE`,
+    `SELECT * FROM services WHERE professional_id = ? ORDER BY is_active DESC, title COLLATE NOCASE`,
   ).bind(current.professional.id).all();
 
   return json({ services: (rows.results || []).map((row: any) => mapService(row, current.professional.slug)) });
@@ -39,6 +39,7 @@ export async function onRequestGet(context: any) {
 export async function onRequestPost(context: any) {
   const current = await getCurrentProfessional(context.env, context.request);
   if (current instanceof Response) return current;
+  const access = await getSubscriptionAccess(context.env, current.user.id);
 
   let b: any;
   try { b = await context.request.json(); } catch { return bad("JSON inválido"); }
@@ -70,13 +71,13 @@ export async function onRequestPost(context: any) {
     await context.env.DB.prepare(
       `UPDATE services
        SET category_id = ?, title = ?, slug = ?, description = ?, price_from = ?, price_type = ?,
-           estimated_time = ?, includes = ?, excludes = ?, process = ?, faqs = ?, service_area = ?, is_active = 1
+           estimated_time = ?, includes = ?, excludes = ?, process = ?, faqs = ?, service_area = ?, is_active = ?
        WHERE id = ? AND professional_id = ?`,
     ).bind(
       categoryId || null, title, slug, description, priceFrom, priceType,
-      estimatedTime, includes, excludes, process, faqs, serviceArea, id, current.professional.id,
+      estimatedTime, includes, excludes, process, faqs, serviceArea, access.active ? 1 : 0, id, current.professional.id,
     ).run();
-    return json({ ok: true, id, slug });
+    return json({ ok: true, id, slug, isActive: access.active, subscriptionRequired: !access.active });
   }
 
   const newServiceId = newId("svc_");
@@ -84,13 +85,13 @@ export async function onRequestPost(context: any) {
     `INSERT INTO services
       (id, professional_id, category_id, title, slug, description, price_from, price_type,
        estimated_time, includes, excludes, process, faqs, service_area, is_active)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   ).bind(
     newServiceId, current.professional.id, categoryId || null, title, slug, description, priceFrom,
-    priceType, estimatedTime, includes, excludes, process, faqs, serviceArea,
+    priceType, estimatedTime, includes, excludes, process, faqs, serviceArea, access.active ? 1 : 0,
   ).run();
 
-  return json({ ok: true, id: newServiceId, slug }, 201);
+  return json({ ok: true, id: newServiceId, slug, isActive: access.active, subscriptionRequired: !access.active }, 201);
 }
 
 export async function onRequestDelete(context: any) {

@@ -63,6 +63,11 @@ export async function onRequestPost(context: any) {
         .run();
       user = await env.DB.prepare("SELECT * FROM users WHERE id = ?").bind(userId).first();
       created = true;
+    } else if (!Number(user.email_verified || 0)) {
+      await env.DB.prepare("UPDATE users SET email_verified = 1, verify_token = NULL WHERE id = ?")
+        .bind(user.id)
+        .run();
+      user.email_verified = 1;
     }
 
     await env.DB.prepare(

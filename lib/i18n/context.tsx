@@ -18,17 +18,24 @@ interface I18nValue {
 const I18nContext = createContext<I18nValue | null>(null);
 const STORAGE_KEY = "regikaha-locale";
 
-function detectInitial(): Locale {
+function explicitLocale(): Locale | null {
   if (typeof window === "undefined") return defaultLocale;
   try {
     const fromUrl = new URLSearchParams(window.location.search).get("lang");
     if (fromUrl && isLocale(fromUrl)) return fromUrl;
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored && isLocale(stored)) return stored;
-    const nav = navigator.language?.slice(0, 2).toLowerCase();
-    if (nav && isLocale(nav)) return nav;
   } catch {
     /* almacenamiento no disponible */
+  }
+  return null;
+}
+
+function browserLocale(): Locale {
+  const candidates = typeof navigator === "undefined" ? [] : [navigator.language, ...(navigator.languages || [])];
+  for (const value of candidates) {
+    const locale = value?.slice(0, 2).toLowerCase();
+    if (locale && isLocale(locale)) return locale;
   }
   return defaultLocale;
 }
@@ -38,7 +45,22 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   // Detecta el idioma en el cliente tras montar (compatible con export estático).
   useEffect(() => {
-    setLocaleState(detectInitial());
+    const explicit = explicitLocale();
+    if (explicit) {
+      setLocaleState(explicit);
+      return;
+    }
+
+    let cancelled = false;
+    fetch("/api/locale", { headers: { accept: "application/json" } })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("locale unavailable")))
+      .then((data) => {
+        if (!cancelled && isLocale(String(data.locale || ""))) setLocaleState(data.locale);
+      })
+      .catch(() => {
+        if (!cancelled) setLocaleState(browserLocale());
+      });
+    return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {

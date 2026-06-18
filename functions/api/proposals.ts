@@ -1,6 +1,6 @@
 import { json, bad, isEmail } from "../../apilib/http";
 import { newId } from "../../apilib/auth";
-import { getCurrentProfessional } from "../../apilib/professional";
+import { requireActiveProfessional } from "../../apilib/professional";
 
 function normalizeLineItems(value: unknown) {
   const raw = Array.isArray(value) ? value : [];
@@ -15,7 +15,7 @@ function normalizeLineItems(value: unknown) {
 }
 
 export async function onRequestPost(context: any) {
-  const current = await getCurrentProfessional(context.env, context.request);
+  const current = await requireActiveProfessional(context.env, context.request);
   if (current instanceof Response) return current;
 
   let b: any;

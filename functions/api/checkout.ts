@@ -1,15 +1,16 @@
 import { bad, json, isEmail, getSessionUser } from "../../apilib/http";
 import { panelPathForRole } from "../../lib/accounts";
 import { priceSecretName, type BillingInterval, type ProfessionalPlanId } from "../../lib/pricing";
+import { isBillingInterval, isOfferingRole, isProfessionalPlan } from "../../lib/billing/subscription";
 
 const STRIPE_VERSION = "2026-02-25.clover";
 
 function isPlan(value: string): value is ProfessionalPlanId {
-  return value === "autonomo_nacional" || value === "europa_pro";
+  return isProfessionalPlan(value);
 }
 
 function isInterval(value: string): value is BillingInterval {
-  return value === "monthly" || value === "yearly";
+  return isBillingInterval(value);
 }
 
 function encodeForm(data: Record<string, string | number | boolean | undefined>): string {
@@ -32,6 +33,7 @@ export async function onRequestPost(context: any) {
 
   const plan = String(body.plan || "");
   const interval = String(body.interval || "");
+  const acceptanceId = String(body.acceptanceId || "").trim();
   if (!isPlan(plan) || !isInterval(interval)) return bad("Plan no válido");
 
   const user = await getSessionUser(env, request);
@@ -44,9 +46,31 @@ export async function onRequestPost(context: any) {
       401,
     );
   }
-  if (!["professional", "company", "subcontractor", "admin"].includes(String(user.role))) {
+  if (!isOfferingRole(String(user.role))) {
     return bad("Este plan es para cuentas que ofrecen servicios", 403);
   }
+  if (!Number(user.email_verified || 0)) return bad("Verifica tu email antes de activar la suscripción", 403);
+
+  const acceptance = await env.DB.prepare(
+    `SELECT * FROM subscription_contract_acceptances
+     WHERE id = ? AND user_id = ? AND plan_id = ? AND renewal_interval = ?
+     LIMIT 1`,
+  ).bind(acceptanceId, user.id, plan, interval).first();
+  if (!acceptance) {
+    return json({
+      error: "Debes aceptar el contrato digital antes de abrir Stripe",
+      redirectTo: `/suscripcion/confirmar?plan=${plan}&interval=${interval}`,
+    }, 409);
+  }
+
+  const snapshot = JSON.parse(String(acceptance.contract_snapshot_json || "{}"));
+  const founder = snapshot?.commercialTerms?.founderTrial === true;
+  const founderSlot = founder
+    ? await env.DB.prepare(
+        "SELECT * FROM founder_slots WHERE user_id = ? AND status IN ('reserved','active') LIMIT 1",
+      ).bind(user.id).first()
+    : null;
+  if (founder && !founderSlot) return bad("La plaza fundador ya no está disponible", 409);
 
   const secret = String(env.STRIPE_SECRET_KEY || "");
   if (!secret) return bad("Stripe no está configurado", 500);
@@ -59,25 +83,37 @@ export async function onRequestPost(context: any) {
   const email = String(user.email || body.email || "").trim().toLowerCase();
   const role = String(user.role || "professional");
   const successPath = panelPathForRole(role as any);
+  const trialEnd = founder && acceptance.trial_ends_at
+    ? Math.floor(new Date(String(acceptance.trial_ends_at)).getTime() / 1000)
+    : undefined;
+  const requirePaymentMethod = String(env.BILLING_REQUIRE_PAYMENT_METHOD_FOR_TRIAL || "true") !== "false";
   const payload = encodeForm({
     mode: "subscription",
     "line_items[0][price]": price,
     "line_items[0][quantity]": 1,
-    success_url: `${origin}${successPath}?checkout=success&plan=${plan}&interval=${interval}`,
-    cancel_url: `${origin}/precios?checkout=cancelled`,
-    allow_promotion_codes: true,
+    success_url: `${origin}/suscripcion/exito?session_id={CHECKOUT_SESSION_ID}&next=${encodeURIComponent(successPath)}`,
+    cancel_url: `${origin}/suscripcion/cancelada?plan=${plan}&interval=${interval}${founder ? "&founder=true" : ""}`,
+    allow_promotion_codes: founder ? undefined : true,
     billing_address_collection: "required",
     "automatic_tax[enabled]": true,
     "tax_id_collection[enabled]": true,
     "customer_email": isEmail(email) ? email : undefined,
+    payment_method_collection: founder && requirePaymentMethod ? "always" : undefined,
     "metadata[regikaha_plan]": plan,
     "metadata[regikaha_interval]": interval,
     "metadata[regikaha_user_id]": user.id,
     "metadata[regikaha_role]": role,
+    "metadata[regikaha_contract_acceptance_id]": acceptanceId,
+    "metadata[regikaha_founder]": founder ? "true" : "false",
+    "metadata[regikaha_founder_slot_id]": founderSlot?.id,
     "subscription_data[metadata][regikaha_plan]": plan,
     "subscription_data[metadata][regikaha_interval]": interval,
     "subscription_data[metadata][regikaha_user_id]": user.id,
     "subscription_data[metadata][regikaha_role]": role,
+    "subscription_data[metadata][regikaha_contract_acceptance_id]": acceptanceId,
+    "subscription_data[metadata][regikaha_founder]": founder ? "true" : "false",
+    "subscription_data[metadata][regikaha_founder_slot_id]": founderSlot?.id,
+    "subscription_data[trial_end]": trialEnd,
   });
 
   const stripeRes = await fetch("https://api.stripe.com/v1/checkout/sessions", {

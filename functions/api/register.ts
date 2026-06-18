@@ -1,9 +1,33 @@
 import { json, bad, isEmail, sessionCookie, getSessionUser } from "../../apilib/http";
 import { hashPassword, createSession, newId, slugify } from "../../apilib/auth";
 import { normalizeRole, panelPathForRole } from "../../lib/accounts";
+import { hashContractSnapshot } from "../../lib/legal/hashContract";
+import { sendEmail, verificationEmailMessage } from "../../lib/notifications/email";
 
 function clean(value: unknown, max = 600): string {
   return String(value || "").trim().slice(0, max);
+}
+
+function billingRedirect(body: any, role: string, verifyEmail: boolean) {
+  if (role === "client") return panelPathForRole(role as any);
+  const plan = body.plan === "europa_pro" ? "europa_pro" : "autonomo_nacional";
+  const interval = body.interval === "yearly" ? "yearly" : "monthly";
+  const founder = body.founderIntent === true || String(body.founder || "") === "true";
+  const params = new URLSearchParams({ plan, interval });
+  if (founder) params.set("founder", "true");
+  if (verifyEmail) params.set("verifyEmail", "true");
+  return `/suscripcion/confirmar?${params.toString()}`;
+}
+
+async function createVerification(env: any) {
+  const rawToken = `${crypto.randomUUID()}${crypto.randomUUID().replace(/-/g, "")}`;
+  return { rawToken, tokenHash: await hashContractSnapshot({ token: rawToken }) };
+}
+
+async function sendVerification(env: any, request: Request, params: { email: string; name?: string; rawToken: string }) {
+  const origin = String(env.NEXT_PUBLIC_SITE_URL || request.headers.get("Origin") || new URL(request.url).origin).replace(/\/$/, "");
+  const verifyUrl = `${origin}/verificar-email?token=${encodeURIComponent(params.rawToken)}`;
+  return sendEmail(env, verificationEmailMessage({ email: params.email, name: params.name, verifyUrl }));
 }
 
 // POST /api/register — crea cuenta (email+contraseña) + perfil profesional pendiente.
@@ -34,11 +58,13 @@ export async function onRequestPost(context: any) {
     const exists = await env.DB.prepare("SELECT id FROM users WHERE email = ?").bind(email).first();
     if (exists && (!sessionUser || exists.id !== sessionUser.id)) return bad("Ya existe una cuenta con ese email", 409);
     const stmts = [];
+    const verification = sessionUser ? null : await createVerification(env);
     if (!sessionUser) {
       const pwHash = await hashPassword(password);
-      stmts.push(env.DB.prepare("INSERT INTO users (id,email,password_hash,role) VALUES (?,?,?,?)").bind(userId, email, pwHash, role));
+      stmts.push(env.DB.prepare("INSERT INTO users (id,email,password_hash,role,verify_token) VALUES (?,?,?,?,?)").bind(userId, email, pwHash, role, verification!.tokenHash));
     }
     if (stmts.length) await env.DB.batch(stmts);
+    if (verification) await sendVerification(env, request, { email, name, rawToken: verification.rawToken });
     try {
       await env.DB.prepare(
         `INSERT OR REPLACE INTO profiles
@@ -47,7 +73,7 @@ export async function onRequestPost(context: any) {
       ).bind(
           userId,
           role,
-          "active",
+          role === "client" ? "active" : "draft",
           String(b.displayName || name),
           name,
           String(b.country || "").toUpperCase(),
@@ -64,7 +90,12 @@ export async function onRequestPost(context: any) {
     }
     const { token, maxAge } = await createSession(env, userId);
     return json(
-      { ok: true, user: { id: userId, email, role }, redirectTo: panelPathForRole(role) },
+      {
+        ok: true,
+        user: { id: userId, email, role },
+        emailVerificationRequired: !!verification,
+        redirectTo: billingRedirect(b, role, !!verification),
+      },
       201,
       { "Set-Cookie": sessionCookie(token, maxAge) },
     );
@@ -99,16 +130,17 @@ export async function onRequestPost(context: any) {
   const seoDescription = String(b.tagline || b.description || "").trim().slice(0, 160);
 
   const stmts = [];
+  const verification = sessionUser ? null : await createVerification(env);
   if (!sessionUser) {
     const pwHash = await hashPassword(password);
-    stmts.push(env.DB.prepare("INSERT INTO users (id,email,password_hash,role) VALUES (?,?,?,'professional')").bind(userId, email, pwHash));
+    stmts.push(env.DB.prepare("INSERT INTO users (id,email,password_hash,role,verify_token) VALUES (?,?,?,'professional',?)").bind(userId, email, pwHash, verification!.tokenHash));
   }
   stmts.push(
     env.DB.prepare(
       `INSERT INTO professionals
         (id,user_id,slug,type,type_label,public_name,legal_name,nif_cif,country,region,city,phone,years_experience,languages,
-         description,short_tagline,insurance_declared,invoice_declared,offers_urgent,seo_title,seo_description,verification_status)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending')`,
+         description,short_tagline,insurance_declared,invoice_declared,offers_urgent,seo_title,seo_description,verification_status,active_status)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',0)`,
     ).bind(
       proId, userId, slug, type, typeLabel[type] || "Profesional", publicName, String(b.legalName || ""), String(b.nifCif || ""),
       country, region, city, String(b.phone || ""), Number(b.yearsExperience) || 0, langs,
@@ -126,9 +158,15 @@ export async function onRequestPost(context: any) {
   }
 
   await env.DB.batch(stmts);
+  if (verification) await sendVerification(env, request, { email, name: publicName, rawToken: verification.rawToken });
   const { token, maxAge } = await createSession(env, userId);
   return json(
-    { ok: true, professional: { id: proId, slug, publicName, verificationStatus: "pending" }, redirectTo: "/panel/profesional" },
+    {
+      ok: true,
+      professional: { id: proId, slug, publicName, verificationStatus: "pending", activeStatus: false },
+      emailVerificationRequired: !!verification,
+      redirectTo: billingRedirect(b, "professional", !!verification),
+    },
     201,
     { "Set-Cookie": sessionCookie(token, maxAge) },
   );

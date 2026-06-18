@@ -24,7 +24,13 @@ export async function onRequestGet(context: any) {
   }
   return json({
     authenticated: true,
-    user: { id: user.id, email: user.email, role: user.role, name: user.name || profile?.display_name || null },
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      name: user.name || profile?.display_name || null,
+      emailVerified: Number(user.email_verified || 0) === 1,
+    },
     profile,
     professional: pro || null,
     panelPath: panelPathForRole(user.role),

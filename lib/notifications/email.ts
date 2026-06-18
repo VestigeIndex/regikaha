@@ -76,3 +76,14 @@ Si la suscripción no está activa, RegiKaha puede limitar el acceso comercial s
     tags: { type: "subscription_trial_notice" },
   };
 }
+
+export function verificationEmailMessage(params: { email: string; name?: string; verifyUrl: string }): EmailMessage {
+  const greeting = params.name ? `Hola ${params.name},` : "Hola,";
+  return {
+    to: { email: params.email, name: params.name },
+    subject: "Verifica tu email en RegiKaha",
+    text: `${greeting}\n\nConfirma tu email para activar las funciones profesionales de RegiKaha:\n${params.verifyUrl}\n\nSi no has creado esta cuenta, ignora este mensaje.`,
+    html: `<p>${greeting}</p><p>Confirma tu email para activar las funciones profesionales de RegiKaha.</p><p><a href="${params.verifyUrl}">Verificar email</a></p><p>Si no has creado esta cuenta, ignora este mensaje.</p>`,
+    tags: { type: "email_verification" },
+  };
+}

@@ -5,6 +5,7 @@ import { useI18n } from "@/lib/i18n/context";
 import { dictionaries } from "@/lib/i18n/dictionaries";
 import { domTextDictionaries } from "@/lib/i18n/dom.generated";
 import { releaseTextDictionaries } from "@/lib/i18n/release";
+import { subscriptionTextDictionaries } from "@/lib/i18n/subscription";
 import { marketsDictionaries } from "@/lib/i18n/markets";
 import { type Locale } from "@/lib/i18n/config";
 import { getActiveMarketBySlug } from "@/lib/market";
@@ -20,13 +21,7 @@ function replaceKnownPhrases(value: string, dictionary: Record<string, string>) 
   if (!normalized) return value;
   const exact = dictionary[normalized];
   if (exact) return value.replace(normalized, exact);
-
-  let next = value;
-  for (const [source, translated] of Object.entries(dictionary)) {
-    if (source.length < 4 || source === translated) continue;
-    next = next.split(source).join(translated);
-  }
-  return next;
+  return value;
 }
 
 function localizeNode(root: ParentNode, dictionary: Record<string, string>) {
@@ -158,12 +153,15 @@ export function DomTextLocalizer() {
   const { locale } = useI18n();
 
   useEffect(() => {
-    const dictionary = { ...domTextDictionaries[locale], ...releaseTextDictionaries[locale] };
+    const dictionary = { ...domTextDictionaries[locale], ...releaseTextDictionaries[locale], ...subscriptionTextDictionaries[locale] };
     localizeDocumentMetadata(locale, dictionary);
     if (locale === "es") return;
     localizeNode(document, dictionary);
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
+        if (mutation.type === "characterData" && mutation.target.parentElement) {
+          localizeNode(mutation.target.parentElement, dictionary);
+        }
         mutation.addedNodes.forEach((node) => {
           if (node.nodeType === Node.TEXT_NODE && node.parentElement) {
             localizeNode(node.parentElement, dictionary);
@@ -174,7 +172,7 @@ export function DomTextLocalizer() {
       }
       localizeDocumentMetadata(locale, dictionary);
     });
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, { childList: true, characterData: true, subtree: true });
     observer.observe(document.head, { childList: true, characterData: true, subtree: true });
     return () => observer.disconnect();
   }, [locale]);

@@ -36,7 +36,7 @@ export function DashboardShell({
       </div>
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         {nav.map((item) => {
-          const active = pathname === item.href;
+          const active = pathname === item.href || (item.href !== "/panel" && pathname.startsWith(`${item.href}/`));
           return (
             <Link
               key={item.href}
@@ -87,10 +87,22 @@ export function DashboardShell({
           </div>
         )}
 
-        <main className="min-w-0">
-          <div className="container-x py-8 lg:py-10">{children}</div>
+        <main className="min-w-0 pb-24 lg:pb-0">
+          <div className="container-x py-6 sm:py-8 lg:py-10">{children}</div>
         </main>
       </div>
+
+      <nav className="dashboard-mobile-nav lg:hidden" aria-label="Navegación principal del panel">
+        {nav.slice(0, 5).map((item) => {
+          const active = pathname === item.href || (item.href !== "/panel" && pathname.startsWith(`${item.href}/`));
+          return (
+            <Link key={item.href} href={item.href} className={cn("dashboard-mobile-link", active && "is-active")} aria-current={active ? "page" : undefined}>
+              <span>{item.icon}</span>
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 }

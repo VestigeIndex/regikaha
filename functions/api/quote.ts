@@ -18,6 +18,12 @@ export async function onRequestPost(context: any) {
   if (!isActiveCountryCode(country)) return bad("País no disponible todavía en RegiKaha");
   if (description.length < 20) return bad("Describe brevemente lo que necesitas");
   if (description.length > 2400) return bad("La descripción es demasiado larga");
+  if (b.professionalId) {
+    const target = await env.DB.prepare(
+      "SELECT id FROM professionals WHERE id = ? AND active_status = 1 AND verification_status != 'suspended'",
+    ).bind(String(b.professionalId)).first();
+    if (!target) return bad("Este perfil no está disponible para nuevas solicitudes", 409);
+  }
 
   const id = newId("qr_");
   await env.DB.prepare(

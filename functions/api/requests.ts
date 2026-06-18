@@ -1,5 +1,5 @@
 import { json } from "../../apilib/http";
-import { getCurrentProfessional, safeJsonArray } from "../../apilib/professional";
+import { getCurrentProfessional, getSubscriptionAccess, safeJsonArray } from "../../apilib/professional";
 
 function locationOf(row: any) {
   return [row.city, row.region, row.country].filter(Boolean).join(", ");
@@ -8,6 +8,10 @@ function locationOf(row: any) {
 export async function onRequestGet(context: any) {
   const current = await getCurrentProfessional(context.env, context.request);
   if (current instanceof Response) return current;
+  const access = await getSubscriptionAccess(context.env, current.user.id);
+  if (!access.active) {
+    return json({ requests: [], subscriptionRequired: true, subscriptionStatus: access.subscription?.status || "no_subscription" });
+  }
 
   const quotes = await context.env.DB.prepare(
     `SELECT * FROM quote_requests

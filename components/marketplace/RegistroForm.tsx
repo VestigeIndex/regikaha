@@ -64,6 +64,7 @@ export function RegistroForm() {
   const [error, setError] = useState<string | null>(null);
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const [form, setForm] = useState<RegisterForm>(initialForm);
+  const [nextPath, setNextPath] = useState("/suscripcion");
 
   function update<K extends keyof RegisterForm>(key: K, value: RegisterForm[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -78,6 +79,7 @@ export function RegistroForm() {
     setError(null);
     try {
       if (!selectedCats.length) throw new Error(t.ui.register.selectCategoryError);
+      const params = new URLSearchParams(window.location.search);
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -87,10 +89,14 @@ export function RegistroForm() {
           categories: selectedCats,
           languages: ["Español"],
           areas: [{ country: form.country, region: form.region, city: form.city }],
+          plan: params.get("plan") === "europa_pro" ? "europa_pro" : "autonomo_nacional",
+          interval: params.get("interval") === "yearly" ? "yearly" : "monthly",
+          founderIntent: params.get("founder") === "true",
         }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || t.ui.register.unableToCreate);
+      setNextPath(data.redirectTo || "/suscripcion");
       setDone(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : t.ui.register.unableToCreate);
@@ -119,7 +125,7 @@ export function RegistroForm() {
           {t.ui.register.welcomeText}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <a href="/panel" className="btn btn-primary">{t.ui.register.goPanel}</a>
+          <a href={nextPath} className="btn btn-primary">Verificar email y continuar</a>
           <a href="/panel/servicios" className="btn btn-secondary">{t.ui.register.createServices}</a>
         </div>
       </div>

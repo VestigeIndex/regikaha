@@ -331,6 +331,121 @@ body {
     animation: none !important;
   }
 }
+
+/* ---------- Subscription contract ---------- */
+.subscription-contract {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  box-shadow: 0 24px 70px -36px rgba(15, 92, 74, 0.38);
+  overflow: hidden;
+}
+.contract-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem 1.75rem;
+  border-bottom: 1px solid var(--hairline);
+}
+.contract-progress { height: 4px; background: var(--canvas-alt); }
+.contract-progress span { display: block; height: 100%; background: var(--primary); transition: width .2s ease; }
+.contract-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr) 320px; min-height: 680px; }
+.contract-tabs { padding: 1rem; border-right: 1px solid var(--hairline); background: var(--canvas); }
+.contract-tab { width: 100%; min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .65rem .75rem; border-radius: 7px; color: var(--muted-foreground); font-size: .82rem; font-weight: 600; text-align: left; }
+.contract-tab:hover, .contract-tab.is-active { background: #fff; color: var(--primary-deep); box-shadow: 0 1px 4px rgba(15,92,74,.08); }
+.contract-content { min-width: 0; padding: 1.75rem; overflow-y: auto; max-height: 78vh; }
+.contract-mobile-tabs { display: none; }
+.contract-copy h2, .contract-checks h2 { font-size: 1.1rem; line-height: 1.35; font-weight: 750; color: var(--foreground); }
+.contract-copy p { margin-top: .85rem; color: var(--muted-foreground); font-size: .92rem; line-height: 1.7; }
+.contract-checks { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--hairline); }
+.contract-check { display: grid; grid-template-columns: 1.25rem 1.35rem minmax(0,1fr); align-items: start; gap: .5rem; padding: .75rem; border: 1px solid var(--hairline); border-radius: 7px; color: #30483d; font-size: .86rem; line-height: 1.45; cursor: pointer; }
+.contract-check input { position: absolute; opacity: 0; pointer-events: none; }
+.contract-check-icon { display: grid; place-items: center; width: 1.25rem; height: 1.25rem; border-radius: 5px; border: 1px solid rgba(15,92,74,.25); background: #fff; color: #fff; }
+.contract-check.is-checked { border-color: rgba(25,140,104,.36); background: rgba(221,244,234,.35); }
+.contract-check.is-checked .contract-check-icon { border-color: var(--primary); background: var(--primary); }
+.contract-summary { padding: 1.5rem; border-left: 1px solid var(--hairline); background: #fbfdfc; }
+.contract-mobile-action { display: none; }
+
+@media (max-width: 1023px) {
+  .contract-grid { grid-template-columns: minmax(0, 1fr) 300px; }
+  .contract-tabs { display: none; }
+  .contract-mobile-tabs { display: flex; gap: .4rem; overflow-x: auto; margin: -1.75rem -1.75rem 1.5rem; padding: .85rem 1.75rem; border-bottom: 1px solid var(--hairline); scrollbar-width: none; }
+  .contract-mobile-tab { flex: 0 0 auto; border-radius: 6px; padding: .55rem .75rem; background: var(--canvas); color: var(--muted-foreground); font-size: .78rem; font-weight: 650; }
+  .contract-mobile-tab.is-active { background: var(--primary-deep); color: #fff; }
+}
+
+@media (max-width: 767px) {
+  .subscription-contract { border: 0; border-radius: 0; box-shadow: none; margin: -1rem -.75rem 0; width: calc(100% + 1.5rem); padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+  .contract-header { padding: 1rem 1.1rem; }
+  .contract-header h1 { font-size: 1.35rem; }
+  .contract-header p { font-size: .8rem; line-height: 1.45; }
+  .contract-print { display: none; }
+  .contract-grid { display: block; min-height: 0; }
+  .contract-content { max-height: none; overflow: visible; padding: 1.2rem 1.1rem; }
+  .contract-mobile-tabs { margin: -1.2rem -1.1rem 1.2rem; padding: .75rem 1.1rem; position: sticky; top: 0; z-index: 5; background: rgba(255,255,255,.96); backdrop-filter: blur(12px); }
+  .contract-summary { border: 0; border-top: 1px solid var(--hairline); padding: 1.2rem 1.1rem; }
+  .contract-summary > button { display: none; }
+  .contract-check { grid-template-columns: 1.25rem minmax(0,1fr); padding: .8rem; font-size: .83rem; }
+  .contract-check > input + .contract-check-icon { grid-column: 1; }
+  .contract-check > span:last-child { grid-column: 2; }
+  .contract-mobile-action { position: fixed; inset-inline: 0; bottom: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom)); background: rgba(255,255,255,.96); border-top: 1px solid var(--hairline); box-shadow: 0 -12px 30px rgba(18,32,25,.09); backdrop-filter: blur(16px); }
+  .contract-mobile-action .btn { min-height: 44px; padding-inline: 1rem; }
+}
+
+@media print {
+  .glass, header, footer, .contract-tabs, .contract-mobile-tabs, .contract-mobile-action, .contract-print { display: none !important; }
+  .subscription-contract { box-shadow: none; border: 0; }
+  .contract-grid { display: block; }
+  .contract-content { max-height: none; overflow: visible; }
+  .contract-summary { border: 0; }
+}
+
+/* ---------- Mobile dashboard navigation ---------- */
+.dashboard-mobile-nav {
+  position: fixed;
+  inset-inline: .65rem;
+  bottom: max(.65rem, env(safe-area-inset-bottom));
+  z-index: 45;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  min-height: 64px;
+  padding: .35rem;
+  border: 1px solid rgba(15, 92, 74, .14);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 16px 40px rgba(18, 32, 25, .16);
+  backdrop-filter: blur(18px);
+}
+.dashboard-mobile-link {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: .2rem;
+  border-radius: 9px;
+  color: var(--muted-foreground);
+  font-size: clamp(.58rem, 2.5vw, .68rem);
+  font-weight: 650;
+  line-height: 1.05;
+  text-align: center;
+}
+.dashboard-mobile-link > span:last-child {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dashboard-mobile-link.is-active { background: var(--primary-deep); color: #fff; }
+.dashboard-mobile-link svg { width: 19px; height: 19px; }
+
+@media (min-width: 1024px) {
+  .dashboard-mobile-nav { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

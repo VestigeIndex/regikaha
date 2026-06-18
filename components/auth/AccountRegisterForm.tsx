@@ -38,11 +38,17 @@ export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "prof
     setPending(true);
     setError(null);
     const form = new FormData(e.currentTarget);
+    const params = new URLSearchParams(window.location.search);
     try {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(Object.fromEntries(form.entries())),
+        body: JSON.stringify({
+          ...Object.fromEntries(form.entries()),
+          plan: params.get("plan") === "europa_pro" ? "europa_pro" : "autonomo_nacional",
+          interval: params.get("interval") === "yearly" ? "yearly" : "monthly",
+          founderIntent: params.get("founder") === "true",
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "No se pudo crear la cuenta");

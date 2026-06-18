@@ -1,4 +1,5 @@
 import { bad, getSessionUser, json } from "../../../apilib/http";
+import { panelPathForRole } from "../../../lib/accounts";
 
 function encodeForm(data: Record<string, string | undefined>): string {
   const params = new URLSearchParams();
@@ -26,6 +27,7 @@ export async function onRequestPost(context: any) {
   if (!subscription?.stripe_customer_id) return bad("No hay cliente Stripe asociado todavía", 404);
 
   const origin = request.headers.get("Origin") || new URL(request.url).origin;
+  const panelPath = panelPathForRole(String(user.role || "professional") as any);
   const stripeRes = await fetch("https://api.stripe.com/v1/billing_portal/sessions", {
     method: "POST",
     headers: {
@@ -34,7 +36,7 @@ export async function onRequestPost(context: any) {
     },
     body: encodeForm({
       customer: String(subscription.stripe_customer_id),
-      return_url: `${origin}/panel/profesional/facturacion`,
+      return_url: `${origin}${panelPath}/facturacion`,
     }),
   });
 

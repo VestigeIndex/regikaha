@@ -46,6 +46,13 @@ export default async function RegistroRolePage({ params }: { params: Promise<{ r
   const { role } = await params;
   if (!roles.includes(role as RouteRole)) notFound();
   const item = copy[role as RouteRole];
+  const visual = role === "profesional"
+    ? { src: "/images/photos/fachada.webp", alt: "Equipo profesional rehabilitando una fachada", text: "Presenta trabajos reales y activa tu cobertura profesional." }
+    : role === "empresa"
+      ? { src: "/images/photos/mantenimiento.webp", alt: "Técnico industrial revisando una instalación", text: "Coordina equipos y oportunidades B2B desde un único panel." }
+      : role === "subcontrata"
+        ? { src: "/images/photos/pavimentacion.webp", alt: "Equipo especializado ejecutando un trabajo de pavimentación", text: "Muestra capacidad, especialidades y zonas disponibles." }
+        : null;
   return (
     <>
       <PageHeader
@@ -60,7 +67,16 @@ export default async function RegistroRolePage({ params }: { params: Promise<{ r
           </span>
         )}
       </PageHeader>
-      <section className="container-x py-14">
+      {visual && (
+        <section className="container-x pt-10 sm:pt-14">
+          <div className="relative mx-auto min-h-64 max-w-4xl overflow-hidden rounded-lg sm:min-h-80">
+            <img src={visual.src} alt={visual.alt} className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
+            <p className="absolute inset-x-0 bottom-0 max-w-xl p-6 text-lg font-semibold text-white sm:p-8 sm:text-xl">{visual.text}</p>
+          </div>
+        </section>
+      )}
+      <section className="container-x py-10 sm:py-14">
         {role === "profesional" || !item.accountRole ? <RegistroForm /> : <AccountRegisterForm role={item.accountRole} />}
       </section>
     </>
