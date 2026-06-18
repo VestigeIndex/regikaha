@@ -291,7 +291,7 @@ export interface Subscription {
   id: string;
   professionalId: string;
   plan: "autonomo_monthly" | "autonomo_yearly" | "europa_monthly" | "europa_yearly" | "founder";
-  status: "trial" | "active" | "past_due" | "canceled";
+  status: "no_subscription" | "founder_trial_0_eur" | "trialing" | "active" | "past_due" | "unpaid" | "cancelled" | "suspended" | "expired";
   priceEur: number;
   startedAt: string;
   renewsAt: string;
@@ -302,6 +302,12 @@ export interface SearchFilters {
   query?: string;
   categoryId?: string;
   locationSlug?: string;
+  placeId?: string;
+  countryCode?: string;
+  city?: string;
+  region?: string;
+  postalCode?: string;
+  radiusKm?: number;
   minRating?: number;
   verifiedOnly?: boolean;
   withInsurance?: boolean;

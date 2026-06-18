@@ -62,11 +62,13 @@ export const footerNav: { title: string; links: { label: string; href: string }[
   {
     title: "Para profesionales",
     links: [
-      { label: "Unirme como profesional", href: "/registro" },
+      { label: "Unirme como profesional", href: "/registro/profesional" },
       { label: "Para profesionales", href: "/para-profesionales" },
       { label: "Precios", href: "/precios" },
       { label: "Oferta fundadores", href: "/fundadores" },
       { label: "Política de verificación", href: "/legal/politica-verificacion" },
+      { label: "Política de suscripción", href: "/legal/politica-suscripcion" },
+      { label: "Uso aceptable", href: "/legal/uso-aceptable" },
     ],
   },
   {
@@ -77,6 +79,7 @@ export const footerNav: { title: string; links: { label: string; href: string }[
       { label: "Aviso legal", href: "/legal/aviso-legal" },
       { label: "Privacidad", href: "/legal/privacidad" },
       { label: "Cookies", href: "/legal/cookies" },
+      { label: "Reclamaciones", href: "/legal/reclamaciones" },
     ],
   },
 ];

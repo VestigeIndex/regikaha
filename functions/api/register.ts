@@ -1,5 +1,10 @@
 import { json, bad, isEmail, sessionCookie, getSessionUser } from "../../apilib/http";
 import { hashPassword, createSession, newId, slugify } from "../../apilib/auth";
+import { normalizeRole, panelPathForRole } from "../../lib/accounts";
+
+function clean(value: unknown, max = 600): string {
+  return String(value || "").trim().slice(0, max);
+}
 
 // POST /api/register — crea cuenta (email+contraseña) + perfil profesional pendiente.
 export async function onRequestPost(context: any) {
@@ -8,6 +13,7 @@ export async function onRequestPost(context: any) {
   try { b = await request.json(); } catch { return bad("JSON inválido"); }
 
   const sessionUser = await getSessionUser(env, request);
+  const role = normalizeRole(b.role || b.accountRole || "professional", "professional");
   const email = String(b.email || sessionUser?.email || "").trim().toLowerCase();
   const password = String(b.password || "");
   const publicName = String(b.publicName || "").trim();
@@ -19,6 +25,50 @@ export async function onRequestPost(context: any) {
 
   if (!isEmail(email)) return bad("Email no válido");
   if (!sessionUser && password.length < 8) return bad("La contraseña debe tener al menos 8 caracteres");
+  if (clean(b.website, 200)) return bad("Solicitud no válida");
+  if (role !== "professional") {
+    if (!String(b.acceptsTerms || "").trim() && b.acceptsTerms !== true) return bad("Debes aceptar las condiciones");
+    const name = String(b.name || b.displayName || "").trim();
+    if (!name) return bad("Falta el nombre");
+    const userId = sessionUser?.id || newId("usr_");
+    const exists = await env.DB.prepare("SELECT id FROM users WHERE email = ?").bind(email).first();
+    if (exists && (!sessionUser || exists.id !== sessionUser.id)) return bad("Ya existe una cuenta con ese email", 409);
+    const stmts = [];
+    if (!sessionUser) {
+      const pwHash = await hashPassword(password);
+      stmts.push(env.DB.prepare("INSERT INTO users (id,email,password_hash,role) VALUES (?,?,?,?)").bind(userId, email, pwHash, role));
+    }
+    if (stmts.length) await env.DB.batch(stmts);
+    try {
+      await env.DB.prepare(
+        `INSERT OR REPLACE INTO profiles
+          (user_id,role,status,display_name,contact_name,country,region,city,place_id,place_slug,phone,email_verified,onboarding_completed,updated_at)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'))`,
+      ).bind(
+          userId,
+          role,
+          "active",
+          String(b.displayName || name),
+          name,
+          String(b.country || "").toUpperCase(),
+          String(b.region || ""),
+          String(b.city || ""),
+          String(b.placeId || ""),
+          String(b.placeSlug || ""),
+          String(b.phone || ""),
+          0,
+          0,
+      ).run();
+    } catch {
+      // En entornos sin migración de profiles aplicada, la cuenta de usuario sigue siendo válida.
+    }
+    const { token, maxAge } = await createSession(env, userId);
+    return json(
+      { ok: true, user: { id: userId, email, role }, redirectTo: panelPathForRole(role) },
+      201,
+      { "Set-Cookie": sessionCookie(token, maxAge) },
+    );
+  }
   if (!publicName) return bad("Falta el nombre comercial");
   if (!country) return bad("Falta el país de actividad");
 
@@ -78,7 +128,7 @@ export async function onRequestPost(context: any) {
   await env.DB.batch(stmts);
   const { token, maxAge } = await createSession(env, userId);
   return json(
-    { ok: true, professional: { id: proId, slug, publicName, verificationStatus: "pending" } },
+    { ok: true, professional: { id: proId, slug, publicName, verificationStatus: "pending" }, redirectTo: "/panel/profesional" },
     201,
     { "Set-Cookie": sessionCookie(token, maxAge) },
   );

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check, ArrowRight, ArrowLeft, PartyPopper, Building2, MapPin, ShieldCheck } from "lucide-react";
 import { GoogleConnectButton } from "@/components/auth/GoogleConnectButton";
+import { PlaceAutocomplete } from "@/components/geo/PlaceAutocomplete";
 import { categories } from "@/lib/data/categories";
 import { integrations } from "@/lib/integrations";
 import { europeanCountryOptions } from "@/lib/market";
@@ -156,7 +157,7 @@ export function RegistroForm() {
                 {t.ui.register.connectText}
               </p>
               <div className="mt-3">
-                <GoogleConnectButton clientId={integrations.googleClientId} redirectTo="/registro" />
+                <GoogleConnectButton clientId={integrations.googleClientId} redirectTo="/registro/profesional" />
               </div>
             </div>
             <Field label={t.ui.register.professionalType}>
@@ -214,8 +215,20 @@ export function RegistroForm() {
                   ))}
                 </select>
               </Field>
-              <Field label={t.ui.common.region}><input className="reg-input" value={form.region} onChange={(e) => update("region", e.target.value)} required /></Field>
-              <Field label={t.ui.common.city}><input className="reg-input" value={form.city} onChange={(e) => update("city", e.target.value)} required /></Field>
+              <div>
+                <PlaceAutocomplete
+                  country={form.country}
+                  required
+                  mode="professional"
+                  label={t.ui.common.city}
+                  onTextChange={(label) => update("city", label)}
+                  onChange={(place, label) => {
+                    update("city", place?.localityName || label);
+                    update("region", place?.admin1Name || place?.admin2Name || "");
+                    if (place?.countryCode) update("country", place.countryCode);
+                  }}
+                />
+              </div>
               <Field label={t.ui.register.serviceArea}><input className="reg-input" value={form.serviceArea} onChange={(e) => update("serviceArea", e.target.value)} required /></Field>
             </div>
             <Field label={t.ui.register.seoTagline}><input className="reg-input" value={form.tagline} onChange={(e) => update("tagline", e.target.value)} required /></Field>

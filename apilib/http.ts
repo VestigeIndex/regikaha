@@ -48,11 +48,41 @@ export async function getSessionUser(env: any, request: Request): Promise<any | 
   return row || null;
 }
 
-/** Exige sesión con rol admin para APIs internas. */
-export async function requireAdmin(env: any, request: Request): Promise<any | Response> {
+export async function requireUser(env: any, request: Request): Promise<any | Response> {
   const user = await getSessionUser(env, request);
   if (!user) return bad("No autenticado", 401);
-  if (user.role !== "admin") return bad("No autorizado", 403);
+  return user;
+}
+
+export async function requireRole(env: any, request: Request, roles: string | string[]): Promise<any | Response> {
+  const user = await requireUser(env, request);
+  if (user instanceof Response) return user;
+  const allowed = Array.isArray(roles) ? roles : [roles];
+  if (!allowed.includes(user.role)) return bad("No autorizado", 403);
+  return user;
+}
+
+export function requireProfessional(env: any, request: Request): Promise<any | Response> {
+  return requireRole(env, request, ["professional", "admin"]);
+}
+
+export function requireCompany(env: any, request: Request): Promise<any | Response> {
+  return requireRole(env, request, ["company", "admin"]);
+}
+
+export function requireSubcontractor(env: any, request: Request): Promise<any | Response> {
+  return requireRole(env, request, ["subcontractor", "admin"]);
+}
+
+/** Exige sesión con rol admin para APIs internas. */
+export async function requireAdmin(env: any, request: Request): Promise<any | Response> {
+  return requireRole(env, request, "admin");
+}
+
+export async function requireOwnerOrAdmin(env: any, request: Request, ownerUserId: string): Promise<any | Response> {
+  const user = await requireUser(env, request);
+  if (user instanceof Response) return user;
+  if (user.role !== "admin" && user.id !== ownerUserId) return bad("No autorizado", 403);
   return user;
 }
 

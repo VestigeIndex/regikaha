@@ -1,6 +1,13 @@
 import type { Professional } from "@/lib/types";
 import { getCategoryById } from "@/lib/data/categories";
 
+export * from "./adapters";
+export * from "./distance";
+export * from "./normalize";
+export * from "./places";
+export * from "./search";
+export * from "./types";
+
 export type Coordinates = { lat: number; lng: number };
 
 export type CoverageStatus =
@@ -26,28 +33,45 @@ export const cityCoordinates: Record<string, Coordinates> = {
   berlin: { lat: 52.52, lng: 13.405 },
   munich: { lat: 48.1351, lng: 11.582 },
   milan: { lat: 45.4642, lng: 9.19 },
+  milano: { lat: 45.4642, lng: 9.19 },
   roma: { lat: 41.9028, lng: 12.4964 },
   amsterdam: { lat: 52.3676, lng: 4.9041 },
+  rotterdam: { lat: 51.9244, lng: 4.4777 },
   bruselas: { lat: 50.8503, lng: 4.3517 },
+  bruxelles: { lat: 50.8503, lng: 4.3517 },
+  antwerpen: { lat: 51.2194, lng: 4.4025 },
+  amberes: { lat: 51.2194, lng: 4.4025 },
   dublin: { lat: 53.3498, lng: -6.2603 },
-  viena: { lat: 48.2082, lng: 16.3738 },
-  varsovia: { lat: 52.2297, lng: 21.0122 },
+  cork: { lat: 51.8985, lng: -8.4756 },
+  london: { lat: 51.5072, lng: -0.1276 },
+  manchester: { lat: 53.4808, lng: -2.2426 },
+  zurich: { lat: 47.3769, lng: 8.5417 },
+  geneva: { lat: 46.2044, lng: 6.1432 },
+  ginebra: { lat: 46.2044, lng: 6.1432 },
+  stuttgart: { lat: 48.7758, lng: 9.1829 },
+  bonn: { lat: 50.7374, lng: 7.0982 },
+  terrassa: { lat: 41.5632, lng: 2.0089 },
+  sabadell: { lat: 41.5463, lng: 2.1086 },
+  rubi: { lat: 41.4923, lng: 2.0331 },
+  "sant-cugat-del-valles": { lat: 41.4706, lng: 2.0853 },
+  algeciras: { lat: 36.1408, lng: -5.4562 },
+  marbella: { lat: 36.5101, lng: -4.8824 },
 };
 
 const countryCoordinates: Record<string, Coordinates> = {
   ES: { lat: 40.4168, lng: -3.7038 },
-  PT: { lat: 38.7223, lng: -9.1393 },
   FR: { lat: 48.8566, lng: 2.3522 },
-  DE: { lat: 52.52, lng: 13.405 },
   IT: { lat: 41.9028, lng: 12.4964 },
+  PT: { lat: 38.7223, lng: -9.1393 },
+  CH: { lat: 46.948, lng: 7.4474 },
+  DE: { lat: 52.52, lng: 13.405 },
   NL: { lat: 52.3676, lng: 4.9041 },
   BE: { lat: 50.8503, lng: 4.3517 },
   IE: { lat: 53.3498, lng: -6.2603 },
-  AT: { lat: 48.2082, lng: 16.3738 },
-  PL: { lat: 52.2297, lng: 21.0122 },
+  GB: { lat: 51.5072, lng: -0.1276 },
 };
 
-const fallbackEurope = { lat: 46.9, lng: 7.4 };
+const fallbackActiveMarkets = { lat: 46.9, lng: 7.4 };
 
 function key(value: string): string {
   return value
@@ -62,7 +86,7 @@ export function coordinatesForCity(city?: string, countryCode?: string): Coordin
   if (countryCode && countryCoordinates[countryCode.toUpperCase()]) {
     return countryCoordinates[countryCode.toUpperCase()];
   }
-  return fallbackEurope;
+  return fallbackActiveMarkets;
 }
 
 export function coordinatesForProfessional(pro: Professional, index = 0): Coordinates {

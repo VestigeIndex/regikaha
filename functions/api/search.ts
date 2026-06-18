@@ -8,6 +8,7 @@ export async function onRequestGet(context: any) {
   const cat = u.searchParams.get("cat") || "";
   const country = (u.searchParams.get("country") || "").toUpperCase();
   const region = u.searchParams.get("region") || "";
+  const city = u.searchParams.get("city") || "";
   const q = u.searchParams.get("q") || "";
 
   if (country && !isActiveCountryCode(country)) {
@@ -31,6 +32,13 @@ export async function onRequestGet(context: any) {
       where.push("(sa.region = ? OR sa.region = '' OR sa.region IS NULL)");
       binds.push(region);
     }
+    if (city) {
+      where.push("(lower(sa.city) = lower(?) OR lower(p.city) = lower(?) OR sa.city = '' OR sa.city IS NULL)");
+      binds.push(city, city);
+    }
+  } else if (city) {
+    where.push("(lower(p.city) = lower(?) OR p.city LIKE ?)");
+    binds.push(city, `%${city}%`);
   }
   if (q) {
     where.push("(p.public_name LIKE ? OR p.description LIKE ? OR p.short_tagline LIKE ?)");

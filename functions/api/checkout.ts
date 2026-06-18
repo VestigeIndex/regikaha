@@ -1,4 +1,5 @@
-import { bad, json, isEmail } from "../../apilib/http";
+import { bad, json, isEmail, getSessionUser } from "../../apilib/http";
+import { panelPathForRole } from "../../lib/accounts";
 import { priceSecretName, type BillingInterval, type ProfessionalPlanId } from "../../lib/pricing";
 
 const STRIPE_VERSION = "2026-02-25.clover";
@@ -33,6 +34,20 @@ export async function onRequestPost(context: any) {
   const interval = String(body.interval || "");
   if (!isPlan(plan) || !isInterval(interval)) return bad("Plan no válido");
 
+  const user = await getSessionUser(env, request);
+  if (!user) {
+    return json(
+      {
+        error: "Necesitas crear cuenta o iniciar sesión antes de activar una suscripción",
+        redirectTo: `/registro/profesional?plan=${plan}&interval=${interval}`,
+      },
+      401,
+    );
+  }
+  if (!["professional", "company", "subcontractor", "admin"].includes(String(user.role))) {
+    return bad("Este plan es para cuentas que ofrecen servicios", 403);
+  }
+
   const secret = String(env.STRIPE_SECRET_KEY || "");
   if (!secret) return bad("Stripe no está configurado", 500);
 
@@ -41,12 +56,14 @@ export async function onRequestPost(context: any) {
   if (!price) return bad(`Falta configurar ${priceEnv}`, 500);
 
   const origin = request.headers.get("Origin") || new URL(request.url).origin;
-  const email = String(body.email || "").trim().toLowerCase();
+  const email = String(user.email || body.email || "").trim().toLowerCase();
+  const role = String(user.role || "professional");
+  const successPath = panelPathForRole(role as any);
   const payload = encodeForm({
     mode: "subscription",
     "line_items[0][price]": price,
     "line_items[0][quantity]": 1,
-    success_url: `${origin}/registro?checkout=success&plan=${plan}&interval=${interval}`,
+    success_url: `${origin}${successPath}?checkout=success&plan=${plan}&interval=${interval}`,
     cancel_url: `${origin}/precios?checkout=cancelled`,
     allow_promotion_codes: true,
     billing_address_collection: "required",
@@ -55,8 +72,12 @@ export async function onRequestPost(context: any) {
     "customer_email": isEmail(email) ? email : undefined,
     "metadata[regikaha_plan]": plan,
     "metadata[regikaha_interval]": interval,
+    "metadata[regikaha_user_id]": user.id,
+    "metadata[regikaha_role]": role,
     "subscription_data[metadata][regikaha_plan]": plan,
     "subscription_data[metadata][regikaha_interval]": interval,
+    "subscription_data[metadata][regikaha_user_id]": user.id,
+    "subscription_data[metadata][regikaha_role]": role,
   });
 
   const stripeRes = await fetch("https://api.stripe.com/v1/checkout/sessions", {

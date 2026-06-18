@@ -1,0 +1,14 @@
+{
+  "countries": [
+    { "code": "ES", "name": "España", "sources": ["GeoNames", "GeoNames postal codes", "Eurostat LAU", "INE Nomenclátor"], "defaultLocale": "es" },
+    { "code": "FR", "name": "Francia", "sources": ["GeoNames", "GeoNames postal codes", "Eurostat LAU", "INSEE"], "defaultLocale": "fr" },
+    { "code": "IT", "name": "Italia", "sources": ["GeoNames", "GeoNames postal codes", "Eurostat LAU", "ISTAT"], "defaultLocale": "it" },
+    { "code": "PT", "name": "Portugal", "sources": ["GeoNames", "GeoNames postal codes", "Eurostat LAU", "INE Portugal"], "defaultLocale": "pt" },
+    { "code": "CH", "name": "Suiza", "sources": ["GeoNames", "GeoNames postal codes", "Swiss Federal Statistical Office"], "defaultLocale": "de" },
+    { "code": "DE", "name": "Alemania", "sources": ["GeoNames", "GeoNames postal codes", "Eurostat LAU", "Destatis"], "defaultLocale": "de" },
+    { "code": "NL", "name": "Países Bajos", "sources": ["GeoNames", "GeoNames postal codes", "Eurostat LAU", "CBS"], "defaultLocale": "nl" },
+    { "code": "BE", "name": "Bélgica", "sources": ["GeoNames", "GeoNames postal codes", "Eurostat LAU", "Statbel"], "defaultLocale": "nl" },
+    { "code": "IE", "name": "Irlanda", "sources": ["GeoNames", "GeoNames postal codes", "Eurostat LAU", "CSO Ireland"], "defaultLocale": "en" },
+    { "code": "GB", "name": "Reino Unido", "sources": ["GeoNames", "GeoNames postal codes", "ONS geography", "OS Open Names"], "defaultLocale": "en" }
+  ]
+}

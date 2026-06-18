@@ -1,5 +1,6 @@
 import { json, bad, isEmail, sessionCookie } from "../../apilib/http";
 import { verifyPassword, createSession } from "../../apilib/auth";
+import { panelPathForRole } from "../../lib/accounts";
 
 // POST /api/login
 export async function onRequestPost(context: any) {
@@ -15,5 +16,11 @@ export async function onRequestPost(context: any) {
     return bad("Email o contraseña incorrectos", 401);
   }
   const { token, maxAge } = await createSession(env, user.id);
-  return json({ ok: true }, 200, { "Set-Cookie": sessionCookie(token, maxAge) });
+  const requestedRole = String(b.role || "");
+  if (requestedRole === "admin" && user.role !== "admin") return bad("No autorizado", 403);
+  return json(
+    { ok: true, user: { id: user.id, email: user.email, role: user.role }, redirectTo: panelPathForRole(user.role) },
+    200,
+    { "Set-Cookie": sessionCookie(token, maxAge) },
+  );
 }

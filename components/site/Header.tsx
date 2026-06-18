@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X, Search } from "lucide-react";
+import { LogIn, Menu, Search, UserRound, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
+import { initialsFromUser, panelPathForRole } from "@/lib/accounts";
 import { useT } from "@/lib/i18n/context";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +22,8 @@ export function Header() {
   const t = useT();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [me, setMe] = useState<any>(null);
+  const [accountOpen, setAccountOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -35,6 +38,29 @@ export function Header() {
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled) setMe(data);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  async function logout() {
+    await fetch("/api/logout", { method: "POST" }).catch(() => undefined);
+    setMe({ authenticated: false });
+    setAccountOpen(false);
+    window.location.href = "/";
+  }
+
+  const authenticated = !!me?.authenticated;
+  const panelHref = panelPathForRole(me?.user?.role);
 
   return (
     <header
@@ -60,6 +86,34 @@ export function Header() {
 
         <div className="hidden lg:flex items-center gap-1.5">
           <LanguageSwitcher />
+          {authenticated ? (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setAccountOpen((value) => !value)}
+                className="inline-flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-medium text-ink/80 hover:bg-forest-500/6"
+                aria-expanded={accountOpen}
+              >
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-forest-600 text-xs font-bold text-white">
+                  {initialsFromUser(me.user || {})}
+                </span>
+                Cuenta
+              </button>
+              {accountOpen && (
+                <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white p-2 shadow-elevated ring-1 ring-forest-600/10">
+                  <p className="px-3 py-2 text-xs text-muted truncate">{me.user?.email}</p>
+                  <Link href={panelHref} className="block rounded-lg px-3 py-2 text-sm text-ink hover:bg-forest-500/6">Ir a mi panel</Link>
+                  <button type="button" onClick={logout} className="block w-full rounded-lg px-3 py-2 text-left text-sm text-ink hover:bg-forest-500/6">
+                    Cerrar sesión
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link href="/conectar" className="btn btn-ghost">
+              <LogIn size={16} /> Conectar
+            </Link>
+          )}
           <Link href="/buscar" className="btn btn-secondary">
             <Search size={16} />
             {t.actions.search}
@@ -67,6 +121,11 @@ export function Header() {
           <Link href="/publicar-proyecto" className="btn btn-primary">
             {t.ui.nav.publishProjectFree}
           </Link>
+          {!authenticated && (
+            <Link href="/registro/profesional" className="btn btn-secondary">
+              Soy profesional
+            </Link>
+          )}
         </div>
 
         <div className="flex items-center gap-1 lg:hidden">
@@ -97,13 +156,27 @@ export function Header() {
               </Link>
             ))}
             <div className="h-px bg-[var(--hairline)] my-3" />
+            {authenticated ? (
+              <>
+                <Link href={panelHref} onClick={() => setOpen(false)} className="btn btn-secondary w-full">
+                  <UserRound size={16} /> Ir a mi panel
+                </Link>
+                <button type="button" onClick={logout} className="btn btn-ghost w-full mt-2">
+                  Cerrar sesión
+                </button>
+              </>
+            ) : (
+              <Link href="/conectar" onClick={() => setOpen(false)} className="btn btn-secondary w-full">
+                <LogIn size={16} /> Conectar
+              </Link>
+            )}
             <Link href="/buscar" onClick={() => setOpen(false)} className="btn btn-secondary w-full">
               <Search size={16} /> {t.actions.search}
             </Link>
             <Link href="/publicar-proyecto" onClick={() => setOpen(false)} className="btn btn-primary w-full mt-2">
               {t.ui.nav.publishProjectFree}
             </Link>
-            <Link href="/registro" onClick={() => setOpen(false)} className="btn btn-secondary w-full mt-2">
+            <Link href="/registro/profesional" onClick={() => setOpen(false)} className="btn btn-secondary w-full mt-2">
               {t.actions.imPro}
             </Link>
           </div>

@@ -4,15 +4,18 @@ import { useState, useRef, useEffect } from "react";
 import { Globe, Check, ChevronDown } from "lucide-react";
 import { useI18n } from "@/lib/i18n/context";
 import { localeList, localeMeta } from "@/lib/i18n/config";
+import { countryFlagEmoji } from "@/lib/market";
 import { cn } from "@/lib/utils";
 
 function Flag({ country, label }: { country: string; label: string }) {
   return (
     <span
-      className={cn("fi rounded-[2px] shadow-[0_0_0_1px_rgba(15,92,74,0.16)]", `fi-${country}`)}
+      className="inline-flex h-4 w-5 items-center justify-center rounded-[3px] text-[16px] leading-none shadow-[0_0_0_1px_rgba(15,92,74,0.16)]"
       aria-label={label}
       role="img"
-    />
+    >
+      {countryFlagEmoji(country)}
+    </span>
   );
 }
 

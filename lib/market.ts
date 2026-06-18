@@ -35,3 +35,12 @@ export function getActiveMarketByCode(code: string): ActiveMarket | undefined {
 export function isActiveCountryCode(code: string): code is ActiveCountryCode {
   return !!getActiveMarketByCode(code);
 }
+
+export function countryFlagEmoji(countryCode: string): string {
+  const normalized = countryCode.trim().toUpperCase();
+  if (!/^[A-Z]{2}$/.test(normalized)) return "";
+  return normalized
+    .split("")
+    .map((letter) => String.fromCodePoint(127397 + letter.charCodeAt(0)))
+    .join("");
+}

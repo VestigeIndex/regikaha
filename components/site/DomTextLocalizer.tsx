@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useI18n } from "@/lib/i18n/context";
 import { dictionaries } from "@/lib/i18n/dictionaries";
 import { domTextDictionaries } from "@/lib/i18n/dom.generated";
+import { releaseTextDictionaries } from "@/lib/i18n/release";
 import { marketsDictionaries } from "@/lib/i18n/markets";
 import { type Locale } from "@/lib/i18n/config";
 import { getActiveMarketBySlug } from "@/lib/market";
@@ -157,7 +158,7 @@ export function DomTextLocalizer() {
   const { locale } = useI18n();
 
   useEffect(() => {
-    const dictionary = domTextDictionaries[locale];
+    const dictionary = { ...domTextDictionaries[locale], ...releaseTextDictionaries[locale] };
     localizeDocumentMetadata(locale, dictionary);
     if (locale === "es") return;
     localizeNode(document, dictionary);

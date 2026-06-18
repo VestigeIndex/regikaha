@@ -1,4 +1,5 @@
 import { json, getSessionUser } from "../../apilib/http";
+import { panelPathForRole } from "../../lib/accounts";
 
 // GET /api/me — usuario autenticado + su perfil, categorías y zonas.
 export async function onRequestGet(context: any) {
@@ -7,6 +8,12 @@ export async function onRequestGet(context: any) {
   if (!user) return json({ authenticated: false });
 
   const pro = await env.DB.prepare("SELECT * FROM professionals WHERE user_id = ?").bind(user.id).first();
+  let profile: any = null;
+  try {
+    profile = await env.DB.prepare("SELECT * FROM profiles WHERE user_id = ?").bind(user.id).first();
+  } catch {
+    profile = null;
+  }
   let categories: string[] = [];
   let areas: any[] = [];
   if (pro) {
@@ -17,8 +24,10 @@ export async function onRequestGet(context: any) {
   }
   return json({
     authenticated: true,
-    user: { id: user.id, email: user.email, role: user.role },
+    user: { id: user.id, email: user.email, role: user.role, name: user.name || profile?.display_name || null },
+    profile,
     professional: pro || null,
+    panelPath: panelPathForRole(user.role),
     categories,
     areas,
   });

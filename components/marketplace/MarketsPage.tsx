@@ -5,11 +5,10 @@ import { ArrowRight, BadgeCheck, Building2, Map, MapPin, Search } from "lucide-r
 import { PageHeader } from "@/components/site/PageHeader";
 import { categories } from "@/lib/data/categories";
 import { citySearchLocations } from "@/lib/data/locations";
-import { activeMarkets, getActiveMarketBySlug } from "@/lib/market";
+import { activeMarkets, countryFlagEmoji, getActiveMarketBySlug } from "@/lib/market";
 import { marketsDictionaries } from "@/lib/i18n/markets";
 import { useI18n } from "@/lib/i18n/context";
 import { useContent } from "@/lib/i18n/useLocalizedContent";
-import { cn } from "@/lib/utils";
 
 function countryName(code: string, locale: string, fallback: string) {
   try {
@@ -43,7 +42,9 @@ export function MarketsIndexPage() {
             return (
               <Link key={market.code} href={`/mercados/${market.slug}`} className="card card-hover p-5">
                 <div className="flex items-center gap-3">
-                  <span className={cn("fi rounded-[3px] shadow-[0_0_0_1px_rgba(15,92,74,0.16)]", `fi-${market.flagCountry}`)} aria-hidden="true" />
+                  <span className="inline-flex h-5 w-7 items-center justify-center rounded-[3px] text-[18px] leading-none shadow-[0_0_0_1px_rgba(15,92,74,0.16)]" aria-hidden="true">
+                    {countryFlagEmoji(market.flagCountry)}
+                  </span>
                   <h2 className="font-bold text-ink">{name}</h2>
                 </div>
                 <p className="mt-3 text-sm text-muted">{cities.map((city) => city.city).join(", ")}</p>
@@ -126,7 +127,7 @@ export function MarketDetailPage({ slug }: { slug: string }) {
 
         <aside className="space-y-4 lg:sticky lg:top-24">
           <InfoCard icon={BadgeCheck} title={copy.detail.clientsTitle} text={copy.detail.clientsText} href="/publicar-proyecto" label={copy.detail.publishProject} />
-          <InfoCard icon={Building2} title={copy.detail.prosTitle} text={copy.detail.prosText} href="/registro" label={t.ui.register.createProfile} />
+          <InfoCard icon={Building2} title={copy.detail.prosTitle} text={copy.detail.prosText} href="/registro/profesional" label={t.ui.register.createProfile} />
         </aside>
       </section>
     </>

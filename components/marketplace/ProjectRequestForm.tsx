@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, Send } from "lucide-react";
+import { PlaceAutocomplete } from "@/components/geo/PlaceAutocomplete";
 import { categories } from "@/lib/data/categories";
 import { europeanCountryOptions } from "@/lib/market";
 import { useI18n, useT } from "@/lib/i18n/context";
@@ -17,6 +18,7 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
   const [sent, setSent] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [country, setCountry] = useState("ES");
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -52,7 +54,7 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
         </p>
         <div className="mt-5 flex justify-center gap-2 flex-wrap">
           <a href="/mapa" className="btn btn-primary">{t.ui.actions.searchMap}</a>
-          <Link href="/registro" className="btn btn-secondary">{t.ui.register.createProfile}</Link>
+          <Link href="/registro/profesional" className="btn btn-secondary">{t.ui.register.createProfile}</Link>
           <button onClick={() => setSent(false)} className="btn btn-secondary">{t.ui.actions.publishAnother}</button>
         </div>
       </div>
@@ -77,12 +79,20 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
             <option value="administrador_fincas">{t.ui.projectForm.clientTypes.administrador_fincas}</option>
           </Select>
         )}
-        <Select name="country" label={t.ui.common.country}>
+        <Select name="country" label={t.ui.common.country} value={country} onChange={setCountry}>
           {europeanCountryOptions.map((country) => (
             <option key={country.code} value={country.code}>{localizedCountry(country.code, locale)}</option>
           ))}
         </Select>
-        <Input name="city" label={t.ui.projectForm.cityZone} minLength={2} required />
+        <div className="sm:col-span-1">
+          <PlaceAutocomplete
+            country={country}
+            required
+            mode={mode === "client" ? "project" : "company"}
+            label={t.ui.projectForm.cityZone}
+            namePrefix="place"
+          />
+        </div>
         {mode === "client" && <Input name="postalCode" label={t.ui.projectForm.postalCode} />}
         {mode === "client" ? (
           <Select name="categoryId" label={t.ui.common.category}>
@@ -120,6 +130,13 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
           <option value="flexible">{t.ui.common.flexible}</option>
           <option value="this_month">{t.ui.common.thisMonth}</option>
           <option value="urgent">{t.ui.common.urgent}</option>
+        </Select>
+        <Select name="radiusKm" label="Radio operativo">
+          <option value="10">10 km</option>
+          <option value="25">25 km</option>
+          <option value="50">50 km</option>
+          <option value="100">100 km</option>
+          <option value="250">250 km</option>
         </Select>
         {mode === "b2b" && <Input name="duration" label={t.ui.projectForm.duration} />}
         <Select name="budgetRange" label={t.ui.projectForm.budgetRange}>
@@ -191,11 +208,23 @@ function Input({
   );
 }
 
-function Select({ name, label, children }: { name: string; label: string; children: React.ReactNode }) {
+function Select({
+  name,
+  label,
+  children,
+  value,
+  onChange,
+}: {
+  name: string;
+  label: string;
+  children: React.ReactNode;
+  value?: string;
+  onChange?: (value: string) => void;
+}) {
   return (
     <label className="block">
       <span className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</span>
-      <select name={name} className="reg-input mt-1.5">{children}</select>
+      <select name={name} value={value} onChange={(event) => onChange?.(event.target.value)} className="reg-input mt-1.5">{children}</select>
     </label>
   );
 }

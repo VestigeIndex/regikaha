@@ -25,6 +25,10 @@ export function CheckoutButton({ plan, interval, children, className }: Checkout
         body: JSON.stringify({ plan, interval }),
       });
       const data = await res.json().catch(() => ({}));
+      if (res.status === 401 && data.redirectTo) {
+        window.location.href = data.redirectTo;
+        return;
+      }
       if (!res.ok || !data.url) {
         throw new Error(data.error || "No se pudo iniciar el pago");
       }

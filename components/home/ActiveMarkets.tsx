@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
-import { activeMarkets } from "@/lib/market";
+import { activeMarkets, countryFlagEmoji } from "@/lib/market";
 import { citySearchLocations } from "@/lib/data/locations";
 import { marketsDictionaries } from "@/lib/i18n/markets";
 import { useI18n } from "@/lib/i18n/context";
-import { cn } from "@/lib/utils";
 
 function countryName(code: string, locale: string, fallback: string) {
   try {
@@ -49,9 +48,11 @@ export function ActiveMarkets() {
               >
                 <div className="flex items-center gap-3">
                   <span
-                    className={cn("fi rounded-[3px] shadow-[0_0_0_1px_rgba(15,92,74,0.16)]", `fi-${market.flagCountry}`)}
+                    className="inline-flex h-5 w-7 items-center justify-center rounded-[3px] text-[18px] leading-none shadow-[0_0_0_1px_rgba(15,92,74,0.16)]"
                     aria-hidden="true"
-                  />
+                  >
+                    {countryFlagEmoji(market.flagCountry)}
+                  </span>
                   <div className="min-w-0">
                     <h3 className="font-semibold text-ink group-hover:text-forest-700 transition-colors">{name}</h3>
                     <p className="mt-0.5 text-xs text-muted">{cities.length} {copy.statsCities}</p>

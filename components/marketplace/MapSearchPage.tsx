@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Building2, Crosshair, ListFilter, Map, MapPin, Search, SlidersHorizontal, Star, X } from "lucide-react";
 import type { Professional, SearchFilters, SortOption } from "@/lib/types";
+import { PlaceAutocomplete } from "@/components/geo/PlaceAutocomplete";
 import { categories, searchProfessionals } from "@/lib/data";
 import { citySearchLocations, countrySearchLocations, getLocationBySlug } from "@/lib/data/locations";
 import { europeanCountryOptions } from "@/lib/market";
@@ -113,10 +114,12 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
     const loc = filters.locationSlug ? getLocationBySlug(filters.locationSlug) : undefined;
     if (filters.query) q.set("q", filters.query);
     if (filters.categoryId) q.set("cat", filters.categoryId);
-    if (loc?.countryCode) q.set("country", loc.countryCode);
-    if (loc?.province || loc?.city) q.set("region", loc.province || loc.city || "");
+    if (filters.countryCode || loc?.countryCode) q.set("country", filters.countryCode || loc?.countryCode || "");
+    if (filters.region || filters.city || loc?.province || loc?.city) q.set("region", filters.region || filters.city || loc?.province || loc?.city || "");
+    if (filters.city) q.set("city", filters.city);
+    if (filters.radiusKm) q.set("radiusKm", String(filters.radiusKm));
     return q.toString();
-  }, [filters.categoryId, filters.locationSlug, filters.query]);
+  }, [filters.categoryId, filters.city, filters.countryCode, filters.locationSlug, filters.query, filters.radiusKm, filters.region]);
 
   useEffect(() => {
     let cancelled = false;
@@ -189,6 +192,24 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
       </Field>
 
       <Field label={t.ui.searchPage.locationLabel}>
+        <PlaceAutocomplete
+          mode="search"
+          country={filters.countryCode}
+          placeholder="Ciudad, pueblo o código postal"
+          onTextChange={(label) => {
+            update("city", label || undefined);
+            update("placeId", undefined);
+          }}
+          onChange={(place, label) => {
+            update("placeId", place?.id);
+            update("countryCode", place?.countryCode);
+            update("city", place?.localityName || label || undefined);
+            update("region", place?.admin1Name || place?.admin2Name || undefined);
+            update("locationSlug", undefined);
+            if (place && !filters.radiusKm) update("radiusKm", 25);
+          }}
+        />
+        <div className="mt-2">
         <Select value={filters.locationSlug ?? ""} onChange={(value) => update("locationSlug", value || undefined)}>
           <option value="">{t.ui.searchPage.allEurope}</option>
           <optgroup label={t.ui.searchPage.countryGroup}>
@@ -203,6 +224,21 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
               </option>
             ))}
           </optgroup>
+        </Select>
+        </div>
+      </Field>
+
+      <Field label="Radio de búsqueda">
+        <Select
+          value={filters.radiusKm ? String(filters.radiusKm) : ""}
+          onChange={(value) => update("radiusKm", value ? Number(value) : undefined)}
+        >
+          <option value="">Sin limitar radio</option>
+          <option value="10">10 km</option>
+          <option value="25">25 km</option>
+          <option value="50">50 km</option>
+          <option value="100">100 km</option>
+          <option value="250">250 km</option>
         </Select>
       </Field>
 

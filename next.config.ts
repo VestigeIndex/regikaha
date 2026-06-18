@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   // Todo el sitio es estático (rutas dinámicas con generateStaticParams),
   // así que no requiere servidor ni adaptador.
   output: "export",
+  outputFileTracingRoot: process.cwd(),
   reactStrictMode: true,
   poweredByHeader: false,
   trailingSlash: false,
