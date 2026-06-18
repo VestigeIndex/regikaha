@@ -38,6 +38,12 @@ export function FounderAvailability({ compact = false }: { compact?: boolean }) 
     de: `${status.claimed} Plätze aktiviert oder reserviert`, nl: `${status.claimed} plaatsen geactiveerd of gereserveerd`,
     en: `${status.claimed} places activated or reserved`,
   } as const)[locale];
+  const occupiedLabel = ({
+    es: `${percent}% de plazas ocupadas`, fr: `${percent} % des places occupées`,
+    it: `${percent}% dei posti occupati`, pt: `${percent}% das vagas ocupadas`,
+    de: `${percent} % der Plätze belegt`, nl: `${percent}% van de plaatsen bezet`,
+    en: `${percent}% of places occupied`,
+  } as const)[locale];
   if (compact) {
     return (
       <span className="text-sm font-semibold text-forest-800">
@@ -51,7 +57,7 @@ export function FounderAvailability({ compact = false }: { compact?: boolean }) 
         <span className="text-muted">{claimedLabel}</span>
         <span className="font-semibold text-forest-800">{availableLabel}</span>
       </div>
-      <div className="mt-2 h-2 overflow-hidden rounded-full bg-canvas-alt" aria-label={`${percent}% de plazas ocupadas`}>
+      <div className="mt-2 h-2 overflow-hidden rounded-full bg-canvas-alt" aria-label={occupiedLabel}>
         <div className="h-full rounded-full bg-forest-600 transition-[width]" style={{ width: `${percent}%` }} />
       </div>
     </div>
