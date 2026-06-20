@@ -99,20 +99,24 @@ export async function onRequestGet(context: any) {
           <label class="field">Ciudad<input class="input" name="city" required></label>
           <label class="field">País<input class="input" name="country" value="${esc(row.country || "")}" required></label>
           <label class="field">Proyecto<textarea class="textarea" name="description" required>${esc(row.title)}: </textarea></label>
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAADoWgsg2pjcNtzCF" data-action="request_quote"></div>
           <p class="muted" style="font-size:12px">Estimación inicial no vinculante. El precio definitivo puede variar tras visita técnica, mediciones, materiales, permisos o revisión real del trabajo.</p>
           <button class="btn" type="submit">Enviar solicitud</button>
           <p class="ok" id="ok">Solicitud enviada correctamente.</p><p class="err" id="err"></p>
         </form>
       </aside>
     </main>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script>
       document.getElementById("quote").addEventListener("submit", async (event) => {
         event.preventDefault();
         const form = event.currentTarget;
         const data = Object.fromEntries(new FormData(form).entries());
+        data.turnstileToken = data["cf-turnstile-response"] || "";
+        delete data["cf-turnstile-response"];
         const res = await fetch("/api/quote", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify(data) });
-        if (res.ok) { form.reset(); document.getElementById("ok").style.display="block"; document.getElementById("err").style.display="none"; }
-        else { const body = await res.json().catch(() => ({})); const err = document.getElementById("err"); err.textContent = body.error || "No se pudo enviar"; err.style.display="block"; }
+        if (res.ok) { form.reset(); window.turnstile?.reset(); document.getElementById("ok").style.display="block"; document.getElementById("err").style.display="none"; }
+        else { window.turnstile?.reset(); const body = await res.json().catch(() => ({})); const err = document.getElementById("err"); err.textContent = body.error || "No se pudo enviar"; err.style.display="block"; }
       });
     </script>
   </body></html>`;

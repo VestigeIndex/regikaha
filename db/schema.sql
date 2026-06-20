@@ -94,6 +94,12 @@ CREATE TABLE IF NOT EXISTS portfolio_items (
   location TEXT,
   image_url TEXT NOT NULL,
   r2_key TEXT,
+  thumbnail_url TEXT,
+  thumbnail_r2_key TEXT,
+  image_size INTEGER,
+  image_width INTEGER,
+  image_height INTEGER,
+  mime_type TEXT,
   sort_order INTEGER DEFAULT 0,
   completion_date TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -398,6 +404,26 @@ CREATE TABLE IF NOT EXISTS lead_topup_orders (
   paid_at TEXT
 );
 
+CREATE TABLE IF NOT EXISTS cost_usage_counters (
+  usage_key TEXT NOT NULL,
+  window_start TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  expires_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  PRIMARY KEY (usage_key, window_start)
+);
+
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  locale TEXT NOT NULL DEFAULT 'es',
+  status TEXT NOT NULL DEFAULT 'new',
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE INDEX IF NOT EXISTS idx_service_areas_loc ON service_areas(country, region, city);
 CREATE INDEX IF NOT EXISTS idx_service_areas_pro ON service_areas(professional_id);
 CREATE INDEX IF NOT EXISTS idx_business_tasks_user_status ON business_tasks(user_id, status, due_date);
@@ -423,3 +449,5 @@ CREATE INDEX IF NOT EXISTS idx_lead_balance_transactions_user ON lead_balance_tr
 CREATE INDEX IF NOT EXISTS idx_lead_invalid_reports_status ON lead_invalid_reports(status, created_at);
 CREATE INDEX IF NOT EXISTS idx_lead_pricing_market ON lead_pricing_rules(country_code, category_id, active);
 CREATE INDEX IF NOT EXISTS idx_lead_topup_orders_user ON lead_topup_orders(user_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_cost_usage_expiry ON cost_usage_counters(expires_at);
+CREATE INDEX IF NOT EXISTS idx_contact_messages_status ON contact_messages(status, created_at);

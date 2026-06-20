@@ -5,6 +5,7 @@ import { searchPlacesD1 } from "../../../lib/geo/adapters";
 import { normalizeGeoText } from "../../../lib/geo/normalize";
 import { searchPlaces } from "../../../lib/geo/search";
 import type { PlaceSearchResult, PlaceType } from "../../../lib/geo/types";
+import { cachePublicResponse } from "../../../packages/cost-guards";
 
 function clampLimit(value: string | null): number {
   const parsed = Number(value || 8);
@@ -75,7 +76,7 @@ async function searchCoverageAssets(request: Request, query: string, country: st
 }
 
 // GET /api/geo/search?q=&country=&limit=
-export async function onRequestGet(context: any) {
+async function geoSearchResponse(context: any) {
   const { request, env } = context;
   const url = new URL(request.url);
   const q = (url.searchParams.get("q") || "").trim();
@@ -99,4 +100,8 @@ export async function onRequestGet(context: any) {
 
   const results = searchPlaces({ q, country: country || undefined, limit });
   return json({ total: results.length, results });
+}
+
+export async function onRequestGet(context: any) {
+  return cachePublicResponse(context.request, 900, () => geoSearchResponse(context));
 }

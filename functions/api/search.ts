@@ -1,5 +1,6 @@
 import { json } from "../../apilib/http";
 import { isActiveCountryCode } from "../../lib/market";
+import { cachePublicResponse, configuredLimit, rateLimitByIP } from "../../packages/cost-guards";
 
 function numeric(value: string | null, min: number, max: number): number | null {
   if (value == null || value === "") return null;
@@ -28,7 +29,7 @@ const orderBy: Record<string, string> = {
 };
 
 // GET /api/search — category, geography, radius, trust and commercial filters.
-export async function onRequestGet(context: any) {
+async function searchResponse(context: any) {
   const { request, env } = context;
   const u = new URL(request.url);
   const cat = u.searchParams.get("cat") || "";
@@ -143,4 +144,16 @@ export async function onRequestGet(context: any) {
     );
   }
   return json({ total: enriched.length, results: enriched });
+}
+
+export async function onRequestGet(context: any) {
+  const limited = await rateLimitByIP(
+    context.env,
+    context.request,
+    "public-search-hour",
+    configuredLimit(context.env, "MAX_PUBLIC_SEARCHES_PER_IP_HOUR"),
+    3600,
+  );
+  if (limited) return limited;
+  return cachePublicResponse(context.request, 600, () => searchResponse(context));
 }

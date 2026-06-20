@@ -1,6 +1,7 @@
 import { json, bad, getSessionUser, isEmail } from "../../apilib/http";
 import { newId } from "../../apilib/auth";
 import { isActiveCountryCode } from "../../lib/market";
+import { requireTurnstile } from "../../packages/cost-guards";
 
 function clean(value: unknown, max = 600): string {
   return String(value || "").trim().slice(0, max);
@@ -36,6 +37,8 @@ export async function onRequestPost(context: any) {
   const longitude = coordinate(b.longitude ?? b.placeLongitude, -180, 180);
   const radiusKm = Math.max(10, Math.min(500, Number(b.radiusKm || 50) || 50));
   if (clean(b.website, 200)) return bad("Solicitud no válida");
+  const challenge = await requireTurnstile(env, request, b.turnstileToken, "publish_b2b");
+  if (challenge) return challenge;
   if (!isEmail(email)) return bad("Email de empresa no válido");
   if (!country || !city || !requiredSpecialty) return bad("Faltan país, ciudad o especialidad");
   if (!isActiveCountryCode(country)) return bad("País no disponible todavía en RegiKaha");

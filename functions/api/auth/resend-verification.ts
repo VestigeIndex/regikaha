@@ -1,12 +1,17 @@
 import { bad, getSessionUser, json } from "../../../apilib/http";
 import { hashContractSnapshot } from "../../../lib/legal/hashContract";
 import { sendEmail, verificationEmailMessage } from "../../../lib/notifications/email";
+import { configuredLimit, consumePersistentQuota } from "../../../packages/cost-guards";
 
 export async function onRequestPost(context: any) {
   const { request, env } = context;
   const user = await getSessionUser(env, request);
   if (!user) return bad("No autenticado", 401);
   if (Number(user.email_verified || 0)) return json({ ok: true, alreadyVerified: true });
+  const userQuota = await consumePersistentQuota(env, `verification-email:user:${user.id}`, configuredLimit(env, "MAX_EMAILS_PER_USER_DAY"), "day");
+  const ip = request.headers.get("CF-Connecting-IP") || request.headers.get("X-Forwarded-For") || "unknown";
+  const ipQuota = await consumePersistentQuota(env, `verification-email:ip:${ip}`, configuredLimit(env, "MAX_EMAILS_PER_IP_DAY"), "day");
+  if (!userQuota.allowed || !ipQuota.allowed) return bad("Has alcanzado el límite diario de envíos", 429);
 
   const rawToken = `${crypto.randomUUID()}${crypto.randomUUID().replace(/-/g, "")}`;
   const tokenHash = await hashContractSnapshot({ token: rawToken });

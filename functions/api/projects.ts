@@ -3,6 +3,28 @@ import { newId } from "../../apilib/auth";
 import { isActiveCountryCode } from "../../lib/market";
 import { getLeadPrice, leadQualityScore } from "../../lib/leads";
 import { isLocale } from "../../lib/i18n/config";
+import {
+  configuredLimit,
+  enforcePlanLimits,
+  enforceUploadLimits,
+  requireTurnstile,
+} from "../../packages/cost-guards";
+import { uploadOptimizedImageToR2 } from "../../packages/image-optimizer";
+
+async function parseInput(request: Request) {
+  if (!String(request.headers.get("Content-Type") || "").includes("multipart/form-data")) {
+    return { body: await request.json(), photos: [] as File[], thumbnails: [] as File[], dimensions: [] as any[] };
+  }
+  const form = await request.formData();
+  let dimensions: any[] = [];
+  try { dimensions = JSON.parse(String(form.get("imageDimensions") || "[]")); } catch { dimensions = []; }
+  return {
+    body: Object.fromEntries([...form.entries()].filter(([key, value]) => !(value instanceof File) && key !== "imageDimensions")),
+    photos: form.getAll("photos").filter((value): value is File => value instanceof File),
+    thumbnails: form.getAll("thumbnails").filter((value): value is File => value instanceof File),
+    dimensions: Array.isArray(dimensions) ? dimensions : [],
+  };
+}
 
 function clean(value: unknown, max = 600): string {
   return String(value || "").trim().slice(0, max);
@@ -104,7 +126,16 @@ async function upsertCoverage(env: any, country: string, city: string, categoryI
 export async function onRequestPost(context: any) {
   const { request, env } = context;
   let b: any;
-  try { b = await request.json(); } catch { return bad("JSON inválido"); }
+  let photos: File[] = [];
+  let thumbnails: File[] = [];
+  let dimensions: any[] = [];
+  try {
+    const parsed = await parseInput(request);
+    b = parsed.body;
+    photos = parsed.photos;
+    thumbnails = parsed.thumbnails;
+    dimensions = parsed.dimensions;
+  } catch { return bad("Solicitud no válida"); }
 
   const email = clean(b.email, 160).toLowerCase();
   const description = clean(b.description, 2000);
@@ -116,6 +147,8 @@ export async function onRequestPost(context: any) {
   const radiusKm = Math.max(10, Math.min(250, Number(b.radiusKm || 25) || 25));
   const locale = isLocale(String(b.locale || "")) ? String(b.locale) : "es";
   if (clean(b.website, 200)) return bad("Solicitud no válida");
+  const challenge = await requireTurnstile(env, request, b.turnstileToken, "publish_project");
+  if (challenge) return challenge;
   if (!isEmail(email)) return bad("Email no válido");
   if (description.length < 20) return bad("Describe un poco más el proyecto");
   if (!country || !city || !categoryId) return bad("Faltan país, ciudad o categoría");
@@ -123,9 +156,30 @@ export async function onRequestPost(context: any) {
   if (String(b.acceptsPreEstimate) !== "true" && b.acceptsPreEstimate !== true) {
     return bad("Debes aceptar recibir pre-presupuestos no vinculantes");
   }
+  const photoLimit = enforcePlanLimits(env, "free").projectPhotos;
+  if (photos.length > photoLimit || thumbnails.length !== photos.length) {
+    return bad(`Puedes adjuntar hasta ${photoLimit} fotos optimizadas`);
+  }
+  if (photos.length && !env.MEDIA) return bad("El almacenamiento de fotos todavía no está activo", 503);
+  for (const file of photos) {
+    const uploadError = enforceUploadLimits(env, { file, plan: "free" });
+    if (uploadError) return uploadError;
+  }
+  for (const file of thumbnails) {
+    const uploadError = enforceUploadLimits(env, { file, plan: "free", thumbnail: true });
+    if (uploadError) return uploadError;
+  }
 
   const projectId = newId("prj_");
   const sessionUser = await getSessionUser(env, request);
+  if (sessionUser?.role === "client") {
+    const monthly = await env.DB.prepare(
+      "SELECT COUNT(*) AS total FROM project_requests WHERE client_id = ? AND created_at >= date('now','start of month')",
+    ).bind(sessionUser.id).first();
+    if (Number(monthly?.total || 0) >= configuredLimit(env, "MAX_FREE_PROJECTS_PER_CLIENT_MONTH")) {
+      return bad("Has alcanzado el límite mensual de solicitudes gratuitas", 429);
+    }
+  }
   const pricing = getLeadPrice({
     countryCode: country,
     categoryId,
@@ -140,12 +194,34 @@ export async function onRequestPost(context: any) {
     hasBudget: Boolean(clean(b.budgetRange, 80)),
     hasPostalCode: Boolean(clean(b.postalCode, 20)),
   });
-  await env.DB.prepare(
+  const uploadedKeys: string[] = [];
+  const mediaFiles: any[] = [];
+  try {
+    for (let index = 0; index < photos.length; index += 1) {
+      const key = `media/projects/${projectId}/${index + 1}.webp`;
+      const thumbnailKey = `media/projects/${projectId}/${index + 1}-thumb.webp`;
+      const metadata = { projectId, kind: "project", optimized: "true" };
+      await uploadOptimizedImageToR2(env.MEDIA, photos[index], key, metadata);
+      uploadedKeys.push(key);
+      await uploadOptimizedImageToR2(env.MEDIA, thumbnails[index], thumbnailKey, { ...metadata, thumbnail: "true" });
+      uploadedKeys.push(thumbnailKey);
+      mediaFiles.push({
+        key,
+        url: `/api/media/${key}`,
+        thumbnailKey,
+        thumbnailUrl: `/api/media/${thumbnailKey}`,
+        size: photos[index].size,
+        width: Math.max(1, Math.min(1600, Number(dimensions[index]?.width || 1))),
+        height: Math.max(1, Math.min(10000, Number(dimensions[index]?.height || 1))),
+        mimeType: photos[index].type,
+      });
+    }
+    await env.DB.prepare(
       `INSERT INTO project_requests
         (id,client_id,client_type,country,region,city,postal_code,latitude,longitude,radius_km,category_id,subcategory,title,
-         description,urgency,budget_range,property_type,approximate_measures,status,locale,expires_at,max_professionals,
+         description,urgency,budget_range,property_type,approximate_measures,files,status,locale,expires_at,max_professionals,
          unlocked_count,quality_score,source,contact_name,contact_email,contact_phone)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'published',?,datetime('now','+30 days'),?,0,?,'web',?,?,?)`,
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'published',?,datetime('now','+30 days'),?,0,?,'web',?,?,?)`,
     ).bind(
       projectId,
       sessionUser?.id || null,
@@ -165,6 +241,7 @@ export async function onRequestPost(context: any) {
       clean(b.budgetRange, 80),
       clean(b.propertyType, 80),
       clean(b.approximateMeasures, 120),
+      JSON.stringify(mediaFiles),
       locale,
       pricing.maxProfessionals,
       qualityScore,
@@ -172,6 +249,10 @@ export async function onRequestPost(context: any) {
       email,
       clean(b.phone, 80),
     ).run();
+  } catch (error) {
+    if (env.MEDIA && uploadedKeys.length) await Promise.all(uploadedKeys.map((key) => env.MEDIA.delete(key)));
+    throw error;
+  }
 
   const matches = await matchProfessionals(env, { categoryId, country, city, latitude, longitude, radiusKm });
   if (matches.length) {

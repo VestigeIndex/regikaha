@@ -8,6 +8,7 @@ import { PlaceAutocomplete } from "@/components/geo/PlaceAutocomplete";
 import { useI18n } from "@/lib/i18n/context";
 import { accountRegisterDictionaries } from "@/lib/i18n/account-register";
 import { detectMarketCountry } from "@/lib/market-country";
+import { Turnstile } from "@/components/security/Turnstile";
 
 export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "professional" | "admin"> }) {
   const { locale } = useI18n();
@@ -18,6 +19,7 @@ export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "prof
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [challengeKey, setChallengeKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -56,6 +58,7 @@ export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "prof
       window.location.assign(data.redirectTo || panelPathForRole(role));
     } catch (err) {
       setError(err instanceof Error ? err.message : dictionary.unable);
+      setChallengeKey((value) => value + 1);
     } finally {
       setPending(false);
     }
@@ -123,6 +126,7 @@ export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "prof
           {copy.terms}
         </span>
       </label>
+      <Turnstile key={challengeKey} action="register_account" />
       <button type="submit" disabled={pending} className="btn btn-primary w-full disabled:opacity-60">
         {pending ? dictionary.creating : copy.submit}
       </button>

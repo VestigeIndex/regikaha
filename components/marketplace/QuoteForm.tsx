@@ -6,6 +6,7 @@ import { CheckCircle2, Send } from "lucide-react";
 import { europeanCountryOptions } from "@/lib/market";
 import { useI18n, useT } from "@/lib/i18n/context";
 import { detectMarketCountry } from "@/lib/market-country";
+import { Turnstile } from "@/components/security/Turnstile";
 
 /**
  * Formulario de solicitud de pre-presupuesto no vinculante.
@@ -32,6 +33,7 @@ export function QuoteForm({
   const [error, setError] = useState<string | null>(null);
   const [country, setCountry] = useState("ES");
   const countryTouched = useRef(false);
+  const [challengeKey, setChallengeKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -64,6 +66,7 @@ export function QuoteForm({
       budgetRange: String(form.get("budgetRange") || ""),
       urgency: String(form.get("urgency") || "flexible"),
       website: String(form.get("website") || ""),
+      turnstileToken: String(form.get("turnstileToken") || ""),
     };
     try {
       const res = await fetch("/api/quote", {
@@ -77,6 +80,7 @@ export function QuoteForm({
       e.currentTarget.reset();
     } catch (err) {
       setError(err instanceof Error ? err.message : t.ui.quoteForm.unableToSend);
+      setChallengeKey((value) => value + 1);
     } finally {
       setPending(false);
     }
@@ -149,6 +153,7 @@ export function QuoteForm({
         />
       </div>
       {error && <p className="text-xs font-medium text-red-600">{error}</p>}
+      <Turnstile key={challengeKey} action="request_quote" />
       <button type="submit" disabled={pending} className="btn btn-primary w-full disabled:opacity-60">
         <Send size={16} /> {pending ? t.ui.quoteForm.submitting : t.ui.quoteForm.submit}
       </button>

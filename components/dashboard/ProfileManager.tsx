@@ -6,6 +6,7 @@ import { DashboardHeader } from "@/components/dashboard/DashboardShell";
 import { PlaceAutocomplete } from "@/components/geo/PlaceAutocomplete";
 import { categories } from "@/lib/data";
 import { europeanCountryOptions } from "@/lib/market";
+import { optimizeImageForUpload } from "@/packages/image-optimizer";
 
 type ProfileForm = {
   publicName: string;
@@ -57,6 +58,7 @@ export function ProfileManager() {
   const [areasText, setAreasText] = useState("");
   const [logoImage, setLogoImage] = useState<string | null>(null);
   const [portfolio, setPortfolio] = useState<any[]>([]);
+  const [maxProfilePhotos, setMaxProfilePhotos] = useState(6);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -99,6 +101,7 @@ export function ProfileManager() {
         setLogoImage(p.logo_image || port.logoImage || null);
       }
       setPortfolio(port.items || []);
+      setMaxProfilePhotos(Number(port.limits?.profilePhotos || 6));
       setLoading(false);
     }
     load().catch(() => {
@@ -173,6 +176,13 @@ export function ProfileManager() {
     setError(null);
     setMessage(null);
     try {
+      const source = formData.get("file");
+      if (!(source instanceof File)) throw new Error("Selecciona una imagen válida");
+      const optimized = await optimizeImageForUpload(source, maxProfilePhotos > 6 ? "europa_pro" : "autonomo_nacional");
+      formData.set("file", optimized.image.file);
+      formData.set("thumbnail", optimized.thumbnail.file);
+      formData.set("width", String(optimized.image.width));
+      formData.set("height", String(optimized.image.height));
       const res = await fetch("/api/portfolio", { method: "POST", body: formData });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "No se pudo subir la imagen");
@@ -322,14 +332,14 @@ export function ProfileManager() {
           <section className="card p-6">
             <div className="flex items-center justify-between gap-3">
               <h2 className="font-bold text-ink">Trabajos realizados</h2>
-              <span className="text-xs text-muted">{portfolio.length}/5</span>
+              <span className="text-xs text-muted">{portfolio.length}/{Math.max(0, maxProfilePhotos - (logoImage ? 1 : 0))}</span>
             </div>
-            <PortfolioUpload disabled={uploading || portfolio.length >= 5} onUpload={uploadFile} />
+            <PortfolioUpload disabled={uploading || portfolio.length >= Math.max(0, maxProfilePhotos - (logoImage ? 1 : 0))} onUpload={uploadFile} />
             <div className="mt-4 grid grid-cols-2 gap-3">
               {portfolio.map((item) => (
                 <div key={item.id} className="overflow-hidden rounded-xl bg-canvas">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={item.imageUrl || item.afterImage} alt="" className="h-24 w-full object-cover" />
+                  <img src={item.thumbnailUrl || item.imageUrl || item.afterImage} alt="" className="h-24 w-full object-cover" />
                   <p className="truncate px-2 py-1.5 text-xs text-ink">{item.title}</p>
                 </div>
               ))}

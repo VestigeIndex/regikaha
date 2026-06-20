@@ -1,10 +1,13 @@
 import { privateJson, bad, isEmail, sessionCookieHeaders } from "../../apilib/http";
 import { verifyPassword, createSession } from "../../apilib/auth";
 import { panelPathForRole } from "../../lib/accounts";
+import { rateLimitByIP } from "../../packages/cost-guards";
 
 // POST /api/login
 export async function onRequestPost(context: any) {
   const { request, env } = context;
+  const limited = await rateLimitByIP(env, request, "login", 10, 600);
+  if (limited) return limited;
   let b: any;
   try { b = await request.json(); } catch { return bad("JSON inválido"); }
   const email = String(b.email || "").trim().toLowerCase();

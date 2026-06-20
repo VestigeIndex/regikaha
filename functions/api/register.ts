@@ -3,6 +3,7 @@ import { hashPassword, createSession, newId, slugify } from "../../apilib/auth";
 import { normalizeRole, panelPathForRole } from "../../lib/accounts";
 import { hashContractSnapshot } from "../../lib/legal/hashContract";
 import { sendEmail, verificationEmailMessage } from "../../lib/notifications/email";
+import { requireTurnstile } from "../../packages/cost-guards";
 
 function clean(value: unknown, max = 600): string {
   return String(value || "").trim().slice(0, max);
@@ -52,9 +53,16 @@ export async function onRequestPost(context: any) {
   const type = String(b.type || "autonomo");
   const categories: string[] = Array.isArray(b.categories) ? b.categories.slice(0, 8).map(String) : [];
 
+  if (clean(b.website, 200)) return bad("Solicitud no válida");
+  const challenge = await requireTurnstile(
+    env,
+    request,
+    b.turnstileToken,
+    role === "professional" ? "register_professional" : "register_account",
+  );
+  if (challenge) return challenge;
   if (!isEmail(email)) return bad("Email no válido");
   if (!sessionUser && password.length < 8) return bad("La contraseña debe tener al menos 8 caracteres");
-  if (clean(b.website, 200)) return bad("Solicitud no válida");
   if (role !== "professional") {
     if (!String(b.acceptsTerms || "").trim() && b.acceptsTerms !== true) return bad("Debes aceptar las condiciones");
     const name = String(b.name || b.displayName || "").trim();

@@ -1,5 +1,6 @@
 import { json, bad, getSessionUser } from "../../apilib/http";
 import { newId } from "../../apilib/auth";
+import { configuredLimit, consumePersistentQuota, rateLimitByUser } from "../../packages/cost-guards";
 
 function coordinate(value: unknown): number | null | undefined {
   if (value === undefined) return undefined;
@@ -14,6 +15,15 @@ export async function onRequestPost(context: any) {
   if (!user) return bad("No autenticado", 401);
   const pro = await env.DB.prepare("SELECT * FROM professionals WHERE user_id = ?").bind(user.id).first();
   if (!pro) return bad("Perfil no encontrado", 404);
+  const limited = await rateLimitByUser(env, user.id, "profile:update");
+  if (limited) return limited;
+  const quota = await consumePersistentQuota(
+    env,
+    `profile-update:${user.id}`,
+    configuredLimit(env, "MAX_FREE_PROFESSIONAL_PROFILE_UPDATES_DAY"),
+    "day",
+  );
+  if (!quota.allowed) return bad("Has alcanzado el límite diario de actualizaciones del perfil", 429);
 
   let b: any;
   try { b = await request.json(); } catch { return bad("JSON inválido"); }

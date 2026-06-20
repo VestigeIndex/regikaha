@@ -12,7 +12,10 @@ export async function onRequestGet(context: any) {
       service: "regikaha-api",
       tables: tables?.n ?? 0,
       professionals: pros?.n ?? 0,
-      r2: typeof env.DOCS !== "undefined",
+      costMode: String(env.COST_MODE || "survival"),
+      d1: typeof env.DB !== "undefined",
+      r2: typeof env.MEDIA !== "undefined",
+      turnstile: Boolean(env.TURNSTILE_SECRET_KEY),
       ts: new Date().toISOString(),
     });
   } catch (e: any) {

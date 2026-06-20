@@ -2,6 +2,7 @@ import { bad, privateJson } from "../../../apilib/http";
 import { newId } from "../../../apilib/auth";
 import { getCurrentProfessional, getSubscriptionAccess, safeJsonArray } from "../../../apilib/professional";
 import { getLeadPrice, leadCurrency } from "../../../lib/leads";
+import { configuredLimit, consumePersistentQuota, rateLimitByUser } from "../../../packages/cost-guards";
 
 function mapLead(row: any) {
   const unlocked = Boolean(row.unlock_id);
@@ -43,6 +44,15 @@ function mapLead(row: any) {
 export async function onRequestGet(context: any) {
   const current = await getCurrentProfessional(context.env, context.request);
   if (current instanceof Response) return current;
+  const limited = await rateLimitByUser(context.env, current.user.id, "leads:search");
+  if (limited) return limited;
+  const quota = await consumePersistentQuota(
+    context.env,
+    `lead-search:${current.user.id}`,
+    configuredLimit(context.env, "MAX_LEAD_SEARCHES_PER_USER_DAY"),
+    "day",
+  );
+  if (!quota.allowed) return bad("daily_lead_search_limit", 429);
   const access = await getSubscriptionAccess(context.env, current.user.id);
   const preferences = await context.env.DB.prepare(
     "SELECT * FROM professional_lead_preferences WHERE professional_id = ?",

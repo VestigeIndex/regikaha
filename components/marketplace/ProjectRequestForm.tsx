@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, Send } from "lucide-react";
+import { CheckCircle2, ImagePlus, Send } from "lucide-react";
 import { PlaceAutocomplete } from "@/components/geo/PlaceAutocomplete";
 import { categories } from "@/lib/data/categories";
 import { europeanCountryOptions } from "@/lib/market";
@@ -10,6 +10,9 @@ import { useI18n, useT } from "@/lib/i18n/context";
 import { useContent } from "@/lib/i18n/useLocalizedContent";
 import { searchGeoDictionaries } from "@/lib/i18n/search-geo";
 import { detectMarketCountry } from "@/lib/market-country";
+import { Turnstile } from "@/components/security/Turnstile";
+import { optimizeImageForUpload, type OptimizedImage } from "@/packages/image-optimizer";
+import { costControlsDictionaries } from "@/lib/i18n/cost-controls";
 
 type Mode = "client" | "b2b";
 
@@ -18,10 +21,14 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
   const t = useT();
   const content = useContent();
   const geoCopy = searchGeoDictionaries[locale];
+  const costCopy = costControlsDictionaries[locale];
   const [sent, setSent] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [country, setCountry] = useState("ES");
+  const [images, setImages] = useState<Array<{ image: OptimizedImage; thumbnail: OptimizedImage }>>([]);
+  const [optimizing, setOptimizing] = useState(false);
+  const [challengeKey, setChallengeKey] = useState(0);
   const countryTouched = useRef(false);
 
   useEffect(() => {
@@ -45,18 +52,33 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
     const payload = Object.fromEntries(form.entries());
     if (mode === "client") payload.acceptsPreEstimate = String(form.get("acceptsPreEstimate") === "on");
     try {
+      let body: BodyInit;
+      const headers: HeadersInit = {};
+      if (mode === "client") {
+        form.set("acceptsPreEstimate", String(form.get("acceptsPreEstimate") === "on"));
+        form.set("locale", locale);
+        form.set("imageDimensions", JSON.stringify(images.map(({ image }) => ({ width: image.width, height: image.height }))));
+        for (const optimized of images) {
+          form.append("photos", optimized.image.file);
+          form.append("thumbnails", optimized.thumbnail.file);
+        }
+        body = form;
+      } else {
+        headers["content-type"] = "application/json";
+        body = JSON.stringify({ ...payload, locale });
+      }
       const res = await fetch(mode === "client" ? "/api/projects" : "/api/b2b-projects", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify({ ...payload, locale }),
+        method: "POST", headers, credentials: "same-origin", body,
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(t.ui.projectForm.unableToPublish);
       setSent(true);
+      setImages([]);
+      setChallengeKey((value) => value + 1);
       e.currentTarget.reset();
     } catch (err) {
       setError(err instanceof Error ? err.message : t.ui.projectForm.unableToPublish);
+      setChallengeKey((value) => value + 1);
     } finally {
       setPending(false);
     }
@@ -177,6 +199,38 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
         required
       />
 
+      {mode === "client" && (
+        <label className="block rounded-xl bg-canvas p-4">
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted">{costCopy.photosLabel}</span>
+          <span className="mt-1 block text-sm text-muted">{costCopy.photosHint}</span>
+          <span className="btn btn-secondary mt-3 cursor-pointer text-sm">
+            <ImagePlus size={16} /> {optimizing ? costCopy.optimizing : costCopy.photosLabel}
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              multiple
+              className="sr-only"
+              disabled={optimizing}
+              onChange={async (event) => {
+                const selected = [...(event.target.files || [])].slice(0, 4);
+                setOptimizing(true);
+                setError(null);
+                try {
+                  setImages(await Promise.all(selected.map((file) => optimizeImageForUpload(file, "free"))));
+                } catch {
+                  setImages([]);
+                  setError(costCopy.invalidImage);
+                } finally {
+                  setOptimizing(false);
+                  event.currentTarget.value = "";
+                }
+              }}
+            />
+          </span>
+          {images.length > 0 && <span className="ml-3 text-sm text-forest-700">{images.length} {costCopy.photosSelected}</span>}
+        </label>
+      )}
+
       {mode === "client" ? (
         <label className="flex items-start gap-3 rounded-xl bg-canvas p-4 cursor-pointer">
           <input name="acceptsPreEstimate" type="checkbox" required className="mt-1 accent-[var(--primary)]" />
@@ -188,7 +242,9 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
         </p>
       )}
 
-      <button type="submit" disabled={pending} className="btn btn-primary w-full disabled:opacity-60">
+      <Turnstile key={challengeKey} action={mode === "client" ? "publish_project" : "publish_b2b"} />
+
+      <button type="submit" disabled={pending || optimizing} className="btn btn-primary w-full disabled:opacity-60">
         <Send size={16} /> {pending ? t.ui.projectForm.publishing : mode === "client" ? t.ui.projectForm.publishClient : t.ui.projectForm.publishB2b}
       </button>
     </form>

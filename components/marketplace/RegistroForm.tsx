@@ -14,6 +14,7 @@ import { subscriptionTextDictionaries } from "@/lib/i18n/subscription";
 import { useContent } from "@/lib/i18n/useLocalizedContent";
 import { detectMarketCountry } from "@/lib/market-country";
 import { cn } from "@/lib/utils";
+import { Turnstile } from "@/components/security/Turnstile";
 
 type RegisterForm = {
   type: string;
@@ -78,6 +79,8 @@ export function RegistroForm() {
   const [form, setForm] = useState<RegisterForm>(initialForm);
   const [nextPath, setNextPath] = useState("/suscripcion");
   const countryTouched = useRef(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [challengeKey, setChallengeKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -115,6 +118,7 @@ export function RegistroForm() {
           plan: params.get("plan") === "europa_pro" ? "europa_pro" : "autonomo_nacional",
           interval: params.get("interval") === "yearly" ? "yearly" : "monthly",
           founderIntent: params.get("founder") === "true",
+          turnstileToken,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -123,6 +127,8 @@ export function RegistroForm() {
       setDone(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : t.ui.register.unableToCreate);
+      setChallengeKey((value) => value + 1);
+      setTurnstileToken("");
     } finally {
       setPending(false);
     }
@@ -290,6 +296,7 @@ export function RegistroForm() {
                 <Link href="/legal/politica-verificacion" className="underline text-forest-700">{t.ui.register.verificationPolicy}</Link> {t.ui.register.fairRanking}
               </span>
             </label>
+            <Turnstile key={challengeKey} action="register_professional" onToken={setTurnstileToken} />
           </div>
         )}
 

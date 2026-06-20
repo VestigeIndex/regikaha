@@ -1,0 +1,58 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "regikaha",
+  "pages_build_output_dir": "./out",
+  "compatibility_date": "2026-06-20",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "regikaha-db",
+      "database_id": "c7cc8d9f-5e66-4289-8ec9-18ff7ab8b2cc",
+      "migrations_dir": "./migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "regikaha-media",
+      "jurisdiction": "eu"
+    }
+  ],
+  "vars": {
+    "COST_MODE": "survival",
+    "REGIKAHA_ENABLE_WORKER": "true",
+    "REGIKAHA_ENABLE_D1": "true",
+    "REGIKAHA_ENABLE_R2": "true",
+    "REGIKAHA_ENABLE_TURNSTILE": "true",
+    "ENABLE_HEAVY_FEATURES": "false",
+    "ENABLE_AI_FEATURES": "false",
+    "ENABLE_VIDEO_UPLOADS": "false",
+    "ENABLE_DOCUMENT_UPLOADS": "false",
+    "ENABLE_BACKGROUND_JOBS": "false",
+    "ENABLE_EMAIL_DIGESTS": "false",
+    "ENABLE_PUBLIC_EXPORTS": "false",
+    "MAX_FREE_PROJECT_PHOTOS": "4",
+    "MAX_FREE_PROFILE_PHOTOS": "6",
+    "MAX_PRO_PROFILE_PHOTOS": "30",
+    "MAX_UPLOAD_SIZE_MB": "2",
+    "MAX_FINAL_IMAGE_SIZE_KB": "350",
+    "MAX_PRO_FINAL_IMAGE_SIZE_KB": "500",
+    "MAX_IMAGE_WIDTH": "1600",
+    "MAX_THUMBNAIL_WIDTH": "400",
+    "MAX_FREE_PROJECTS_PER_CLIENT_MONTH": "3",
+    "MAX_FREE_PROFESSIONAL_PROFILE_UPDATES_DAY": "10",
+    "MAX_PUBLIC_SEARCHES_PER_IP_HOUR": "60",
+    "MAX_API_REQUESTS_PER_IP_MINUTE": "30",
+    "MAX_API_REQUESTS_PER_USER_MINUTE": "60",
+    "MAX_LEAD_SEARCHES_PER_USER_DAY": "30",
+    "MAX_EMAILS_PER_USER_DAY": "3",
+    "MAX_EMAILS_PER_IP_DAY": "10",
+    "MAX_R2_SOFT_LIMIT_GB": "8",
+    "MAX_R2_HARD_LIMIT_GB": "10",
+    "MAX_D1_SOFT_LIMIT_MB": "400",
+    "MAX_D1_HARD_LIMIT_MB": "480",
+    "AUTO_UNLOCK_LEADS": "false",
+    "MAX_CONTACT_UNLOCKS_WITHOUT_BALANCE": "0"
+  }
+}

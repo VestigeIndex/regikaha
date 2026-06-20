@@ -1,6 +1,7 @@
 import { json, bad, isEmail } from "../../apilib/http";
 import { newId } from "../../apilib/auth";
 import { isActiveCountryCode } from "../../lib/market";
+import { requireTurnstile } from "../../packages/cost-guards";
 
 // POST /api/quote — solicitud de presupuesto de un cliente.
 export async function onRequestPost(context: any) {
@@ -13,6 +14,8 @@ export async function onRequestPost(context: any) {
   const city = String(b.city || "").trim();
   const honeypot = String(b.website || b.companyWebsite || "").trim();
   if (honeypot) return bad("Solicitud no válida", 400);
+  const challenge = await requireTurnstile(env, request, b.turnstileToken, "request_quote");
+  if (challenge) return challenge;
   if (!isEmail(email)) return bad("Email no válido");
   if (!country || !city) return bad("Faltan país o ciudad");
   if (!isActiveCountryCode(country)) return bad("País no disponible todavía en RegiKaha");

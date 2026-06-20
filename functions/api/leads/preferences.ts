@@ -9,7 +9,7 @@ function stringList(value: unknown, max: number): string[] {
     .slice(0, max);
 }
 
-function mapPreferences(row: any, professional: any) {
+function mapPreferences(row: any, professional: any, autoUnlockAllowed: boolean) {
   return {
     countries: row ? safeJsonArray(row.countries) : [professional.country].filter(Boolean),
     regions: row ? safeJsonArray(row.regions) : [professional.region].filter(Boolean),
@@ -18,7 +18,7 @@ function mapPreferences(row: any, professional: any) {
     maxDistanceKm: Number(row?.max_distance_km || professional.service_radius_km || 50),
     minBudget: Number(row?.min_budget || 0),
     weeklyBudget: Number(row?.weekly_budget || 0),
-    autoUnlockEnabled: Boolean(row?.auto_unlock_enabled),
+    autoUnlockEnabled: autoUnlockAllowed && Boolean(row?.auto_unlock_enabled),
     instantNotifications: row ? Boolean(row.instant_notifications) : true,
     languages: row ? safeJsonArray(row.languages) : safeJsonArray(professional.languages),
     excludedCategories: row ? safeJsonArray(row.excluded_categories) : [],
@@ -31,7 +31,9 @@ export async function onRequestGet(context: any) {
   const row = await context.env.DB.prepare(
     "SELECT * FROM professional_lead_preferences WHERE professional_id = ?",
   ).bind(current.professional.id).first();
-  return privateJson({ preferences: mapPreferences(row, current.professional) });
+  return privateJson({
+    preferences: mapPreferences(row, current.professional, String(context.env.AUTO_UNLOCK_LEADS || "false") === "true"),
+  });
 }
 
 export async function onRequestPut(context: any) {
@@ -45,6 +47,7 @@ export async function onRequestPut(context: any) {
   const maxDistanceKm = Math.max(5, Math.min(500, Number(body.maxDistanceKm || 50)));
   const minBudget = Math.max(0, Math.round(Number(body.minBudget || 0)));
   const weeklyBudget = Math.max(0, Math.round(Number(body.weeklyBudget || 0)));
+  const autoUnlockEnabled = String(context.env.AUTO_UNLOCK_LEADS || "false") === "true" && body.autoUnlockEnabled === true;
 
   await context.env.DB.prepare(
     `INSERT INTO professional_lead_preferences
@@ -65,7 +68,7 @@ export async function onRequestPut(context: any) {
     maxDistanceKm,
     minBudget,
     weeklyBudget,
-    body.autoUnlockEnabled === true ? 1 : 0,
+    autoUnlockEnabled ? 1 : 0,
     body.instantNotifications === false ? 0 : 1,
     JSON.stringify(stringList(body.languages, 20)),
     JSON.stringify(stringList(body.excludedCategories, 80)),

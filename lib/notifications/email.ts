@@ -56,8 +56,6 @@ export async function sendEmail(env: NotificationEnv, message: EmailMessage): Pr
   }
 
   console.info("RegiKaha email noop", {
-    to: message.to.email,
-    subject: message.subject,
     tags: message.tags,
   });
   return { ok: true, provider: "noop" };
