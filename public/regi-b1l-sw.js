@@ -1,4 +1,4 @@
-const CACHE = "regi-b1l-v1";
+const CACHE = "regi-b1l-v2";
 const SHELL = ["/regi-b1l", "/regi-b1l/manifest.webmanifest", "/regi-b1l/icon.svg"];
 
 self.addEventListener("install", (event) => {
