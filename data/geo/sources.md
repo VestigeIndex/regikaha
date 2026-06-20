@@ -1,6 +1,6 @@
 # Fuentes de geodata
 
-- GeoNames country files y postal codes.
+- GeoNames country files y códigos administrativos: https://download.geonames.org/export/dump/ (CC BY 4.0).
 - Eurostat LAU para municipios/comunas europeos.
 - España: INE Nomenclátor.
 - Francia: INSEE communes y códigos postales.

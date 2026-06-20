@@ -4,6 +4,8 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Loader2, MapPin, Search, X } from "lucide-react";
 import type { PlaceSearchResult } from "@/lib/geo/types";
 import { searchPlaces } from "@/lib/geo/search";
+import { useI18n } from "@/lib/i18n/context";
+import { releaseTextDictionaries } from "@/lib/i18n/release";
 import { cn } from "@/lib/utils";
 
 export type PlaceAutocompleteMode = "project" | "professional" | "company" | "subcontractor" | "search";
@@ -52,6 +54,8 @@ export function PlaceAutocomplete({
   onChange,
   onTextChange,
 }: PlaceAutocompleteProps) {
+  const { locale } = useI18n();
+  const copy = releaseTextDictionaries[locale];
   const id = useId();
   const boxRef = useRef<HTMLDivElement | null>(null);
   const [query, setQuery] = useState(value);
@@ -152,7 +156,7 @@ export function PlaceAutocomplete({
           value={query}
           onChange={(event) => updateText(event.target.value)}
           onFocus={() => setOpen(true)}
-          placeholder={placeholder || defaultPlaceholder[mode]}
+          placeholder={placeholder || copy[defaultPlaceholder[mode]]}
           required={required}
           className={cn("reg-input pl-9 pr-10", inputClassName)}
           autoComplete="off"
@@ -164,7 +168,7 @@ export function PlaceAutocomplete({
               type="button"
               onClick={clear}
               className="grid h-7 w-7 place-items-center rounded-lg text-muted hover:bg-white hover:text-ink"
-              aria-label="Borrar ubicación"
+              aria-label={copy["Borrar ubicación"]}
             >
               <X size={14} />
             </button>
@@ -204,7 +208,9 @@ export function PlaceAutocomplete({
             </ul>
           ) : (
             <div className="rounded-xl bg-canvas px-3 py-2 text-sm text-muted">
-              {loading ? "Buscando ubicación..." : "No hay coincidencias exactas. Puedes mantener el texto escrito."}
+              {loading
+                ? copy["Buscando ubicación..."]
+                : copy["No hay coincidencias exactas. Puedes mantener el texto escrito."]}
             </div>
           )}
         </div>

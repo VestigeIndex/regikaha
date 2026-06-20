@@ -2,22 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Globe, Check, ChevronDown } from "lucide-react";
+import { CountryFlag } from "@/components/ui/CountryFlag";
 import { useI18n } from "@/lib/i18n/context";
 import { localeList, localeMeta } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
-
-function Flag({ country, label }: { country: string; label: string }) {
-  return (
-    <span
-      className={cn(
-        `fi fi-${country.toLowerCase()}`,
-        "inline-flex h-4 w-5 shrink-0 rounded-[3px] bg-cover bg-center shadow-[0_0_0_1px_rgba(15,92,74,0.16)]",
-      )}
-      aria-label={label}
-      role="img"
-    />
-  );
-}
 
 /** Selector de idioma con banderas SVG para los idiomas operativos. */
 export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
@@ -47,7 +35,7 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
         aria-expanded={open}
       >
         <Globe size={16} className="text-forest-500" />
-        <Flag country={current.flagCountry} label={current.english} />
+        <CountryFlag country={current.flagCountry} label={current.english} />
         {!compact && <span className="uppercase text-xs">{current.code}</span>}
         <ChevronDown size={14} className={cn("transition-transform", open && "rotate-180")} />
       </button>
@@ -69,7 +57,7 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
                     l.code === locale ? "bg-forest-500/10 text-forest-800 font-medium" : "text-ink/80 hover:bg-forest-500/6",
                   )}
                 >
-                  <Flag country={l.flagCountry} label={l.english} />
+                  <CountryFlag country={l.flagCountry} label={l.english} />
                   <span className="flex-1 text-left">{l.native}</span>
                   {l.code === locale && <Check size={15} className="text-forest-600" />}
                 </button>

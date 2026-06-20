@@ -19,6 +19,15 @@ import {
   Ruler,
   ClipboardCheck,
   Factory,
+  KeyRound,
+  Grid2X2,
+  Trees,
+  Sparkles,
+  ShieldCheck,
+  Wrench,
+  Truck,
+  Hammer,
+  BellRing,
   type LucideIcon,
 } from "lucide-react";
 
@@ -38,6 +47,15 @@ export const categoryIcons: Record<string, LucideIcon> = {
   Ruler,
   ClipboardCheck,
   Factory,
+  KeyRound,
+  Grid2X2,
+  Trees,
+  Sparkles,
+  ShieldCheck,
+  Wrench,
+  Truck,
+  Hammer,
+  BellRing,
 };
 
 export function getCategoryIcon(name: string): LucideIcon {

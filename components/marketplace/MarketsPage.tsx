@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { ArrowRight, BadgeCheck, Building2, Map, MapPin, Search } from "lucide-react";
 import { PageHeader } from "@/components/site/PageHeader";
+import { CountryFlag } from "@/components/ui/CountryFlag";
+import { MarketCoverageFinder } from "@/components/marketplace/MarketCoverageFinder";
 import { categories } from "@/lib/data/categories";
 import { citySearchLocations } from "@/lib/data/locations";
-import { activeMarkets, countryFlagEmoji, getActiveMarketBySlug } from "@/lib/market";
+import { activeMarkets, getActiveMarketBySlug } from "@/lib/market";
+import { coveragePlaceCounts } from "@/lib/geo/coverage-stats.generated";
 import { marketsDictionaries } from "@/lib/i18n/markets";
 import { useI18n } from "@/lib/i18n/context";
 import { useContent } from "@/lib/i18n/useLocalizedContent";
@@ -39,15 +42,15 @@ export function MarketsIndexPage() {
           {activeMarkets.map((market) => {
             const name = countryName(market.code, locale, market.name);
             const cities = citiesForMarket(market.code, market.citySlugs);
+            const places = coveragePlaceCounts[market.code] || 0;
             return (
               <Link key={market.code} href={`/mercados/${market.slug}`} className="card card-hover p-5">
                 <div className="flex items-center gap-3">
-                  <span className="inline-flex h-5 w-7 items-center justify-center rounded-[3px] text-[18px] leading-none shadow-[0_0_0_1px_rgba(15,92,74,0.16)]" aria-hidden="true">
-                    {countryFlagEmoji(market.flagCountry)}
-                  </span>
+                  <CountryFlag country={market.flagCountry} label={name} className="h-5 w-7" />
                   <h2 className="font-bold text-ink">{name}</h2>
                 </div>
-                <p className="mt-3 text-sm text-muted">{cities.map((city) => city.city).join(", ")}</p>
+                <p className="mt-3 text-sm font-semibold text-forest-700">{places.toLocaleString(locale)} {copy.home.statsCities}</p>
+                <p className="mt-1 text-sm text-muted">{cities.map((city) => city.city).join(", ")}</p>
                 <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-forest-700">
                   {copy.home.openMarket} <ArrowRight size={14} />
                 </span>
@@ -98,6 +101,7 @@ export function MarketDetailPage({ slug }: { slug: string }) {
           <section>
             <h2 className="text-2xl font-bold text-ink">{copy.detail.citiesTitle}</h2>
             <p className="mt-2 text-muted">{copy.detail.citiesText}</p>
+            <MarketCoverageFinder country={market.code} countryName={name} />
             <div className="mt-5 grid sm:grid-cols-2 gap-3">
               {cities.length === 0 && <p className="text-sm text-muted">{copy.detail.noCities}</p>}
               {cities.map((city) => (

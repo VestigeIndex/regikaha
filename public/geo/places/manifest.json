@@ -1,0 +1,60 @@
+{
+  "source": "GeoNames",
+  "sourceUrl": "https://download.geonames.org/export/dump/",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "generatedAt": "2026-06-20T05:24:51.953Z",
+  "countries": {
+    "ES": {
+      "name": "España",
+      "places": 30661,
+      "shards": 363
+    },
+    "FR": {
+      "name": "Francia",
+      "places": 81452,
+      "shards": 490
+    },
+    "IT": {
+      "name": "Italia",
+      "places": 62947,
+      "shards": 365
+    },
+    "PT": {
+      "name": "Portugal",
+      "places": 16609,
+      "shards": 213
+    },
+    "CH": {
+      "name": "Suiza",
+      "places": 13187,
+      "shards": 318
+    },
+    "DE": {
+      "name": "Alemania",
+      "places": 81746,
+      "shards": 498
+    },
+    "NL": {
+      "name": "Países Bajos",
+      "places": 7719,
+      "shards": 357
+    },
+    "BE": {
+      "name": "Bélgica",
+      "places": 12658,
+      "shards": 359
+    },
+    "IE": {
+      "name": "Irlanda",
+      "places": 12158,
+      "shards": 269
+    },
+    "GB": {
+      "name": "Reino Unido",
+      "places": 43700,
+      "shards": 440
+    }
+  },
+  "totalPlaces": 362837
+}

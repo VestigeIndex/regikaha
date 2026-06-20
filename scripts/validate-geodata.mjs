@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
@@ -23,4 +23,16 @@ for (const place of places) {
   if (!allowedCountries.has(place.countryCode)) throw new Error(`País no activo: ${place.countryCode} (${place.id})`);
 }
 
-console.log(`Geodata OK: ${places.length} lugares validados en ${[...allowedCountries].join(", ")}`);
+const coverageRoot = path.join(root, "public", "geo", "places");
+const manifest = JSON.parse(await readFile(path.join(coverageRoot, "manifest.json"), "utf8"));
+let coverageTotal = 0;
+for (const country of allowedCountries) {
+  const entry = manifest.countries?.[country];
+  if (!entry || Number(entry.places || 0) < 1000) throw new Error(`Cobertura incompleta para ${country}`);
+  const shards = (await readdir(path.join(coverageRoot, country))).filter((name) => name.endsWith(".json"));
+  if (shards.length !== Number(entry.shards)) throw new Error(`Número de fragmentos incorrecto para ${country}`);
+  coverageTotal += Number(entry.places);
+}
+if (coverageTotal !== Number(manifest.totalPlaces)) throw new Error("El total de cobertura no coincide con el manifiesto");
+
+console.log(`Geodata OK: ${places.length} lugares destacados y ${coverageTotal} localidades buscables en ${[...allowedCountries].join(", ")}`);

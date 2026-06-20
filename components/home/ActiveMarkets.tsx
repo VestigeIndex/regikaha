@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
-import { activeMarkets, countryFlagEmoji } from "@/lib/market";
-import { citySearchLocations } from "@/lib/data/locations";
+import { CountryFlag } from "@/components/ui/CountryFlag";
+import { activeMarkets } from "@/lib/market";
+import { coveragePlaceCounts, totalCoveragePlaces } from "@/lib/geo/coverage-stats.generated";
 import { marketsDictionaries } from "@/lib/i18n/markets";
 import { useI18n } from "@/lib/i18n/context";
 
@@ -28,7 +29,7 @@ export function ActiveMarkets() {
           <p className="mt-4 text-muted leading-relaxed">{copy.description}</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <span className="chip">{activeMarkets.length} {copy.statsCountries}</span>
-            <span className="chip">{citySearchLocations.length} {copy.statsCities}</span>
+            <span className="chip">{totalCoveragePlaces.toLocaleString(locale)} {copy.statsCities}</span>
           </div>
           <Link href="/mercados" className="btn btn-secondary mt-7">
             {copy.viewAll} <ArrowRight size={16} />
@@ -38,7 +39,7 @@ export function ActiveMarkets() {
         <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
           {activeMarkets.map((market) => {
             const name = countryName(market.code, locale, market.name);
-            const cities = citySearchLocations.filter((city) => city.countryCode === market.code);
+            const places = coveragePlaceCounts[market.code] || 0;
             return (
               <Link
                 key={market.code}
@@ -47,19 +48,14 @@ export function ActiveMarkets() {
                 aria-label={`${copy.openMarket}: ${name}`}
               >
                 <div className="flex items-center gap-3">
-                  <span
-                    className="inline-flex h-5 w-7 items-center justify-center rounded-[3px] text-[18px] leading-none shadow-[0_0_0_1px_rgba(15,92,74,0.16)]"
-                    aria-hidden="true"
-                  >
-                    {countryFlagEmoji(market.flagCountry)}
-                  </span>
+                  <CountryFlag country={market.flagCountry} label={name} className="h-5 w-7" />
                   <div className="min-w-0">
                     <h3 className="font-semibold text-ink group-hover:text-forest-700 transition-colors">{name}</h3>
-                    <p className="mt-0.5 text-xs text-muted">{cities.length} {copy.statsCities}</p>
+                    <p className="mt-0.5 text-xs text-muted">{places.toLocaleString(locale)} {copy.statsCities}</p>
                   </div>
                 </div>
                 <p className="mt-3 text-sm text-muted line-clamp-2">
-                  {cities.slice(0, 3).map((city) => city.city).join(", ")}
+                  {copy.description}
                 </p>
               </Link>
             );

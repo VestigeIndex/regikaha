@@ -1,7 +1,8 @@
 import type { Category } from "@/lib/types";
+import { tradeCategories } from "@/lib/data/trade-categories";
 
 /**
- * Categorías iniciales del marketplace (15). El orden define la prioridad de
+ * Categorías y gremios del marketplace. El orden define la prioridad de
  * aparición en home y listados. `featured` marca las que se muestran en la
  * cuadrícula destacada de la home.
  */
@@ -41,7 +42,7 @@ export const categories: Category[] = [
   {
     id: "electricidad",
     slug: "electricidad",
-    name: "Electricidad",
+    name: "Electricistas",
     professionalNoun: "electricista",
     professionalNounPlural: "electricistas",
     shortDescription: "Instalaciones y reparaciones eléctricas con boletín.",
@@ -240,6 +241,7 @@ export const categories: Category[] = [
     ],
     featured: false,
   },
+  ...tradeCategories,
 ];
 
 export function getCategoryById(id: string): Category | undefined {

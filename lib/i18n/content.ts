@@ -1,5 +1,6 @@
 import type { Locale } from "./config";
 import { generatedContentDictionaries } from "./content.generated";
+import { tradeCategoryTranslations } from "@/lib/data/trade-categories";
 
 export interface ContentDict {
   categories: Record<
@@ -63,4 +64,13 @@ export interface ContentDict {
   languageOptions: { value: string; label: string }[];
 }
 
-export const contentDictionaries: Record<Locale, ContentDict> = generatedContentDictionaries;
+export const contentDictionaries = (Object.keys(generatedContentDictionaries) as Locale[]).reduce((result, locale) => {
+  result[locale] = {
+    ...generatedContentDictionaries[locale],
+    categories: {
+      ...generatedContentDictionaries[locale].categories,
+      ...tradeCategoryTranslations[locale],
+    },
+  };
+  return result;
+}, {} as Record<Locale, ContentDict>);

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useI18n } from "@/lib/i18n/context";
+import type { Locale } from "@/lib/i18n/config";
 
 declare global {
   interface Window {
@@ -35,29 +37,40 @@ interface GoogleConnectButtonProps {
   redirectTo?: string;
 }
 
-let googleScriptPromise: Promise<void> | null = null;
+const errorCopy: Record<Locale, { credential: string; connect: string; unavailable: string }> = {
+  es: { credential: "Google no devolvió credenciales", connect: "No se pudo conectar con Google", unavailable: "Google Connect no está disponible" },
+  fr: { credential: "Google n’a pas renvoyé d’identifiants", connect: "Impossible de se connecter avec Google", unavailable: "Google Connect n’est pas disponible" },
+  it: { credential: "Google non ha restituito le credenziali", connect: "Impossibile connettersi con Google", unavailable: "Google Connect non è disponibile" },
+  pt: { credential: "O Google não devolveu credenciais", connect: "Não foi possível ligar ao Google", unavailable: "O Google Connect não está disponível" },
+  de: { credential: "Google hat keine Anmeldedaten zurückgegeben", connect: "Die Verbindung mit Google ist fehlgeschlagen", unavailable: "Google Connect ist nicht verfügbar" },
+  nl: { credential: "Google heeft geen inloggegevens teruggestuurd", connect: "Verbinding met Google is mislukt", unavailable: "Google Connect is niet beschikbaar" },
+  en: { credential: "Google did not return credentials", connect: "Could not connect with Google", unavailable: "Google Connect is unavailable" },
+};
 
-function loadGoogleScript(): Promise<void> {
-  if (googleScriptPromise) return googleScriptPromise;
+let googleScriptPromise: Promise<void> | null = null;
+let googleScriptLocale: Locale | null = null;
+
+function loadGoogleScript(locale: Locale): Promise<void> {
+  if (googleScriptPromise && googleScriptLocale === locale) return googleScriptPromise;
+  document.querySelector("script[data-regikaha-google-locale]")?.remove();
+  googleScriptPromise = null;
+  googleScriptLocale = locale;
   googleScriptPromise = new Promise((resolve, reject) => {
-    const existing = document.querySelector<HTMLScriptElement>("script[src='https://accounts.google.com/gsi/client']");
-    if (existing) {
-      existing.addEventListener("load", () => resolve(), { once: true });
-      if (window.google?.accounts?.id) resolve();
-      return;
-    }
     const script = document.createElement("script");
-    script.src = "https://accounts.google.com/gsi/client";
+    script.src = `https://accounts.google.com/gsi/client?hl=${encodeURIComponent(locale)}`;
+    script.dataset.regikahaGoogleLocale = locale;
     script.async = true;
     script.defer = true;
     script.onload = () => resolve();
-    script.onerror = () => reject(new Error("No se pudo cargar Google Connect"));
+    script.onerror = () => reject(new Error("google_load_failed"));
     document.head.appendChild(script);
   });
   return googleScriptPromise;
 }
 
 export function GoogleConnectButton({ clientId, redirectTo = "/panel" }: GoogleConnectButtonProps) {
+  const { locale } = useI18n();
+  const copy = errorCopy[locale];
   const targetRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
@@ -66,7 +79,7 @@ export function GoogleConnectButton({ clientId, redirectTo = "/panel" }: GoogleC
     let cancelled = false;
     async function init() {
       try {
-        await loadGoogleScript();
+        await loadGoogleScript(locale);
         if (cancelled || !targetRef.current || !window.google?.accounts?.id) return;
         window.google.accounts.id.initialize({
           client_id: clientId,
@@ -75,7 +88,7 @@ export function GoogleConnectButton({ clientId, redirectTo = "/panel" }: GoogleC
             setError(null);
             const credential = response.credential;
             if (!credential) {
-              setError("Google no devolvió credenciales");
+              setError(copy.credential);
               return;
             }
             const res = await fetch("/api/auth/google", {
@@ -85,7 +98,7 @@ export function GoogleConnectButton({ clientId, redirectTo = "/panel" }: GoogleC
             });
             const data = await res.json().catch(() => ({}));
             if (!res.ok) {
-              setError(data.error || "No se pudo conectar con Google");
+              setError(data.error || copy.connect);
               return;
             }
             window.location.href = data.professional?.slug
@@ -105,14 +118,14 @@ export function GoogleConnectButton({ clientId, redirectTo = "/panel" }: GoogleC
         });
         setReady(true);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Google Connect no está disponible");
+        setError(e instanceof Error && e.message !== "google_load_failed" ? e.message : copy.unavailable);
       }
     }
     init();
     return () => {
       cancelled = true;
     };
-  }, [clientId, redirectTo]);
+  }, [clientId, copy, locale, redirectTo]);
 
   return (
     <div>

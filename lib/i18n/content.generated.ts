@@ -29,7 +29,7 @@ export const generatedContentDictionaries = {
         ]
       },
       "electricidad": {
-        "name": "Electricidad",
+        "name": "Electricistas",
         "professionalNoun": "electricista",
         "professionalNounPlural": "electricistas",
         "shortDescription": "Instalaciones y reparaciones eléctricas con boletín.",
@@ -1232,7 +1232,7 @@ export const generatedContentDictionaries = {
         ]
       },
       "electricidad": {
-        "name": "Électricité",
+        "name": "Électriciens",
         "professionalNoun": "électricien",
         "professionalNounPlural": "électriciens",
         "shortDescription": "Installations et réparations électriques avec bulletin.",
@@ -2435,7 +2435,7 @@ export const generatedContentDictionaries = {
         ]
       },
       "electricidad": {
-        "name": "Elettricità",
+        "name": "Elettricisti",
         "professionalNoun": "elettricista",
         "professionalNounPlural": "elettricisti",
         "shortDescription": "Impianti elettrici e riparazioni con bollettino.",
@@ -3638,7 +3638,7 @@ export const generatedContentDictionaries = {
         ]
       },
       "electricidad": {
-        "name": "Eletricidade",
+        "name": "Eletricistas",
         "professionalNoun": "eletricista",
         "professionalNounPlural": "eletricistas",
         "shortDescription": "Instalações elétricas e reparos com boletim.",
@@ -4841,7 +4841,7 @@ export const generatedContentDictionaries = {
         ]
       },
       "electricidad": {
-        "name": "Strom",
+        "name": "Elektriker",
         "professionalNoun": "Elektriker",
         "professionalNounPlural": "Elektriker",
         "shortDescription": "Elektroinstallationen und Reparaturen mit Bulletin.",
@@ -6044,7 +6044,7 @@ export const generatedContentDictionaries = {
         ]
       },
       "electricidad": {
-        "name": "Elektriciteit",
+        "name": "Elektriciens",
         "professionalNoun": "elektricien",
         "professionalNounPlural": "elektriciens",
         "shortDescription": "Elektrische installaties en reparaties met bulletin.",
@@ -7247,7 +7247,7 @@ export const generatedContentDictionaries = {
         ]
       },
       "electricidad": {
-        "name": "Electricity",
+        "name": "Electricians",
         "professionalNoun": "electrician",
         "professionalNounPlural": "electricians",
         "shortDescription": "Electrical installations and repairs with bulletin.",
