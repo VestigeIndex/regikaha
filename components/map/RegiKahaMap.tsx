@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Map as LeafletMap, LayerGroup } from "leaflet";
 import type { Professional } from "@/lib/types";
 import { coordinatesForProfessional, primaryCategoryName, professionalMarkerKind } from "@/lib/geo";
@@ -9,14 +9,19 @@ export function RegiKahaMap({
   professionals,
   selectedId,
   onSelect,
+  searchCenter,
+  radiusKm,
 }: {
   professionals: Professional[];
   selectedId?: string | null;
   onSelect?: (professional: Professional) => void;
+  searchCenter?: { lat: number; lng: number };
+  radiusKm?: number;
 }) {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const layerRef = useRef<LayerGroup | null>(null);
+  const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -34,6 +39,7 @@ export function RegiKahaMap({
       }).addTo(map);
       mapRef.current = map;
       layerRef.current = L.layerGroup().addTo(map);
+      setMapReady(true);
     }
     init();
     return () => {
@@ -51,6 +57,15 @@ export function RegiKahaMap({
       if (cancelled) return;
       group.clearLayers();
       const bounds: [number, number][] = [];
+      const searchCircle = searchCenter && radiusKm
+        ? L.circle([searchCenter.lat, searchCenter.lng], {
+            radius: radiusKm * 1000,
+            color: "#198C68",
+            weight: 2,
+            fillColor: "#7ad9b7",
+            fillOpacity: 0.12,
+          }).addTo(group)
+        : null;
       professionals.forEach((professional, index) => {
         const coords = coordinatesForProfessional(professional, index);
         bounds.push([coords.lat, coords.lng]);
@@ -77,7 +92,11 @@ export function RegiKahaMap({
         marker.on("click", () => onSelect?.(professional));
         marker.addTo(group);
       });
-      if (bounds.length === 1) map.setView(bounds[0], 11);
+      if (searchCircle) {
+        const areaBounds = searchCircle.getBounds();
+        bounds.forEach((point) => areaBounds.extend(point));
+        map.fitBounds(areaBounds, { padding: [36, 36], maxZoom: 11 });
+      } else if (bounds.length === 1) map.setView(bounds[0], 11);
       else if (bounds.length > 1) map.fitBounds(bounds, { padding: [36, 36], maxZoom: 8 });
       else map.setView([43.5, 6.8], 4);
     }
@@ -85,7 +104,7 @@ export function RegiKahaMap({
     return () => {
       cancelled = true;
     };
-  }, [onSelect, professionals, selectedId]);
+  }, [mapReady, onSelect, professionals, radiusKm, searchCenter, selectedId]);
 
   useEffect(() => {
     return () => {

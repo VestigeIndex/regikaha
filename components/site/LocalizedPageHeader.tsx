@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { PageHeader } from "@/components/site/PageHeader";
 import { useT } from "@/lib/i18n/context";
 
@@ -14,6 +15,12 @@ export function LocalizedPageHeader({
 }) {
   const t = useT();
   const header = t.ui.pageHeaders[id];
+
+  useEffect(() => {
+    document.title = `${header.title} | RegiKaha`;
+    const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (description) description.content = header.description;
+  }, [header.description, header.title]);
 
   return (
     <PageHeader

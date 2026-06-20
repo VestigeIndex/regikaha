@@ -90,6 +90,9 @@ export function coordinatesForCity(city?: string, countryCode?: string): Coordin
 }
 
 export function coordinatesForProfessional(pro: Professional, index = 0): Coordinates {
+  if (Number.isFinite(pro.latitude) && Number.isFinite(pro.longitude)) {
+    return { lat: Number(pro.latitude), lng: Number(pro.longitude) };
+  }
   const base = coordinatesForCity(pro.city || pro.locationSlug, pro.countryCode);
   const offset = ((index % 7) - 3) * 0.018;
   const ring = (Math.floor(index / 7) % 5) * 0.012;

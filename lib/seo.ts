@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { site } from "./site";
 import type { Professional, ServiceItem, Category } from "./types";
 import { activeMarkets, europeMarket } from "./market";
+import { openGraphLocales } from "./seo-local";
+import type { Locale } from "./i18n/config";
 
 /** Construye metadata coherente para cualquier página. */
 export function buildMetadata(opts: {
@@ -9,8 +11,12 @@ export function buildMetadata(opts: {
   description: string;
   path?: string;
   noindex?: boolean;
+  locale?: Locale;
+  image?: string;
 }): Metadata {
   const url = opts.path ? `${site.url}${opts.path}` : site.url;
+  const locale = opts.locale || "es";
+  const image = opts.image || "/images/photos/ventanas.webp";
   return {
     title: opts.title,
     description: opts.description,
@@ -22,14 +28,14 @@ export function buildMetadata(opts: {
       title: opts.title,
       description: opts.description,
       url,
-      locale: "es_ES",
-      images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: site.name }],
+      locale: openGraphLocales[locale],
+      images: [{ url: image, alt: opts.title }],
     },
     twitter: {
       card: "summary_large_image",
       title: opts.title,
       description: opts.description,
-      images: ["/og-image.svg"],
+      images: [image],
     },
   };
 }
@@ -45,8 +51,23 @@ export function organizationSchema() {
     description: site.description,
     areaServed: activeMarkets.map((market) => ({ "@type": "Country", name: market.name })),
     contactPoint: [
-      { "@type": "ContactPoint", contactType: "customer support", email: site.email, availableLanguage: ["es", "en"] },
+      { "@type": "ContactPoint", contactType: "customer support", email: site.email, availableLanguage: ["es", "fr", "it", "pt", "de", "nl", "en"] },
     ],
+  };
+}
+
+export function websiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.name,
+    url: site.url,
+    inLanguage: ["es", "fr", "it", "pt", "de", "nl", "en"],
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${site.url}/buscar?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
   };
 }
 

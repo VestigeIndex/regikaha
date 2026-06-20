@@ -9,7 +9,7 @@ import { PlaceAutocomplete } from "@/components/geo/PlaceAutocomplete";
 import { categories, searchProfessionals } from "@/lib/data";
 import { citySearchLocations, countrySearchLocations, getLocationBySlug } from "@/lib/data/locations";
 import { europeanCountryOptions } from "@/lib/market";
-import { coverageStatus } from "@/lib/geo";
+import { coordinatesForCity, coverageStatus } from "@/lib/geo";
 import { type Locale } from "@/lib/i18n/config";
 import { useI18n, useT } from "@/lib/i18n/context";
 import { useContent, useLocalizedProfessional } from "@/lib/i18n/useLocalizedContent";
@@ -19,6 +19,7 @@ import { CoverageBadge } from "@/components/marketplace/CoverageBadge";
 import { FavoriteButton } from "@/components/marketplace/FavoriteButton";
 import { CompareButton } from "@/components/marketplace/CompareButton";
 import { RegiKahaMap } from "@/components/map/RegiKahaMap";
+import { searchGeoDictionaries } from "@/lib/i18n/search-geo";
 
 function countryName(code: string, locale: Locale): string {
   try {
@@ -61,6 +62,9 @@ function mapRemoteProfessional(row: any, locale: Locale, professionalLabel: stri
     locationSlug: (row.city || row.country || "market").toString().toLowerCase(),
     serviceArea: [row.city, row.region, country].filter(Boolean).join(", "),
     serviceRadiusKm: Number(row.service_radius_km || 30),
+    latitude: row.search_latitude == null ? undefined : Number(row.search_latitude),
+    longitude: row.search_longitude == null ? undefined : Number(row.search_longitude),
+    distanceKm: row.distance_km == null ? undefined : Number(row.distance_km),
     categoryIds: row.category_ids || [],
     specialties: [],
     yearsExperience: Number(row.years_experience || 0),
@@ -90,6 +94,7 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
   const { locale } = useI18n();
   const t = useT();
   const content = useContent();
+  const geoCopy = searchGeoDictionaries[locale];
   const params = useSearchParams();
   const [filters, setFilters] = useState<SearchFilters>({});
   const [sort, setSort] = useState<SortOption>("relevance");
@@ -100,11 +105,23 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
+    const latitudeParam = params.get("lat");
+    const longitudeParam = params.get("lng");
+    const radiusParam = params.get("radiusKm");
+    const latitude = Number(latitudeParam);
+    const longitude = Number(longitudeParam);
+    const radiusKm = Number(radiusParam);
     setFilters((current) => ({
       ...current,
       query: params.get("q") ?? undefined,
       categoryId: params.get("cat") ?? undefined,
       locationSlug: params.get("loc") ?? undefined,
+      countryCode: params.get("country") ?? undefined,
+      region: params.get("region") ?? undefined,
+      city: params.get("city") ?? undefined,
+      latitude: latitudeParam !== null && Number.isFinite(latitude) ? latitude : undefined,
+      longitude: longitudeParam !== null && Number.isFinite(longitude) ? longitude : undefined,
+      radiusKm: radiusParam !== null && Number.isFinite(radiusKm) && radiusKm > 0 ? radiusKm : undefined,
     }));
   }, [params]);
 
@@ -118,8 +135,21 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
     if (filters.region || filters.city || loc?.province || loc?.city) q.set("region", filters.region || filters.city || loc?.province || loc?.city || "");
     if (filters.city) q.set("city", filters.city);
     if (filters.radiusKm) q.set("radiusKm", String(filters.radiusKm));
+    if (Number.isFinite(filters.latitude)) q.set("lat", String(filters.latitude));
+    if (Number.isFinite(filters.longitude)) q.set("lng", String(filters.longitude));
+    if (filters.minRating) q.set("minRating", String(filters.minRating));
+    if (filters.verifiedOnly) q.set("verified", "1");
+    if (filters.withInvoice) q.set("invoice", "1");
+    if (filters.withInsurance) q.set("insurance", "1");
+    if (filters.urgentOnly) q.set("urgent", "1");
+    if (filters.withPortfolio) q.set("portfolio", "1");
+    if (filters.language) q.set("language", filters.language);
+    if (filters.professionalType) q.set("type", filters.professionalType);
+    if (filters.maxPriceFrom) q.set("maxPrice", String(filters.maxPriceFrom));
+    if (filters.minYearsExperience) q.set("minExperience", String(filters.minYearsExperience));
+    q.set("sort", sort);
     return q.toString();
-  }, [filters.categoryId, filters.city, filters.countryCode, filters.locationSlug, filters.query, filters.radiusKm, filters.region]);
+  }, [filters, sort]);
 
   useEffect(() => {
     let cancelled = false;
@@ -166,6 +196,39 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
     setSelectedId(null);
   }
 
+  function selectLegacyLocation(value: string) {
+    const location = value ? getLocationBySlug(value) : undefined;
+    if (location?.city) {
+      const coordinates = coordinatesForCity(location.city, location.countryCode);
+      setFilters((current) => ({
+        ...current,
+        locationSlug: value,
+        latitude: coordinates.lat,
+        longitude: coordinates.lng,
+        radiusKm: current.radiusKm || 25,
+      }));
+      return;
+    }
+    setFilters((current) => ({ ...current, locationSlug: value || undefined, latitude: undefined, longitude: undefined }));
+  }
+
+  function useMyLocation() {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (position) => setFilters((current) => ({
+        ...current,
+        city: geoCopy.currentLocation,
+        locationSlug: undefined,
+        placeId: undefined,
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        radiusKm: current.radiusKm || 25,
+      })),
+      () => window.alert(geoCopy.locationError),
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 },
+    );
+  }
+
   const filtersUI = (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -195,22 +258,26 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
         <PlaceAutocomplete
           mode="search"
           country={filters.countryCode}
-          placeholder="Ciudad, pueblo o código postal"
+          placeholder={geoCopy.placeholder}
           onTextChange={(label) => {
             update("city", label || undefined);
             update("placeId", undefined);
+            update("latitude", undefined);
+            update("longitude", undefined);
           }}
           onChange={(place, label) => {
             update("placeId", place?.id);
             update("countryCode", place?.countryCode);
             update("city", place?.localityName || label || undefined);
             update("region", place?.admin1Name || place?.admin2Name || undefined);
+            update("latitude", place?.latitude);
+            update("longitude", place?.longitude);
             update("locationSlug", undefined);
             if (place && !filters.radiusKm) update("radiusKm", 25);
           }}
         />
         <div className="mt-2">
-        <Select value={filters.locationSlug ?? ""} onChange={(value) => update("locationSlug", value || undefined)}>
+        <Select value={filters.locationSlug ?? ""} onChange={selectLegacyLocation}>
           <option value="">{t.ui.searchPage.allEurope}</option>
           <optgroup label={t.ui.searchPage.countryGroup}>
             {countrySearchLocations.map((location) => (
@@ -225,15 +292,18 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
             ))}
           </optgroup>
         </Select>
+        <button type="button" onClick={useMyLocation} className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-forest-700 hover:text-forest-800">
+          <Crosshair size={15} /> {geoCopy.useMyLocation}
+        </button>
         </div>
       </Field>
 
-      <Field label="Radio de búsqueda">
+      <Field label={geoCopy.radius}>
         <Select
           value={filters.radiusKm ? String(filters.radiusKm) : ""}
           onChange={(value) => update("radiusKm", value ? Number(value) : undefined)}
         >
-          <option value="">Sin limitar radio</option>
+          <option value="">{geoCopy.unlimited}</option>
           <option value="10">10 km</option>
           <option value="25">25 km</option>
           <option value="50">50 km</option>
@@ -368,10 +438,16 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
           )}
         </div>
 
-        <aside className={cn("min-h-[520px] lg:sticky lg:top-24", mobileView === "list" && "hidden lg:block")}>
-          <div className="card overflow-hidden">
-            <div className="h-[520px]">
-              <RegiKahaMap professionals={results} selectedId={selected?.id} onSelect={(professional) => setSelectedId(professional.id)} />
+        <aside className={cn("min-w-0 w-full max-w-full min-h-[520px] lg:sticky lg:top-24", mobileView === "list" && "hidden lg:block")}>
+          <div className="card min-w-0 w-full max-w-full overflow-hidden">
+            <div className="h-[520px] min-w-0 w-full max-w-full">
+              <RegiKahaMap
+                professionals={results}
+                selectedId={selected?.id}
+                onSelect={(professional) => setSelectedId(professional.id)}
+                searchCenter={Number.isFinite(filters.latitude) && Number.isFinite(filters.longitude) ? { lat: Number(filters.latitude), lng: Number(filters.longitude) } : undefined}
+                radiusKm={filters.radiusKm}
+              />
             </div>
             {selected && (
               <div className="border-t hairline p-4">
@@ -423,6 +499,8 @@ export function MapSearchPage({ mode = "search" }: { mode?: "search" | "map" }) 
 }
 
 function SelectedMeta({ professional }: { professional: Professional }) {
+  const { locale } = useI18n();
+  const geoCopy = searchGeoDictionaries[locale];
   const content = useContent();
   const displayProfessional = useLocalizedProfessional(professional);
   const primaryCategory = displayProfessional.categoryIds[0]
@@ -431,7 +509,11 @@ function SelectedMeta({ professional }: { professional: Professional }) {
 
   return (
     <p className="text-sm text-muted">
-      {[primaryCategory, displayProfessional.city || displayProfessional.serviceArea].filter(Boolean).join(" · ")}
+      {[
+        primaryCategory,
+        displayProfessional.city || displayProfessional.serviceArea,
+        Number.isFinite(professional.distanceKm) ? geoCopy.distanceAway(Number(professional.distanceKm)) : null,
+      ].filter(Boolean).join(" · ")}
     </p>
   );
 }

@@ -1,4 +1,4 @@
-import { json } from "../../apilib/http";
+import { bad, privateJson } from "../../apilib/http";
 import { getCurrentProfessional, getSubscriptionAccess, safeJsonArray } from "../../apilib/professional";
 
 function locationOf(row: any) {
@@ -10,7 +10,7 @@ export async function onRequestGet(context: any) {
   if (current instanceof Response) return current;
   const access = await getSubscriptionAccess(context.env, current.user.id);
   if (!access.active) {
-    return json({ requests: [], subscriptionRequired: true, subscriptionStatus: access.subscription?.status || "no_subscription" });
+    return privateJson({ requests: [], subscriptionRequired: true, subscriptionStatus: access.subscription?.status || "no_subscription" });
   }
 
   const quotes = await context.env.DB.prepare(
@@ -46,7 +46,7 @@ export async function onRequestGet(context: any) {
     estimateMap.set(estimate.quote_request_id, list);
   }
 
-  return json({
+  return privateJson({
     requests: (quotes.results || []).map((q: any) => ({
       id: q.id,
       clientName: q.client_name || "Cliente",
@@ -55,6 +55,7 @@ export async function onRequestGet(context: any) {
       categoryId: q.category_id || "",
       serviceId: q.service_id || null,
       location: locationOf(q),
+      country: q.country || current.professional.country || "ES",
       description: q.description || "",
       budgetRange: q.budget_range || "",
       urgency: q.urgency || "flexible",
@@ -63,4 +64,20 @@ export async function onRequestGet(context: any) {
       estimates: estimateMap.get(q.id) || [],
     })),
   });
+}
+
+export async function onRequestPatch(context: any) {
+  const current = await getCurrentProfessional(context.env, context.request);
+  if (current instanceof Response) return current;
+  const access = await getSubscriptionAccess(context.env, current.user.id);
+  if (!access.active) return bad("Tu suscripción no está activa", 402);
+  let body: any;
+  try { body = await context.request.json(); } catch { return bad("JSON inválido"); }
+  const id = String(body.id || "").trim();
+  const status = String(body.status || "").trim();
+  if (!id || !["new", "contacted", "quoted", "won", "lost", "closed"].includes(status)) return bad("Estado no válido");
+  await context.env.DB.prepare(
+    "UPDATE quote_requests SET status = ? WHERE id = ? AND professional_id = ?",
+  ).bind(status, id, current.professional.id).run();
+  return privateJson({ ok: true });
 }

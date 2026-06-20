@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 import { categories, publicProfessionals, getServicesByProfessional } from "@/lib/data";
 import { activeMarkets } from "@/lib/market";
+import { locales } from "@/lib/i18n/config";
+import { indexablePlaces, localityPath, localServicePath, primaryLocaleByCountry } from "@/lib/seo-local";
 
 export const dynamic = "force-static";
 
@@ -68,6 +70,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.75,
     });
+  }
+
+  for (const locale of locales) {
+    for (const place of indexablePlaces) {
+      const primary = primaryLocaleByCountry[place.countryCode] === locale;
+      entries.push({
+        url: `${site.url}${localityPath(locale, place)}`,
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: primary ? 0.75 : 0.55,
+      });
+      for (const category of categories) {
+        entries.push({
+          url: `${site.url}${localServicePath(locale, category.slug, place)}`,
+          lastModified: now,
+          changeFrequency: "weekly",
+          priority: primary ? 0.7 : 0.5,
+        });
+      }
+    }
   }
 
   for (const p of publicProfessionals) {

@@ -1,0 +1,29 @@
+# RegiKaha
+
+> RegiKaha is a multilingual European marketplace for verified renovation, construction, installation, maintenance, architecture and engineering professionals.
+
+RegiKaha helps clients discover professionals by service, country and locality, compare transparent profiles and request a non-binding initial estimate. It operates in Spain, France, Italy, Portugal, Switzerland, Germany, the Netherlands, Belgium, Ireland and the United Kingdom.
+
+## Core resources
+
+- [Search professionals](https://regikaha.com/buscar)
+- [Explore the map](https://regikaha.com/mapa)
+- [Browse service categories](https://regikaha.com/categorias)
+- [Browse active markets](https://regikaha.com/mercados)
+- [Publish a client project](https://regikaha.com/publicar-proyecto)
+- [Professional plans](https://regikaha.com/precios)
+- [How RegiKaha works](https://regikaha.com/como-funciona)
+- [Trust and verification policy](https://regikaha.com/legal/politica-verificacion)
+- [Review policy](https://regikaha.com/legal/politica-resenas)
+- [Full AI-readable reference](https://regikaha.com/llms-full.txt)
+
+## Languages
+
+The user interface and local discovery pages are available in Spanish, French, Italian, Portuguese, German, Dutch and English. Local pages use canonical URLs and reciprocal language alternatives.
+
+## Important interpretation rules
+
+- A profile is only public when its activation and verification state permits it.
+- Initial estimates are indicative and non-binding until scope, measurements, materials and site conditions are reviewed.
+- Paid plans do not buy ranking position. Search ordering is based on service quality and relevance signals.
+- A local page does not imply that supply exists. When coverage is insufficient, RegiKaha says so and can use real demand to guide acquisition.

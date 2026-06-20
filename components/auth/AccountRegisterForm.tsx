@@ -1,37 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, UserPlus } from "lucide-react";
 import { europeanCountryOptions } from "@/lib/market";
-import { panelPathForRole, roleLabels, type AccountRole } from "@/lib/accounts";
+import { panelPathForRole, type AccountRole } from "@/lib/accounts";
 import { PlaceAutocomplete } from "@/components/geo/PlaceAutocomplete";
-
-const roleCopy: Record<Exclude<AccountRole, "professional" | "admin">, { title: string; text: string; submit: string }> = {
-  client: {
-    title: "Crear cuenta cliente",
-    text: "Publica proyectos, guarda favoritos, recibe pre-presupuestos y gestiona conversaciones.",
-    submit: "Crear cuenta cliente",
-  },
-  company: {
-    title: "Crear cuenta empresa",
-    text: "Publica necesidades de subcontrata, compara equipos y gestiona solicitudes B2B.",
-    submit: "Crear cuenta empresa",
-  },
-  subcontractor: {
-    title: "Crear cuenta subcontrata",
-    text: "Define especialidades, zonas de servicio y disponibilidad para recibir oportunidades B2B.",
-    submit: "Crear cuenta subcontrata",
-  },
-};
+import { useI18n } from "@/lib/i18n/context";
+import { accountRegisterDictionaries } from "@/lib/i18n/account-register";
+import { detectMarketCountry } from "@/lib/market-country";
 
 export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "professional" | "admin"> }) {
   const router = useRouter();
-  const copy = roleCopy[role];
+  const { locale } = useI18n();
+  const dictionary = accountRegisterDictionaries[locale];
+  const copy = dictionary.roles[role];
   const [country, setCountry] = useState("ES");
+  const countryTouched = useRef(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    detectMarketCountry(locale).then((detected) => {
+      if (!cancelled && !countryTouched.current) setCountry(detected);
+    });
+    return () => { cancelled = true; };
+  }, [locale]);
+
+  function selectCountry(value: string) {
+    countryTouched.current = true;
+    setCountry(value);
+  }
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -51,14 +52,14 @@ export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "prof
         }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "No se pudo crear la cuenta");
+      if (!res.ok) throw new Error(data.error || dictionary.unable);
       setDone(true);
       setTimeout(() => {
         router.push(data.redirectTo || panelPathForRole(role));
         router.refresh();
       }, 450);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo crear la cuenta");
+      setError(err instanceof Error ? err.message : dictionary.unable);
     } finally {
       setPending(false);
     }
@@ -68,8 +69,8 @@ export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "prof
     return (
       <div className="card p-8 text-center max-w-xl mx-auto">
         <CheckCircle2 size={40} className="mx-auto text-forest-600" />
-        <h2 className="mt-4 text-xl font-bold text-ink">Tu cuenta se ha creado</h2>
-        <p className="mt-2 text-muted">Te llevamos a tu panel. Si el inicio automático no estuviera disponible, podrás entrar desde Conectar.</p>
+        <h2 className="mt-4 text-xl font-bold text-ink">{dictionary.doneTitle}</h2>
+        <p className="mt-2 text-muted">{dictionary.doneText}</p>
       </div>
     );
   }
@@ -89,48 +90,56 @@ export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "prof
       </div>
       {error && <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
       <div className="grid sm:grid-cols-2 gap-4">
-        <Field label={role === "client" ? "Nombre" : "Nombre de contacto"}>
+        <Field label={role === "client" ? dictionary.name : dictionary.contactName}>
           <input name="name" required className="reg-input" />
         </Field>
         {role !== "client" && (
-          <Field label="Razón social o nombre público">
+          <Field label={dictionary.displayName}>
             <input name="displayName" required className="reg-input" />
           </Field>
         )}
-        <Field label="Email">
+        <Field label={dictionary.email}>
           <input name="email" type="email" required className="reg-input" autoComplete="email" />
         </Field>
-        <Field label="Contraseña">
+        <Field label={dictionary.password}>
           <input name="password" type="password" required minLength={8} className="reg-input" autoComplete="new-password" />
         </Field>
-        <Field label="Teléfono">
+        <Field label={dictionary.phone}>
           <input name="phone" type="tel" className="reg-input" />
         </Field>
-        <Field label="País">
-          <select name="country" value={country} onChange={(e) => setCountry(e.target.value)} className="reg-input" required>
+        <Field label={dictionary.country}>
+          <select name="country" value={country} onChange={(e) => selectCountry(e.target.value)} className="reg-input" required>
             {europeanCountryOptions.map((option) => (
-              <option key={option.code} value={option.code}>{option.name}</option>
+              <option key={option.code} value={option.code}>{localizedCountry(option.code, locale)}</option>
             ))}
           </select>
         </Field>
       </div>
-      <PlaceAutocomplete country={country} required mode={role === "client" ? "project" : role} placeholder="Ciudad, pueblo o código postal" />
+      <PlaceAutocomplete country={country} required mode={role === "client" ? "project" : role} placeholder={dictionary.cityPlaceholder} />
       {role !== "client" && (
-        <Field label={role === "company" ? "Necesidades habituales" : "Especialidades"}>
+        <Field label={role === "company" ? dictionary.needs : dictionary.specialties}>
           <textarea name="description" required minLength={20} rows={4} className="reg-input resize-none" />
         </Field>
       )}
       <label className="flex items-start gap-3 rounded-xl bg-canvas p-4 cursor-pointer">
         <input type="checkbox" name="acceptsTerms" required className="mt-1 accent-[var(--primary)]" />
         <span className="text-sm text-ink/85">
-          Acepto las condiciones aplicables a {roleLabels[role].toLowerCase()}, la política de privacidad y el uso de RegiKaha como plataforma tecnológica de intermediación.
+          {copy.terms}
         </span>
       </label>
       <button type="submit" disabled={pending} className="btn btn-primary w-full disabled:opacity-60">
-        {pending ? "Creando cuenta..." : copy.submit}
+        {pending ? dictionary.creating : copy.submit}
       </button>
     </form>
   );
+}
+
+function localizedCountry(code: string, locale: string) {
+  try {
+    return new Intl.DisplayNames([locale], { type: "region" }).of(code) || code;
+  } catch {
+    return code;
+  }
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {

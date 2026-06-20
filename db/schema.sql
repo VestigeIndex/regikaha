@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS professionals (
   country TEXT,                 -- código país UE (ES, FR, DE, ...)
   region TEXT,                  -- provincia / región / estado
   city TEXT,
+  latitude REAL,
+  longitude REAL,
   phone TEXT,
   years_experience INTEGER DEFAULT 0,
   languages TEXT DEFAULT '[]',  -- JSON array
@@ -60,7 +62,9 @@ CREATE TABLE IF NOT EXISTS service_areas (
   country TEXT NOT NULL,        -- código país UE
   region TEXT,                  -- provincia / región
   city TEXT,
-  postal_prefix TEXT
+  postal_prefix TEXT,
+  latitude REAL,
+  longitude REAL
 );
 
 CREATE TABLE IF NOT EXISTS services (
@@ -118,6 +122,9 @@ CREATE TABLE IF NOT EXISTS quote_requests (
   country TEXT,
   region TEXT,
   city TEXT,
+  latitude REAL,
+  longitude REAL,
+  radius_km INTEGER NOT NULL DEFAULT 25,
   description TEXT,
   budget_range TEXT,
   urgency TEXT DEFAULT 'flexible',
@@ -169,6 +176,9 @@ CREATE TABLE IF NOT EXISTS project_requests (
   country TEXT,
   city TEXT,
   postal_code TEXT,
+  latitude REAL,
+  longitude REAL,
+  radius_km INTEGER NOT NULL DEFAULT 25,
   category_id TEXT,
   subcategory TEXT,
   description TEXT,
@@ -187,6 +197,12 @@ CREATE TABLE IF NOT EXISTS b2b_project_requests (
   company_type TEXT,
   country TEXT,
   city TEXT,
+  latitude REAL,
+  longitude REAL,
+  radius_km INTEGER NOT NULL DEFAULT 50,
+  contact_name TEXT,
+  contact_email TEXT,
+  contact_phone TEXT,
   required_specialty TEXT,
   project_type TEXT,
   start_date TEXT,
@@ -251,8 +267,34 @@ CREATE TABLE IF NOT EXISTS oauth_accounts (
   PRIMARY KEY (provider, provider_user_id)
 );
 
+CREATE TABLE IF NOT EXISTS business_tasks (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  due_date TEXT,
+  priority TEXT NOT NULL DEFAULT 'normal',
+  status TEXT NOT NULL DEFAULT 'open',
+  related_type TEXT,
+  related_id TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS estimate_templates (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  summary TEXT,
+  line_items TEXT NOT NULL DEFAULT '[]',
+  vat_rate REAL NOT NULL DEFAULT 21,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE INDEX IF NOT EXISTS idx_service_areas_loc ON service_areas(country, region, city);
 CREATE INDEX IF NOT EXISTS idx_service_areas_pro ON service_areas(professional_id);
+CREATE INDEX IF NOT EXISTS idx_business_tasks_user_status ON business_tasks(user_id, status, due_date);
+CREATE INDEX IF NOT EXISTS idx_estimate_templates_user ON estimate_templates(user_id, name);
 CREATE INDEX IF NOT EXISTS idx_prof_cat_cat ON professional_categories(category_id);
 CREATE INDEX IF NOT EXISTS idx_prof_status ON professionals(verification_status, active_status);
 CREATE INDEX IF NOT EXISTS idx_docs_pro ON documents(professional_id);

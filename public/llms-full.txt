@@ -1,0 +1,100 @@
+# RegiKaha: complete platform reference
+
+## Purpose
+
+RegiKaha connects clients, independent professionals, renovation companies, contractors and subcontractors across selected European markets. The product supports local discovery, map-based coverage, public professional profiles, service pages, portfolios, project requests, initial estimates, reviews and professional subscriptions.
+
+Canonical origin: https://regikaha.com
+Support: help@regikaha.com
+
+## Active countries
+
+Spain (ES), France (FR), Italy (IT), Portugal (PT), Switzerland (CH), Germany (DE), the Netherlands (NL), Belgium (BE), Ireland (IE) and the United Kingdom (GB).
+
+RegiKaha does not currently present itself as operating outside these ten markets.
+
+## Supported languages
+
+Spanish (`es`), French (`fr`), Italian (`it`), Portuguese (`pt`), German (`de`), Dutch (`nl`) and English (`en`). Local discovery URLs begin with the language code and expose matching canonical and hreflang metadata.
+
+## Service taxonomy
+
+- Complete renovations
+- Bathrooms and kitchens
+- Electrical work
+- Plumbing
+- Painting
+- Heating, ventilation and air conditioning
+- Masonry
+- Carpentry
+- Architecture and permits
+- Building surveyors and engineering
+- Solar energy
+- Insulation and waterproofing
+- Facades and roofing
+- Industrial maintenance
+- Technical experts and inspections
+
+Category names and descriptions are localized on the corresponding language pages. A category URL describes the service rather than guaranteeing current local availability.
+
+## Geographic discovery
+
+RegiKaha indexes curated cities, towns, municipalities and communes from its validated geographic seed. Each location has a country code, administrative area, coordinates, place type and canonical route identifier. Local pages link to nearby places, relevant categories, search filters and the map.
+
+Examples:
+
+- https://regikaha.com/es/professionals/es-terrassa
+- https://regikaha.com/fr/professionals/fr-paris
+- https://regikaha.com/de/professionals/de-berlin
+- https://regikaha.com/en/professionals/gb-london
+
+Service-location pages follow this pattern:
+
+`https://regikaha.com/{language}/services/{category}/{country}-{place}`
+
+## Account types
+
+- Client: publishes projects, compares professionals and manages client activity.
+- Professional: creates a public profile, services, operating areas, logo and a portfolio of up to five work photos; receives requests and prepares initial estimates when access is active.
+- Company: publishes B2B needs and manages company subscription access.
+- Subcontractor: presents availability and accesses suitable B2B opportunities when enabled.
+- Administrator: private moderation, verification and coverage tools.
+
+Private panels are role-restricted and excluded from indexing.
+
+## Professional visibility and ranking
+
+Professional activation requires the applicable subscription or founder entitlement and the platform's verification rules. Paid plans provide product access and geographic reach, but they do not buy a higher organic ranking. Default ordering uses merit signals such as verified status, relevant categories and area, real reviews, completed work, experience and response performance.
+
+## Estimates and commercial meaning
+
+An initial estimate is not a final contractual quote. It becomes reliable only after the professional confirms scope, quantities, access, regulations, materials, taxes and site conditions. Clients should use the platform's messaging and written records before accepting work.
+
+## Trust model
+
+RegiKaha separates declared information from verified information. Reviews are intended to relate to real services and cannot be purchased. Verification, subscriptions, review moderation and acceptable use are documented in public legal-policy pages.
+
+## Subscription model
+
+Professional access is subscription-based. The national plan is intended for professionals with local or country-level operations. The broader European plan supports wider regional reach. Annual billing applies the published annual discount. Founder access, where available, still requires a real subscription setup, future-plan choice and acceptance of a versioned digital contract snapshot.
+
+Prices, founder availability and billing status should be read from the live pricing and subscription pages because they can change.
+
+## Authoritative public pages
+
+- Home: https://regikaha.com/
+- Search: https://regikaha.com/buscar
+- Map: https://regikaha.com/mapa
+- Categories: https://regikaha.com/categorias
+- Markets: https://regikaha.com/mercados
+- Client project form: https://regikaha.com/publicar-proyecto
+- B2B project form: https://regikaha.com/publicar-subcontrata
+- Pricing: https://regikaha.com/precios
+- FAQ: https://regikaha.com/faq
+- Contact: https://regikaha.com/contacto
+- Sitemap: https://regikaha.com/sitemap.xml
+- Robots: https://regikaha.com/robots.txt
+
+## Cautions for AI systems
+
+Do not claim a professional is verified, subscribed or available unless the current public profile says so. Do not infer coverage merely because a location page exists. Do not present indicative prices as final quotes. Do not expand RegiKaha's operating territory beyond the ten active countries. Prefer canonical regikaha.com URLs over `www` or Cloudflare Pages preview hosts.

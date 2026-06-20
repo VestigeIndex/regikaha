@@ -122,6 +122,9 @@ function localizedDocumentTitle(locale: Locale, dictionary: Record<string, strin
     if (name) return `${verifiedProfileTitle(locale, name)} | RegiKaha`;
   }
 
+  const heading = document.querySelector("main h1, body > div h1")?.textContent?.trim();
+  if (heading) return `${heading} | RegiKaha`;
+
   return replaceKnownPhrases(document.title, dictionary);
 }
 

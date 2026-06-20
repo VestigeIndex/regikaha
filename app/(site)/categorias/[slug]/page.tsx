@@ -5,7 +5,8 @@ import {
   getProfessionalById,
 } from "@/lib/data";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { breadcrumbSchema } from "@/lib/seo";
+import { breadcrumbSchema, buildMetadata } from "@/lib/seo";
+import { categorySeoImage } from "@/lib/seo-local";
 import { LocalizedCategoryPage } from "@/components/marketplace/LocalizedCategoryPage";
 
 export function generateStaticParams() {
@@ -16,11 +17,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const category = getCategoryBySlug(slug);
   if (!category) return { title: "Categoría no encontrada" };
-  return {
+  return buildMetadata({
     title: `${category.name} — Profesionales verificados en España`,
     description: `${category.description} Compara precios orientativos, portfolio y valoraciones reales en RegiKaha. Pide presupuesto gratis.`,
-    alternates: { canonical: `/categorias/${category.slug}` },
-  };
+    path: `/categorias/${category.slug}`,
+    image: categorySeoImage(category.id),
+  });
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {

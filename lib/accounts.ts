@@ -34,6 +34,27 @@ export function panelPathForRole(value: unknown): string {
   return rolePanelPaths[normalizeRole(value)];
 }
 
+export const roleBillingPaths: Partial<Record<AccountRole, string>> = {
+  professional: "/panel/profesional/facturacion",
+  company: "/panel/empresa/facturacion",
+  subcontractor: "/panel/subcontrata/facturacion",
+};
+
+export function isPanelPathAllowed(role: AccountRole, pathname: string): boolean {
+  if (pathname === "/panel") return true;
+  if (role === "admin") return false;
+  const roleRoot = rolePanelPaths[role];
+  if (pathname === roleRoot || pathname.startsWith(`${roleRoot}/`)) return true;
+  if (role === "professional") {
+    return ["/panel/solicitudes", "/panel/perfil", "/panel/servicios", "/panel/resenas", "/panel/herramientas"]
+      .some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  }
+  if (role === "company" || role === "subcontractor") {
+    return pathname === "/panel/herramientas" || pathname.startsWith("/panel/herramientas/");
+  }
+  return false;
+}
+
 export function initialsFromUser(user: { name?: string | null; email?: string | null }) {
   const name = String(user.name || "").trim();
   if (name) {

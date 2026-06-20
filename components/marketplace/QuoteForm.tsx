@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { CheckCircle2, Send } from "lucide-react";
 import { europeanCountryOptions } from "@/lib/market";
 import { useI18n, useT } from "@/lib/i18n/context";
+import { detectMarketCountry } from "@/lib/market-country";
 
 /**
  * Formulario de solicitud de pre-presupuesto no vinculante.
@@ -28,6 +30,21 @@ export function QuoteForm({
   const [sent, setSent] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [country, setCountry] = useState("ES");
+  const countryTouched = useRef(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    detectMarketCountry(locale).then((detected) => {
+      if (!cancelled && !countryTouched.current) setCountry(detected);
+    });
+    return () => { cancelled = true; };
+  }, [locale]);
+
+  function selectCountry(value: string) {
+    countryTouched.current = true;
+    setCountry(value);
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -97,7 +114,7 @@ export function QuoteForm({
       <Input name="email" label={t.ui.common.email} placeholder="email@example.com" type="email" required />
       <div className={compact ? "space-y-3" : "grid sm:grid-cols-2 gap-3"}>
         <Input name="city" label={t.ui.common.city} placeholder={t.ui.quoteForm.cityPlaceholder} minLength={2} required />
-        <Select name="country" label={t.ui.common.country}>
+        <Select name="country" label={t.ui.common.country} value={country} onChange={selectCountry}>
           {europeanCountryOptions.map((country) => (
             <option key={country.code} value={country.code}>{localizedCountry(country.code, locale)}</option>
           ))}
@@ -137,7 +154,7 @@ export function QuoteForm({
       </button>
       <p className="text-[0.7rem] text-muted text-center leading-relaxed">
         {t.ui.projectForm.preEstimateDisclaimer} {t.ui.quoteForm.privacyPrefix}
-        <a href="/legal/privacidad" className="underline hover:text-forest-700">{t.ui.quoteForm.privacyLink}</a>.
+        <Link href="/legal/privacidad" className="underline hover:text-forest-700">{t.ui.quoteForm.privacyLink}</Link>.
       </p>
     </form>
   );
@@ -147,10 +164,14 @@ function Select({
   name,
   label,
   children,
+  value,
+  onChange,
 }: {
   name: string;
   label: string;
   children: React.ReactNode;
+  value?: string;
+  onChange?: (value: string) => void;
 }) {
   return (
     <div>
@@ -160,6 +181,8 @@ function Select({
       <select
         id={name}
         name={name}
+        value={value}
+        onChange={onChange ? (event) => onChange(event.target.value) : undefined}
         className="mt-1.5 w-full rounded-xl bg-canvas px-3.5 py-2.5 text-sm text-ink outline-none ring-1 ring-transparent focus:ring-forest-500"
       >
         {children}

@@ -1,4 +1,4 @@
-import { bad, isEmail, json, sessionCookie } from "../../../apilib/http";
+import { bad, isEmail, privateJson, sessionCookie } from "../../../apilib/http";
 import { createSession, newId } from "../../../apilib/auth";
 
 interface GoogleTokenInfo {
@@ -81,7 +81,7 @@ export async function onRequestPost(context: any) {
     .bind(user.id)
     .first();
   const { token, maxAge } = await createSession(env, user.id);
-  return json(
+  return privateJson(
     {
       ok: true,
       created,
@@ -89,6 +89,6 @@ export async function onRequestPost(context: any) {
       professional: professional || null,
     },
     200,
-    { "Set-Cookie": sessionCookie(token, maxAge) },
+    { "Set-Cookie": sessionCookie(token, maxAge, request) },
   );
 }

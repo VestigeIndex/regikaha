@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, Send } from "lucide-react";
 import { PlaceAutocomplete } from "@/components/geo/PlaceAutocomplete";
@@ -8,6 +8,8 @@ import { categories } from "@/lib/data/categories";
 import { europeanCountryOptions } from "@/lib/market";
 import { useI18n, useT } from "@/lib/i18n/context";
 import { useContent } from "@/lib/i18n/useLocalizedContent";
+import { searchGeoDictionaries } from "@/lib/i18n/search-geo";
+import { detectMarketCountry } from "@/lib/market-country";
 
 type Mode = "client" | "b2b";
 
@@ -15,10 +17,25 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
   const { locale } = useI18n();
   const t = useT();
   const content = useContent();
+  const geoCopy = searchGeoDictionaries[locale];
   const [sent, setSent] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [country, setCountry] = useState("ES");
+  const countryTouched = useRef(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    detectMarketCountry(locale).then((detected) => {
+      if (!cancelled && !countryTouched.current) setCountry(detected);
+    });
+    return () => { cancelled = true; };
+  }, [locale]);
+
+  function selectCountry(value: string) {
+    countryTouched.current = true;
+    setCountry(value);
+  }
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -53,7 +70,7 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
           {mode === "client" ? t.ui.projectForm.sentClient : t.ui.projectForm.sentB2b}
         </p>
         <div className="mt-5 flex justify-center gap-2 flex-wrap">
-          <a href="/mapa" className="btn btn-primary">{t.ui.actions.searchMap}</a>
+          <Link href="/mapa" className="btn btn-primary">{t.ui.actions.searchMap}</Link>
           <Link href="/registro/profesional" className="btn btn-secondary">{t.ui.register.createProfile}</Link>
           <button onClick={() => setSent(false)} className="btn btn-secondary">{t.ui.actions.publishAnother}</button>
         </div>
@@ -79,7 +96,7 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
             <option value="administrador_fincas">{t.ui.projectForm.clientTypes.administrador_fincas}</option>
           </Select>
         )}
-        <Select name="country" label={t.ui.common.country} value={country} onChange={setCountry}>
+        <Select name="country" label={t.ui.common.country} value={country} onChange={selectCountry}>
           {europeanCountryOptions.map((country) => (
             <option key={country.code} value={country.code}>{localizedCountry(country.code, locale)}</option>
           ))}
@@ -131,7 +148,7 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
           <option value="this_month">{t.ui.common.thisMonth}</option>
           <option value="urgent">{t.ui.common.urgent}</option>
         </Select>
-        <Select name="radiusKm" label="Radio operativo">
+        <Select name="radiusKm" label={geoCopy.radius}>
           <option value="10">10 km</option>
           <option value="25">25 km</option>
           <option value="50">50 km</option>

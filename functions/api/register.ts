@@ -1,4 +1,4 @@
-import { json, bad, isEmail, sessionCookie, getSessionUser } from "../../apilib/http";
+import { privateJson, bad, isEmail, sessionCookie, getSessionUser } from "../../apilib/http";
 import { hashPassword, createSession, newId, slugify } from "../../apilib/auth";
 import { normalizeRole, panelPathForRole } from "../../lib/accounts";
 import { hashContractSnapshot } from "../../lib/legal/hashContract";
@@ -6,6 +6,11 @@ import { sendEmail, verificationEmailMessage } from "../../lib/notifications/ema
 
 function clean(value: unknown, max = 600): string {
   return String(value || "").trim().slice(0, max);
+}
+
+function coordinate(value: unknown): number | null {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 function billingRedirect(body: any, role: string, verifyEmail: boolean) {
@@ -68,8 +73,8 @@ export async function onRequestPost(context: any) {
     try {
       await env.DB.prepare(
         `INSERT OR REPLACE INTO profiles
-          (user_id,role,status,display_name,contact_name,country,region,city,place_id,place_slug,phone,email_verified,onboarding_completed,updated_at)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'))`,
+          (user_id,role,status,display_name,contact_name,country,region,city,place_id,place_slug,latitude,longitude,phone,email_verified,onboarding_completed,updated_at)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'))`,
       ).bind(
           userId,
           role,
@@ -81,6 +86,8 @@ export async function onRequestPost(context: any) {
           String(b.city || ""),
           String(b.placeId || ""),
           String(b.placeSlug || ""),
+          coordinate(b.latitude ?? b.placeLatitude),
+          coordinate(b.longitude ?? b.placeLongitude),
           String(b.phone || ""),
           0,
           0,
@@ -89,7 +96,7 @@ export async function onRequestPost(context: any) {
       // En entornos sin migración de profiles aplicada, la cuenta de usuario sigue siendo válida.
     }
     const { token, maxAge } = await createSession(env, userId);
-    return json(
+    return privateJson(
       {
         ok: true,
         user: { id: userId, email, role },
@@ -97,7 +104,7 @@ export async function onRequestPost(context: any) {
         redirectTo: billingRedirect(b, role, !!verification),
       },
       201,
-      { "Set-Cookie": sessionCookie(token, maxAge) },
+      { "Set-Cookie": sessionCookie(token, maxAge, request) },
     );
   }
   if (!publicName) return bad("Falta el nombre comercial");
@@ -110,7 +117,7 @@ export async function onRequestPost(context: any) {
       .bind(sessionUser.id)
       .first();
     if (existingProfile) {
-      return json({ ok: true, professional: existingProfile }, 200);
+      return privateJson({ ok: true, professional: existingProfile }, 200);
     }
   }
 
@@ -138,12 +145,13 @@ export async function onRequestPost(context: any) {
   stmts.push(
     env.DB.prepare(
       `INSERT INTO professionals
-        (id,user_id,slug,type,type_label,public_name,legal_name,nif_cif,country,region,city,phone,years_experience,languages,
+        (id,user_id,slug,type,type_label,public_name,legal_name,nif_cif,country,region,city,latitude,longitude,phone,years_experience,languages,
          description,short_tagline,insurance_declared,invoice_declared,offers_urgent,seo_title,seo_description,verification_status,active_status)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',0)`,
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',0)`,
     ).bind(
       proId, userId, slug, type, typeLabel[type] || "Profesional", publicName, String(b.legalName || ""), String(b.nifCif || ""),
-      country, region, city, String(b.phone || ""), Number(b.yearsExperience) || 0, langs,
+      country, region, city, coordinate(b.latitude ?? b.placeLatitude), coordinate(b.longitude ?? b.placeLongitude),
+      String(b.phone || ""), Number(b.yearsExperience) || 0, langs,
       String(b.description || ""), String(b.tagline || ""), b.insuranceDeclared ? 1 : 0,
       b.invoiceDeclared ? 1 : 0, b.offersUrgent ? 1 : 0, seoTitle, seoDescription,
     ),
@@ -153,14 +161,22 @@ export async function onRequestPost(context: any) {
   }
   const areas = Array.isArray(b.areas) && b.areas.length ? b.areas.slice(0, 80) : [{ country, region, city }];
   for (const area of areas) {
-    stmts.push(env.DB.prepare("INSERT INTO service_areas (id,professional_id,country,region,city) VALUES (?,?,?,?,?)")
-      .bind(newId("area_"), proId, String(area.country || country).toUpperCase(), String(area.region || region), String(area.city || city)));
+    stmts.push(env.DB.prepare("INSERT INTO service_areas (id,professional_id,country,region,city,latitude,longitude) VALUES (?,?,?,?,?,?,?)")
+      .bind(
+        newId("area_"),
+        proId,
+        String(area.country || country).toUpperCase(),
+        String(area.region || region),
+        String(area.city || city),
+        coordinate(area.latitude ?? b.latitude ?? b.placeLatitude),
+        coordinate(area.longitude ?? b.longitude ?? b.placeLongitude),
+      ));
   }
 
   await env.DB.batch(stmts);
   if (verification) await sendVerification(env, request, { email, name: publicName, rawToken: verification.rawToken });
   const { token, maxAge } = await createSession(env, userId);
-  return json(
+  return privateJson(
     {
       ok: true,
       professional: { id: proId, slug, publicName, verificationStatus: "pending", activeStatus: false },
@@ -168,6 +184,6 @@ export async function onRequestPost(context: any) {
       redirectTo: billingRedirect(b, "professional", !!verification),
     },
     201,
-    { "Set-Cookie": sessionCookie(token, maxAge) },
+    { "Set-Cookie": sessionCookie(token, maxAge, request) },
   );
 }

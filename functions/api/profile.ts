@@ -1,6 +1,12 @@
 import { json, bad, getSessionUser } from "../../apilib/http";
 import { newId } from "../../apilib/auth";
 
+function coordinate(value: unknown): number | null | undefined {
+  if (value === undefined) return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 // POST /api/profile — actualiza perfil, categorías y zonas de operación (autenticado).
 export async function onRequestPost(context: any) {
   const { request, env } = context;
@@ -16,6 +22,7 @@ export async function onRequestPost(context: any) {
     public_name: b.publicName, legal_name: b.legalName, nif_cif: b.nifCif, type: b.type,
     country: b.country !== undefined ? String(b.country).toUpperCase() : undefined,
     region: b.region, city: b.city, phone: b.phone, description: b.description,
+    latitude: coordinate(b.latitude), longitude: coordinate(b.longitude),
     short_tagline: b.tagline, years_experience: b.yearsExperience, service_radius_km: b.serviceRadiusKm,
     price_from: b.priceFrom,
     insurance_declared: b.insuranceDeclared !== undefined ? (b.insuranceDeclared ? 1 : 0) : undefined,
@@ -54,8 +61,11 @@ export async function onRequestPost(context: any) {
   if (Array.isArray(b.areas)) {
     const st = [env.DB.prepare("DELETE FROM service_areas WHERE professional_id = ?").bind(pro.id)];
     for (const a of b.areas.slice(0, 80)) {
-      st.push(env.DB.prepare("INSERT INTO service_areas (id,professional_id,country,region,city,postal_prefix) VALUES (?,?,?,?,?,?)")
-        .bind(newId("area_"), pro.id, String(a.country || "").toUpperCase(), String(a.region || ""), String(a.city || ""), String(a.postalPrefix || "")));
+      st.push(env.DB.prepare("INSERT INTO service_areas (id,professional_id,country,region,city,postal_prefix,latitude,longitude) VALUES (?,?,?,?,?,?,?,?)")
+        .bind(
+          newId("area_"), pro.id, String(a.country || "").toUpperCase(), String(a.region || ""), String(a.city || ""),
+          String(a.postalPrefix || ""), coordinate(a.latitude) ?? null, coordinate(a.longitude) ?? null,
+        ));
     }
     await env.DB.batch(st);
   }

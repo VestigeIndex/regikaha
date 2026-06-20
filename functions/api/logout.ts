@@ -1,9 +1,13 @@
-import { json, getCookie, clearSessionCookie, SESSION_COOKIE } from "../../apilib/http";
+import { privateJson, clearSessionCookies, getSessionTokens } from "../../apilib/http";
 
 // POST /api/logout
 export async function onRequestPost(context: any) {
   const { request, env } = context;
-  const token = getCookie(request, SESSION_COOKIE);
-  if (token) await env.DB.prepare("DELETE FROM sessions WHERE id = ?").bind(token).run();
-  return json({ ok: true }, 200, { "Set-Cookie": clearSessionCookie() });
+  const tokens = getSessionTokens(request);
+  if (tokens.length) {
+    await env.DB.batch(tokens.map((token) => env.DB.prepare("DELETE FROM sessions WHERE id = ?").bind(token)));
+  }
+  const headers = new Headers();
+  for (const cookie of clearSessionCookies(request)) headers.append("Set-Cookie", cookie);
+  return privateJson({ ok: true }, 200, headers);
 }

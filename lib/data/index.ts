@@ -15,6 +15,8 @@ import { services, getServicesByProfessional, getServiceBySlug, getServicesByCat
 import { reviews, getReviewsByProfessional, publishedReviews, pendingReviews } from "./reviews";
 import { portfolioItems, getPortfolioByProfessional } from "./portfolio";
 import { europeMarket } from "@/lib/market";
+import { coordinatesForCity } from "@/lib/geo";
+import { distanceKm } from "@/lib/geo/distance";
 
 export {
   categories,
@@ -106,6 +108,17 @@ function matchesLocation(p: Professional, locationSlug: string): boolean {
 function matchesFilters(p: Professional, f: SearchFilters): boolean {
   if (f.categoryId && !p.categoryIds.includes(f.categoryId)) return false;
   if (f.locationSlug && !matchesLocation(p, f.locationSlug)) return false;
+  if (f.countryCode && professionalCountryCode(p) !== f.countryCode.toUpperCase()) return false;
+  if (f.radiusKm && Number.isFinite(f.latitude) && Number.isFinite(f.longitude)) {
+    const coordinates = coordinatesForCity(p.city || p.locationSlug, p.countryCode);
+    const distance = distanceKm(
+      { latitude: Number(f.latitude), longitude: Number(f.longitude) },
+      { latitude: coordinates.lat, longitude: coordinates.lng },
+    );
+    if (distance > f.radiusKm + Math.max(0, p.serviceRadiusKm || 0)) return false;
+  } else if (f.city && ![p.city, p.province, p.serviceArea].some((value) => value?.toLowerCase().includes(f.city!.toLowerCase()))) {
+    return false;
+  }
   if (f.verifiedOnly && p.verificationStatus !== "verified") return false;
   if (f.withInsurance && !p.insuranceDeclared) return false;
   if (f.withInvoice && !p.invoiceDeclared) return false;

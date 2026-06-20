@@ -7,6 +7,9 @@ import { QuoteStatusBadge } from "@/components/dashboard/QuoteStatusBadge";
 import { getCategoryById } from "@/lib/data";
 import { timeAgo } from "@/lib/utils";
 import { preEstimateDisclaimer } from "@/lib/preestimate";
+import { countryBusinessConfig, formatBusinessMoney } from "@/lib/country-business";
+import { useI18n, useT } from "@/lib/i18n/context";
+import { businessToolsDictionaries } from "@/lib/i18n/business-tools";
 
 type LineItem = {
   description: string;
@@ -16,11 +19,10 @@ type LineItem = {
 
 const emptyLine: LineItem = { description: "", quantity: "1", unitPrice: "0" };
 
-function euro(value: number) {
-  return new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(value);
-}
-
 export function QuoteRequestsManager() {
+  const { locale } = useI18n();
+  const t = useT();
+  const toolsCopy = businessToolsDictionaries[locale];
   const [requests, setRequests] = useState<any[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [title, setTitle] = useState("Pre-presupuesto inicial");
@@ -31,13 +33,21 @@ export function QuoteRequestsManager() {
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [country, setCountry] = useState("ES");
 
   async function load() {
     setLoading(true);
-    const res = await fetch("/api/requests");
+    const [res, toolsRes] = await Promise.all([
+      fetch("/api/requests", { cache: "no-store", credentials: "same-origin" }),
+      fetch("/api/tools", { cache: "no-store", credentials: "same-origin" }),
+    ]);
     const data = await res.json().catch(() => ({}));
+    const tools = toolsRes.ok ? await toolsRes.json().catch(() => ({})) : {};
     if (res.ok) setRequests(data.requests || []);
     else setError(data.error || "No se pudieron cargar las solicitudes");
+    setTemplates(tools.templates || []);
+    setCountry(tools.context?.country || data.requests?.[0]?.country || "ES");
     setLoading(false);
   }
 
@@ -61,8 +71,32 @@ export function QuoteRequestsManager() {
     setActiveId(request.id);
     setTitle(`Pre-presupuesto inicial para ${request.clientName}`);
     setSummary("");
-    setVatRate("21");
+    setVatRate(String(countryBusinessConfig(request.country || country, locale).defaultTaxRate));
     setLineItems([{ ...emptyLine }]);
+  }
+
+  function applyTemplate(templateId: string) {
+    const template = templates.find((item) => item.id === templateId);
+    if (!template) return;
+    setTitle(template.name);
+    setSummary(template.summary || "");
+    setVatRate(String(template.vat_rate ?? countryBusinessConfig(country, locale).defaultTaxRate));
+    setLineItems((template.line_items || []).map((item: any) => ({
+      description: String(item.description || ""),
+      quantity: String(item.quantity || 1),
+      unitPrice: String(item.unitPrice || 0),
+    })));
+  }
+
+  async function updateRequestStatus(id: string, status: string) {
+    const response = await fetch("/api/requests", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      cache: "no-store",
+      credentials: "same-origin",
+      body: JSON.stringify({ id, status }),
+    });
+    if (response.ok) await load();
   }
 
   async function sendProposal() {
@@ -143,11 +177,14 @@ export function QuoteRequestsManager() {
                   {request.estimates?.length > 0 && (
                     <div className="mt-4 rounded-xl bg-canvas p-3 text-sm">
                       <p className="font-medium text-ink">Último pre-presupuesto: {request.estimates[0].title}</p>
-                      <p className="text-muted">{euro(request.estimates[0].totalEur)} · {request.estimates[0].status}</p>
+                      <p className="text-muted">{formatBusinessMoney(request.estimates[0].totalEur, request.country || country, locale)} · {request.estimates[0].status}</p>
                     </div>
                   )}
 
                   <div className="mt-4 flex flex-wrap gap-2">
+                    <select value={request.status} onChange={(event) => updateRequestStatus(request.id, event.target.value).catch(() => undefined)} className="rounded-lg border hairline bg-white px-3 py-2 text-sm text-ink">
+                      {(["new", "contacted", "quoted", "won", "lost", "closed"] as const).map((status) => <option key={status} value={status}>{t.ui.dashboard.status[status]}</option>)}
+                    </select>
                     {request.clientEmail && (
                       <a href={`mailto:${request.clientEmail}`} className="btn btn-secondary text-sm py-2">
                         <Mail size={15} /> {request.clientEmail}
@@ -174,6 +211,15 @@ export function QuoteRequestsManager() {
                   <p className="text-xs font-semibold uppercase tracking-wide text-muted">Pre-presupuesto para</p>
                   <h2 className="mt-1 font-bold text-ink">{activeRequest.clientName}</h2>
                 </div>
+                {templates.length > 0 && (
+                  <label className="block">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-muted">{toolsCopy.tabs.templates}</span>
+                    <select defaultValue="" onChange={(event) => applyTemplate(event.target.value)} className="reg-input mt-1.5">
+                      <option value="">{toolsCopy.templates.empty}</option>
+                      {templates.map((template) => <option key={template.id} value={template.id}>{template.name}</option>)}
+                    </select>
+                  </label>
+                )}
                 <Input label="Título" value={title} onChange={setTitle} />
                 <TextArea label="Resumen / alcance" rows={4} value={summary} onChange={setSummary} />
                 <div className="space-y-3">
@@ -197,11 +243,11 @@ export function QuoteRequestsManager() {
                 <button onClick={() => setLineItems((items) => [...items, { ...emptyLine }])} className="btn btn-secondary w-full text-sm">
                   <Plus size={16} /> Añadir línea
                 </button>
-                <Input label="IVA %" type="number" value={vatRate} onChange={setVatRate} />
+                <Input label={`${countryBusinessConfig(activeRequest.country || country, locale).taxLabel} %`} type="number" value={vatRate} onChange={setVatRate} />
                 <div className="rounded-xl bg-ink p-4 text-white text-sm space-y-1">
-                  <p className="flex justify-between"><span>Base</span><strong>{euro(subtotal)}</strong></p>
-                  <p className="flex justify-between"><span>IVA</span><strong>{euro(vat)}</strong></p>
-                  <p className="flex justify-between text-base"><span>Total</span><strong>{euro(total)}</strong></p>
+                  <p className="flex justify-between"><span>Base</span><strong>{formatBusinessMoney(subtotal, activeRequest.country || country, locale)}</strong></p>
+                  <p className="flex justify-between"><span>{countryBusinessConfig(activeRequest.country || country, locale).taxLabel}</span><strong>{formatBusinessMoney(vat, activeRequest.country || country, locale)}</strong></p>
+                  <p className="flex justify-between text-base"><span>Total</span><strong>{formatBusinessMoney(total, activeRequest.country || country, locale)}</strong></p>
                 </div>
                 <p className="text-xs text-muted leading-relaxed">{preEstimateDisclaimer}</p>
                 <div className="flex gap-2">

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Camera, CheckCircle2, ImagePlus, MapPin, Save, Upload } from "lucide-react";
 import { DashboardHeader } from "@/components/dashboard/DashboardShell";
+import { PlaceAutocomplete } from "@/components/geo/PlaceAutocomplete";
 import { categories } from "@/lib/data";
 import { europeanCountryOptions } from "@/lib/market";
 
@@ -17,6 +18,8 @@ type ProfileForm = {
   country: string;
   region: string;
   city: string;
+  latitude: string;
+  longitude: string;
   yearsExperience: string;
   serviceRadiusKm: string;
   priceFrom: string;
@@ -37,6 +40,8 @@ const initialForm: ProfileForm = {
   country: "ES",
   region: "",
   city: "",
+  latitude: "",
+  longitude: "",
   yearsExperience: "0",
   serviceRadiusKm: "30",
   priceFrom: "0",
@@ -79,6 +84,8 @@ export function ProfileManager() {
           country: p.country || "ES",
           region: p.region || "",
           city: p.city || "",
+          latitude: p.latitude == null ? "" : String(p.latitude),
+          longitude: p.longitude == null ? "" : String(p.longitude),
           yearsExperience: String(p.years_experience || 0),
           serviceRadiusKm: String(p.service_radius_km || 30),
           priceFrom: String(p.price_from || 0),
@@ -117,11 +124,18 @@ export function ProfileManager() {
 
   function parseAreas() {
     const lines = areasText.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-    const areas = lines.map((line) => {
+    const areas = lines.map((line, index) => {
       const [city = "", region = "", country = form.country] = line.split(",").map((part) => part.trim());
-      return { city, region, country: country || form.country };
+      const isMainArea = index === 0 || city.toLowerCase() === form.city.toLowerCase();
+      return {
+        city,
+        region,
+        country: country || form.country,
+        latitude: isMainArea ? Number(form.latitude) || null : null,
+        longitude: isMainArea ? Number(form.longitude) || null : null,
+      };
     });
-    if (!areas.length) areas.push({ city: form.city, region: form.region, country: form.country });
+    if (!areas.length) areas.push({ city: form.city, region: form.region, country: form.country, latitude: Number(form.latitude) || null, longitude: Number(form.longitude) || null });
     return areas;
   }
 
@@ -221,8 +235,22 @@ export function ProfileManager() {
                   <option key={country.code} value={country.code}>{country.name}</option>
                 ))}
               </Select>
-              <Input label="Región / provincia" value={form.region} onChange={(v) => update("region", v)} />
-              <Input label="Ciudad" value={form.city} onChange={(v) => update("city", v)} />
+              <div className="md:col-span-2">
+                <PlaceAutocomplete
+                  country={form.country}
+                  value={form.city}
+                  mode="professional"
+                  label="Ciudad o zona principal"
+                  onTextChange={(value) => update("city", value)}
+                  onChange={(place, label) => {
+                    update("city", place?.localityName || label);
+                    update("region", place?.admin1Name || place?.admin2Name || "");
+                    update("latitude", place ? String(place.latitude) : "");
+                    update("longitude", place ? String(place.longitude) : "");
+                    if (place?.countryCode) update("country", place.countryCode);
+                  }}
+                />
+              </div>
               <Input label="Años de experiencia" type="number" value={form.yearsExperience} onChange={(v) => update("yearsExperience", v)} />
               <Input label="Radio km" type="number" value={form.serviceRadiusKm} onChange={(v) => update("serviceRadiusKm", v)} />
               <Input label="Precio desde (€)" type="number" value={form.priceFrom} onChange={(v) => update("priceFrom", v)} />

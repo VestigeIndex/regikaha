@@ -12,7 +12,7 @@ export function PanelRouter() {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const res = await fetch("/api/me");
+      const res = await fetch("/api/me", { cache: "no-store", credentials: "same-origin" });
       const data = await res.json().catch(() => ({}));
       if (cancelled) return;
       if (!data.authenticated) {

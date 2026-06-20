@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { organizationSchema } from "@/lib/seo";
+import { organizationSchema, websiteSchema } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { I18nProvider } from "@/lib/i18n/context";
 import { DomTextLocalizer } from "@/components/site/DomTextLocalizer";
@@ -74,7 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" content="#198C68" />
         {/* Progressive enhancement: marca que hay JS para activar animaciones reveal. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
-        <JsonLd data={organizationSchema()} />
+        <JsonLd data={[organizationSchema(), websiteSchema()]} />
       </head>
       <body className="min-h-screen bg-white text-ink antialiased">
         <I18nProvider>

@@ -21,6 +21,8 @@ const STORAGE_KEY = "regikaha-locale";
 function explicitLocale(): Locale | null {
   if (typeof window === "undefined") return defaultLocale;
   try {
+    const fromPath = window.location.pathname.split("/").filter(Boolean)[0];
+    if (fromPath && isLocale(fromPath)) return fromPath;
     const fromUrl = new URLSearchParams(window.location.search).get("lang");
     if (fromUrl && isLocale(fromUrl)) return fromUrl;
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -73,12 +75,18 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, [locale]);
 
   const setLocale = useCallback((l: Locale) => {
-    setLocaleState(l);
     try {
       localStorage.setItem(STORAGE_KEY, l);
+      const parts = window.location.pathname.split("/").filter(Boolean);
+      if (parts[0] && isLocale(parts[0]) && parts[0] !== l) {
+        parts[0] = l;
+        window.location.assign(`/${parts.join("/")}${window.location.search}${window.location.hash}`);
+        return;
+      }
     } catch {
       /* noop */
     }
+    setLocaleState(l);
   }, []);
 
   const t: FullDict = { ...dictionaries[locale], ...homeDictionaries[locale], ui: uiDictionaries[locale] };

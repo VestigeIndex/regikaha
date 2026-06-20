@@ -138,6 +138,9 @@ export interface Professional {
   locationSlug: string;
   serviceArea: string;
   serviceRadiusKm: number;
+  latitude?: number;
+  longitude?: number;
+  distanceKm?: number;
   categoryIds: string[];
   specialties: string[];
   yearsExperience: number;
@@ -308,6 +311,8 @@ export interface SearchFilters {
   region?: string;
   postalCode?: string;
   radiusKm?: number;
+  latitude?: number;
+  longitude?: number;
   minRating?: number;
   verifiedOnly?: boolean;
   withInsurance?: boolean;

@@ -1,12 +1,22 @@
 // Helpers HTTP compartidos por las Pages Functions de RegiKaha.
 
-export const SESSION_COOKIE = "rk_session";
+export const SESSION_COOKIE = "__Secure-rk_session";
+export const LEGACY_SESSION_COOKIE = "rk_session";
 
-export function json(data: unknown, status = 200, headers: Record<string, string> = {}): Response {
+export function json(data: unknown, status = 200, initHeaders: HeadersInit = {}): Response {
+  const headers = new Headers(initHeaders);
+  if (!headers.has("content-type")) headers.set("content-type", "application/json; charset=utf-8");
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "content-type": "application/json; charset=utf-8", ...headers },
+    headers,
   });
+}
+
+export function privateJson(data: unknown, status = 200, initHeaders: HeadersInit = {}): Response {
+  const headers = new Headers(initHeaders);
+  headers.set("Cache-Control", "private, no-store, max-age=0");
+  headers.set("Vary", "Cookie");
+  return json(data, status, headers);
 }
 
 export function bad(message: string, status = 400): Response {
@@ -19,33 +29,74 @@ export function getCookie(request: Request, name: string): string | null {
   return m ? decodeURIComponent(m[1]) : null;
 }
 
-export function sessionCookie(token: string, maxAgeSec: number): string {
+function isProductionDomain(request: Request): boolean {
+  const hostname = new URL(request.url).hostname.toLowerCase();
+  return hostname === "regikaha.com" || hostname === "www.regikaha.com";
+}
+
+function cookieDomain(request: Request): string[] {
+  return isProductionDomain(request) ? ["Domain=regikaha.com"] : [];
+}
+
+export function sessionCookie(token: string, maxAgeSec: number, request: Request): string {
+  const expires = new Date(Date.now() + maxAgeSec * 1000).toUTCString();
   const parts = [
     `${SESSION_COOKIE}=${encodeURIComponent(token)}`,
     "Path=/",
+    ...cookieDomain(request),
     "HttpOnly",
     "Secure",
     "SameSite=Lax",
+    "Priority=High",
     `Max-Age=${maxAgeSec}`,
+    `Expires=${expires}`,
   ];
   return parts.join("; ");
 }
 
-export function clearSessionCookie(): string {
-  return `${SESSION_COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
+function expiredCookie(name: string, domain?: string): string {
+  const parts = [
+    `${name}=`,
+    "Path=/",
+    ...(domain ? [`Domain=${domain}`] : []),
+    "HttpOnly",
+    "Secure",
+    "SameSite=Lax",
+    "Max-Age=0",
+    "Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+  ];
+  return parts.join("; ");
+}
+
+export function clearSessionCookies(request: Request): string[] {
+  const cookies = [
+    expiredCookie(SESSION_COOKIE),
+    expiredCookie(LEGACY_SESSION_COOKIE),
+  ];
+  if (isProductionDomain(request)) {
+    cookies.push(expiredCookie(SESSION_COOKIE, "regikaha.com"));
+    cookies.push(expiredCookie(LEGACY_SESSION_COOKIE, "regikaha.com"));
+  }
+  return cookies;
+}
+
+export function getSessionTokens(request: Request): string[] {
+  return [getCookie(request, SESSION_COOKIE), getCookie(request, LEGACY_SESSION_COOKIE)]
+    .filter((token): token is string => Boolean(token));
 }
 
 /** Devuelve el usuario autenticado (o null) a partir de la cookie de sesión. */
 export async function getSessionUser(env: any, request: Request): Promise<any | null> {
-  const token = getCookie(request, SESSION_COOKIE);
-  if (!token) return null;
-  const row = await env.DB.prepare(
-    `SELECT u.* FROM sessions s JOIN users u ON u.id = s.user_id
-     WHERE s.id = ? AND s.expires_at > datetime('now')`,
-  )
-    .bind(token)
-    .first();
-  return row || null;
+  for (const token of getSessionTokens(request)) {
+    const row = await env.DB.prepare(
+      `SELECT u.* FROM sessions s JOIN users u ON u.id = s.user_id
+       WHERE s.id = ? AND s.expires_at > datetime('now')`,
+    )
+      .bind(token)
+      .first();
+    if (row) return row;
+  }
+  return null;
 }
 
 export async function requireUser(env: any, request: Request): Promise<any | Response> {

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Check, ArrowRight, ArrowLeft, PartyPopper, Building2, MapPin, ShieldCheck } from "lucide-react";
 import { GoogleConnectButton } from "@/components/auth/GoogleConnectButton";
 import { PlaceAutocomplete } from "@/components/geo/PlaceAutocomplete";
@@ -8,7 +9,10 @@ import { categories } from "@/lib/data/categories";
 import { integrations } from "@/lib/integrations";
 import { europeanCountryOptions } from "@/lib/market";
 import { useI18n, useT } from "@/lib/i18n/context";
+import { localeMeta } from "@/lib/i18n/config";
+import { subscriptionTextDictionaries } from "@/lib/i18n/subscription";
 import { useContent } from "@/lib/i18n/useLocalizedContent";
+import { detectMarketCountry } from "@/lib/market-country";
 import { cn } from "@/lib/utils";
 
 type RegisterForm = {
@@ -23,6 +27,10 @@ type RegisterForm = {
   country: string;
   region: string;
   city: string;
+  placeId: string;
+  placeSlug: string;
+  latitude: string;
+  longitude: string;
   serviceArea: string;
   tagline: string;
   description: string;
@@ -44,6 +52,10 @@ const initialForm: RegisterForm = {
   country: "ES",
   region: "",
   city: "",
+  placeId: "",
+  placeSlug: "",
+  latitude: "",
+  longitude: "",
   serviceArea: "",
   tagline: "",
   description: "",
@@ -65,8 +77,18 @@ export function RegistroForm() {
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const [form, setForm] = useState<RegisterForm>(initialForm);
   const [nextPath, setNextPath] = useState("/suscripcion");
+  const countryTouched = useRef(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    detectMarketCountry(locale).then((country) => {
+      if (!cancelled && !countryTouched.current) setForm((current) => ({ ...current, country }));
+    });
+    return () => { cancelled = true; };
+  }, [locale]);
 
   function update<K extends keyof RegisterForm>(key: K, value: RegisterForm[K]) {
+    if (key === "country") countryTouched.current = true;
     setForm((current) => ({ ...current, [key]: value }));
   }
 
@@ -87,8 +109,8 @@ export function RegistroForm() {
           ...form,
           yearsExperience: Number(form.yearsExperience || 0),
           categories: selectedCats,
-          languages: ["Español"],
-          areas: [{ country: form.country, region: form.region, city: form.city }],
+          languages: [localeMeta[locale].native],
+          areas: [{ country: form.country, region: form.region, city: form.city, latitude: form.latitude, longitude: form.longitude }],
           plan: params.get("plan") === "europa_pro" ? "europa_pro" : "autonomo_nacional",
           interval: params.get("interval") === "yearly" ? "yearly" : "monthly",
           founderIntent: params.get("founder") === "true",
@@ -125,8 +147,10 @@ export function RegistroForm() {
           {t.ui.register.welcomeText}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <a href={nextPath} className="btn btn-primary">Verificar email y continuar</a>
-          <a href="/panel/servicios" className="btn btn-secondary">{t.ui.register.createServices}</a>
+          <Link href={nextPath} className="btn btn-primary">
+            {subscriptionTextDictionaries[locale]["Verificar email y continuar"]}
+          </Link>
+          <Link href="/panel/servicios" className="btn btn-secondary">{t.ui.register.createServices}</Link>
         </div>
       </div>
     );
@@ -231,6 +255,10 @@ export function RegistroForm() {
                   onChange={(place, label) => {
                     update("city", place?.localityName || label);
                     update("region", place?.admin1Name || place?.admin2Name || "");
+                    update("placeId", place?.id || "");
+                    update("placeSlug", place?.slug || "");
+                    update("latitude", place ? String(place.latitude) : "");
+                    update("longitude", place ? String(place.longitude) : "");
                     if (place?.countryCode) update("country", place.countryCode);
                   }}
                 />
@@ -257,8 +285,8 @@ export function RegistroForm() {
               <input type="checkbox" required className="mt-1 accent-[var(--primary)]" />
               <span className="text-sm text-ink/85">
                 {t.ui.register.termsText}
-                <a href="/legal/terminos-profesionales" className="underline text-forest-700">{t.ui.register.proTerms}</a>,{" "}
-                <a href="/legal/politica-verificacion" className="underline text-forest-700">{t.ui.register.verificationPolicy}</a> {t.ui.register.fairRanking}
+                <Link href="/legal/terminos-profesionales" className="underline text-forest-700">{t.ui.register.proTerms}</Link>,{" "}
+                <Link href="/legal/politica-verificacion" className="underline text-forest-700">{t.ui.register.verificationPolicy}</Link> {t.ui.register.fairRanking}
               </span>
             </label>
           </div>

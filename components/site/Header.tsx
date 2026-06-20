@@ -6,7 +6,8 @@ import { LogIn, Menu, Search, UserRound, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 import { initialsFromUser, panelPathForRole } from "@/lib/accounts";
-import { useT } from "@/lib/i18n/context";
+import { useI18n } from "@/lib/i18n/context";
+import { headerDictionaries } from "@/lib/i18n/header";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -19,7 +20,8 @@ const navItems = [
 ] as const;
 
 export function Header() {
-  const t = useT();
+  const { t, locale } = useI18n();
+  const headerCopy = headerDictionaries[locale];
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [me, setMe] = useState<any>(null);
@@ -41,7 +43,7 @@ export function Header() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/me")
+    fetch("/api/me", { cache: "no-store", credentials: "same-origin" })
       .then((res) => res.json())
       .then((data) => {
         if (!cancelled) setMe(data);
@@ -53,7 +55,7 @@ export function Header() {
   }, []);
 
   async function logout() {
-    await fetch("/api/logout", { method: "POST" }).catch(() => undefined);
+    await fetch("/api/logout", { method: "POST", cache: "no-store", credentials: "same-origin" }).catch(() => undefined);
     setMe({ authenticated: false });
     setAccountOpen(false);
     window.location.href = "/";
@@ -97,35 +99,26 @@ export function Header() {
                 <span className="grid h-8 w-8 place-items-center rounded-full bg-forest-600 text-xs font-bold text-white">
                   {initialsFromUser(me.user || {})}
                 </span>
-                Cuenta
+                {headerCopy.account}
               </button>
               {accountOpen && (
                 <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white p-2 shadow-elevated ring-1 ring-forest-600/10">
                   <p className="px-3 py-2 text-xs text-muted truncate">{me.user?.email}</p>
-                  <Link href={panelHref} className="block rounded-lg px-3 py-2 text-sm text-ink hover:bg-forest-500/6">Ir a mi panel</Link>
+                  <Link href={panelHref} className="block rounded-lg px-3 py-2 text-sm text-ink hover:bg-forest-500/6">{headerCopy.myPanel}</Link>
                   <button type="button" onClick={logout} className="block w-full rounded-lg px-3 py-2 text-left text-sm text-ink hover:bg-forest-500/6">
-                    Cerrar sesión
+                    {headerCopy.logout}
                   </button>
                 </div>
               )}
             </div>
           ) : (
             <Link href="/conectar" className="btn btn-ghost">
-              <LogIn size={16} /> Conectar
+              <LogIn size={16} /> {headerCopy.signIn}
             </Link>
           )}
-          <Link href="/buscar" className="btn btn-secondary">
-            <Search size={16} />
-            {t.actions.search}
-          </Link>
           <Link href="/publicar-proyecto" className="btn btn-primary">
             {t.ui.nav.publishProjectFree}
           </Link>
-          {!authenticated && (
-            <Link href="/registro/profesional" className="btn btn-secondary">
-              Soy profesional
-            </Link>
-          )}
         </div>
 
         <div className="flex items-center gap-1 lg:hidden">
@@ -143,7 +136,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="lg:hidden fixed inset-x-0 top-16 bottom-0 z-40 bg-white border-t hairline overflow-y-auto animate-fade-in">
+        <div className="lg:hidden absolute inset-x-0 top-16 z-40 h-[calc(100dvh-4rem)] bg-white border-t hairline overflow-y-auto animate-fade-in">
           <div className="container-x py-5 flex flex-col gap-1">
             {navItems.map((item) => (
               <Link
@@ -159,15 +152,15 @@ export function Header() {
             {authenticated ? (
               <>
                 <Link href={panelHref} onClick={() => setOpen(false)} className="btn btn-secondary w-full">
-                  <UserRound size={16} /> Ir a mi panel
+                  <UserRound size={16} /> {headerCopy.myPanel}
                 </Link>
                 <button type="button" onClick={logout} className="btn btn-ghost w-full mt-2">
-                  Cerrar sesión
+                  {headerCopy.logout}
                 </button>
               </>
             ) : (
               <Link href="/conectar" onClick={() => setOpen(false)} className="btn btn-secondary w-full">
-                <LogIn size={16} /> Conectar
+                <LogIn size={16} /> {headerCopy.signIn}
               </Link>
             )}
             <Link href="/buscar" onClick={() => setOpen(false)} className="btn btn-secondary w-full">
