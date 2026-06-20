@@ -12,6 +12,7 @@ RegiKaha helps clients discover professionals by service, country and locality, 
 - [Browse active markets](https://regikaha.com/mercados)
 - [Publish a client project](https://regikaha.com/publicar-proyecto)
 - [Professional plans](https://regikaha.com/precios)
+- [Regi B1L professional workspace](https://regikaha.com/regi-b1l)
 - [How RegiKaha works](https://regikaha.com/como-funciona)
 - [Trust and verification policy](https://regikaha.com/legal/politica-verificacion)
 - [Review policy](https://regikaha.com/legal/politica-resenas)
@@ -20,6 +21,8 @@ RegiKaha helps clients discover professionals by service, country and locality, 
 ## Languages
 
 The user interface and local discovery pages are available in Spanish, French, Italian, Portuguese, German, Dutch and English. Local pages use canonical URLs and reciprocal language alternatives.
+
+Regi B1L adds an installable local-first workspace for leads, clients, jobs, quotes, document records, materials, suppliers and teams. Its workspace interface also supports Catalan, Arabic and Chinese.
 
 ## Important interpretation rules
 

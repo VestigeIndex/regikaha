@@ -33,6 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/registro/subcontrata", priority: 0.6, freq: "monthly" },
     { path: "/conectar", priority: 0.5, freq: "monthly" },
     { path: "/b2b", priority: 0.6, freq: "monthly" },
+    { path: "/regi-b1l", priority: 0.8, freq: "weekly" },
     { path: "/legal/aviso-legal", priority: 0.2, freq: "yearly" },
     { path: "/legal/privacidad", priority: 0.2, freq: "yearly" },
     { path: "/legal/cookies", priority: 0.2, freq: "yearly" },

@@ -1,0 +1,16 @@
+{
+  "name": "Regi B1L — Gestión profesional de obra",
+  "short_name": "Regi B1L",
+  "description": "Clientes, obras, presupuestos, documentos, materiales y equipo en una herramienta local-first.",
+  "id": "/regi-b1l",
+  "start_url": "/regi-b1l",
+  "scope": "/regi-b1l",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f8f5",
+  "theme_color": "#083f32",
+  "lang": "es",
+  "icons": [
+    { "src": "/regi-b1l/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

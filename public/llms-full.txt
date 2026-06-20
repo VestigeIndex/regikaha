@@ -7,6 +7,10 @@ RegiKaha connects clients, independent professionals, renovation companies, cont
 Canonical origin: https://regikaha.com
 Support: help@regikaha.com
 
+## Regi B1L professional workspace
+
+`https://regikaha.com/regi-b1l` is the installable professional operations workspace for leads, clients, jobs, photos, quotes, internal acceptance signatures, PDF exports, document records, Material Radar, suppliers and teams. It is local-first: records are stored on the current device unless and until an authenticated backend is enabled. Demonstration supplier comparisons are labelled, and internal drawn signatures are not represented as qualified electronic signatures.
+
 ## Active countries
 
 Spain (ES), France (FR), Italy (IT), Portugal (PT), Switzerland (CH), Germany (DE), the Netherlands (NL), Belgium (BE), Ireland (IE) and the United Kingdom (GB).
