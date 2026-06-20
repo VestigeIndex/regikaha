@@ -67,6 +67,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
+      if (window.location.pathname.startsWith("/regi-b1l")) return;
       document.documentElement.lang = locale;
       document.documentElement.dir = localeMeta[locale].dir;
     } catch {

@@ -156,6 +156,8 @@ export function DomTextLocalizer() {
   const { locale } = useI18n();
 
   useEffect(() => {
+    // Regi B1L owns its ten-language dictionary and document direction.
+    if (window.location.pathname.startsWith("/regi-b1l")) return;
     const dictionary = { ...domTextDictionaries[locale], ...releaseTextDictionaries[locale], ...subscriptionTextDictionaries[locale] };
     localizeDocumentMetadata(locale, dictionary);
     if (locale === "es") return;
