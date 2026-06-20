@@ -7,6 +7,8 @@ import { locales, type Locale } from "@/lib/i18n/config";
 import { site } from "@/lib/site";
 
 export const indexablePlaces = seedPlaces.filter((place) => place.isIndexable);
+export const launchPlaces = [...new Set(indexablePlaces.map((place) => place.countryCode))]
+  .flatMap((countryCode) => indexablePlaces.filter((place) => place.countryCode === countryCode).slice(0, 2));
 
 export const openGraphLocales: Record<Locale, string> = {
   es: "es_ES",

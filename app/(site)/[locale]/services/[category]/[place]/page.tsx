@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LocalSeoPage } from "@/components/marketplace/LocalSeoPage";
 import { categories, getCategoryBySlug } from "@/lib/data";
+import { tradeCategoryIds } from "@/lib/data/trade-categories";
 import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import {
   categorySeoImage,
   countryName,
   getPlaceByRouteId,
   indexablePlaces,
+  launchPlaces,
   localizedCategory,
   localizedMetadata,
   localSeoDictionaries,
@@ -16,13 +18,17 @@ import {
 } from "@/lib/seo-local";
 
 export const dynamicParams = false;
+const tradeCategoryIdSet = new Set<string>(tradeCategoryIds);
 
 export function generateStaticParams() {
-  return locales.flatMap((locale) => categories.flatMap((category) => indexablePlaces.map((place) => ({
-    locale,
-    category: category.slug,
-    place: `${place.countryCode.toLowerCase()}-${place.slug}`,
-  }))));
+  return locales.flatMap((locale) => categories.flatMap((category) => {
+    const places = tradeCategoryIdSet.has(category.id) ? launchPlaces : indexablePlaces;
+    return places.map((place) => ({
+      locale,
+      category: category.slug,
+      place: `${place.countryCode.toLowerCase()}-${place.slug}`,
+    }));
+  }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; category: string; place: string }> }): Promise<Metadata> {

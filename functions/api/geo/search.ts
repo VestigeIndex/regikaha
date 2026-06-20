@@ -15,7 +15,7 @@ function clampLimit(value: string | null): number {
 type CompactPlace = [string, string, string, string, string, string, number, number, PlaceType, number, string[]];
 
 function shardPrefix(value: string) {
-  return normalizeGeoText(value).replace(/[^a-z0-9]/g, "").slice(0, 2).padEnd(2, "_");
+  return normalizeGeoText(value).replace(/[^a-z0-9]/g, "").slice(0, 1).padEnd(1, "_");
 }
 
 function compactResult(row: CompactPlace, country: string): PlaceSearchResult {

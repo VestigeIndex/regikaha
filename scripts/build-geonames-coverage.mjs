@@ -33,7 +33,7 @@ function slug(value) {
 }
 
 function prefix(value) {
-  return normalize(value).replace(/[^a-z0-9]/g, "").slice(0, 2).padEnd(2, "_");
+  return normalize(value).replace(/[^a-z0-9]/g, "").slice(0, 1).padEnd(1, "_");
 }
 
 function placeType(featureCode, population) {

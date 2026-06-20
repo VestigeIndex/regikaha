@@ -1,7 +1,7 @@
 import type { Category } from "@/lib/types";
 import type { Locale } from "@/lib/i18n/config";
 
-const tradeIds = [
+export const tradeCategoryIds = [
   "cerrajeria-cerramientos",
   "suelos-pladur",
   "jardineria-piscinas",
@@ -12,7 +12,7 @@ const tradeIds = [
   "metal-demoliciones",
   "ascensores-incendios",
 ] as const;
-type TradeId = (typeof tradeIds)[number];
+type TradeId = (typeof tradeCategoryIds)[number];
 
 type TradeCopy = { name: string; noun: string; plural: string; services: [string, string, string] };
 
@@ -122,14 +122,14 @@ function descriptions(locale: Locale, copy: TradeCopy) {
 }
 
 export const tradeCategoryTranslations = (Object.keys(copies) as Locale[]).reduce((result, locale) => {
-  result[locale] = Object.fromEntries(tradeIds.map((id) => {
+  result[locale] = Object.fromEntries(tradeCategoryIds.map((id) => {
     const copy = copies[locale][id];
     return [id, { name: copy.name, professionalNoun: copy.noun, professionalNounPlural: copy.plural, ...descriptions(locale, copy), popularServices: copy.services }];
   })) as unknown as Record<TradeId, Omit<Category, "id" | "slug" | "icon" | "image" | "featured">>;
   return result;
 }, {} as Record<Locale, Record<TradeId, Omit<Category, "id" | "slug" | "icon" | "image" | "featured">>>);
 
-export const tradeCategories: Category[] = tradeIds.map((id) => ({
+export const tradeCategories: Category[] = tradeCategoryIds.map((id) => ({
   id,
   slug: id,
   ...tradeCategoryTranslations.es[id],
