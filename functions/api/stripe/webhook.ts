@@ -1,6 +1,7 @@
 import { bad, json } from "../../../apilib/http";
 import { commercialAccessStatus } from "../../../lib/billing/subscription";
 import { newId } from "../../../apilib/auth";
+import { leadCurrency } from "../../../lib/leads";
 
 const STRIPE_TOLERANCE_SECONDS = 300;
 
@@ -16,15 +17,13 @@ function timingSafeEqual(a: string, b: string): boolean {
 }
 
 async function verifyStripeSignature(rawBody: string, signatureHeader: string, secret: string): Promise<boolean> {
-  const parts = Object.fromEntries(
-    signatureHeader.split(",").map((part) => {
-      const [key, value] = part.split("=");
-      return [key, value];
-    }),
-  );
-  const timestamp = Number(parts.t || 0);
-  const signature = parts.v1 || "";
-  if (!timestamp || !signature) return false;
+  const parts = signatureHeader.split(",").map((part) => {
+    const separator = part.indexOf("=");
+    return separator > 0 ? [part.slice(0, separator), part.slice(separator + 1)] : ["", ""];
+  });
+  const timestamp = Number(parts.find(([key]) => key === "t")?.[1] || 0);
+  const signatures = parts.filter(([key]) => key === "v1").map(([, value]) => value);
+  if (!timestamp || !signatures.length) return false;
   if (Math.abs(Date.now() / 1000 - timestamp) > STRIPE_TOLERANCE_SECONDS) return false;
 
   const key = await crypto.subtle.importKey(
@@ -36,7 +35,8 @@ async function verifyStripeSignature(rawBody: string, signatureHeader: string, s
   );
   const signedPayload = `${timestamp}.${rawBody}`;
   const digest = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(signedPayload));
-  return timingSafeEqual(hex(digest), signature);
+  const expected = hex(digest);
+  return signatures.some((signature) => timingSafeEqual(expected, signature));
 }
 
 function secondsToDate(value: unknown): string | null {
@@ -77,13 +77,14 @@ async function upsertSubscription(env: any, data: {
   contractAcceptanceId?: string;
   founderSlotId?: string;
   checkoutSessionId?: string;
+  paymentMethodStatus?: string | null;
 }) {
   if (!data.stripeSubscriptionId) return;
   await env.DB.prepare(
     `INSERT INTO subscriptions
       (id,user_id,role,plan,interval,status,stripe_customer_id,stripe_subscription_id,current_period_end,trial_ends_at,
        contract_acceptance_id,founder_slot_id,checkout_session_id,payment_method_status,updated_at)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,'attached',datetime('now'))
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'))
      ON CONFLICT(stripe_subscription_id) DO UPDATE SET
        user_id = COALESCE(excluded.user_id, subscriptions.user_id),
        role = COALESCE(excluded.role, subscriptions.role),
@@ -113,6 +114,7 @@ async function upsertSubscription(env: any, data: {
       data.contractAcceptanceId || null,
       data.founderSlotId || null,
       data.checkoutSessionId || null,
+      data.paymentMethodStatus || null,
     )
     .run();
 
@@ -157,7 +159,111 @@ async function scheduleTrialNotifications(env: any, userId: string, subscription
   await env.DB.batch(statements);
 }
 
+async function recordBillingNotification(env: any, userId: string, subscriptionId: string, type: string) {
+  if (!userId || !subscriptionId) return;
+  await env.DB.prepare(
+    `INSERT OR IGNORE INTO billing_notifications
+      (id,user_id,subscription_id,type,scheduled_for)
+     VALUES (?,?,?,?,datetime('now'))`,
+  ).bind(newId("bill_notice_"), userId, subscriptionId, type).run();
+}
+
+async function creditLeadBalance(env: any, data: {
+  userId: string;
+  currency: string;
+  amount: number;
+  balanceType: "paid" | "promotional";
+  referenceType: string;
+  referenceId: string;
+  description: string;
+}) {
+  if (!data.userId || !data.amount || data.amount < 0) return;
+  const promoAmount = data.balanceType === "promotional" ? data.amount : 0;
+  const paidAmount = data.balanceType === "paid" ? data.amount : 0;
+  await env.DB.batch([
+    env.DB.prepare(
+      `INSERT INTO lead_balances
+        (user_id,currency,promotional_balance,paid_balance,reserved_balance,updated_at)
+       VALUES (?,?,?,?,0,datetime('now'))
+       ON CONFLICT(user_id,currency) DO UPDATE SET
+         promotional_balance = lead_balances.promotional_balance + excluded.promotional_balance,
+         paid_balance = lead_balances.paid_balance + excluded.paid_balance,
+         updated_at = datetime('now')`,
+    ).bind(data.userId, data.currency, promoAmount, paidAmount),
+    env.DB.prepare(
+      `INSERT INTO lead_balance_transactions
+        (id,user_id,currency,amount,balance_type,transaction_type,reference_type,reference_id,description)
+       VALUES (?,?,?,?,?,'credit',?,?,?)`,
+    ).bind(
+      newId("lead_tx_"),
+      data.userId,
+      data.currency,
+      data.amount,
+      data.balanceType,
+      data.referenceType,
+      data.referenceId,
+      data.description,
+    ),
+  ]);
+}
+
+async function handleLeadTopup(env: any, session: any) {
+  if (session.payment_status !== "paid") return;
+  const orderId = String(session.metadata?.regikaha_order_id || "");
+  const userId = String(session.metadata?.regikaha_user_id || "");
+  const currency = String(session.metadata?.regikaha_currency || "").toUpperCase();
+  const amount = Number(session.metadata?.regikaha_amount || 0);
+  if (!orderId || !userId || !amount || String(session.currency || "").toUpperCase() !== currency) return;
+  const order = await env.DB.prepare(
+    "SELECT * FROM lead_topup_orders WHERE id = ? AND user_id = ? AND status = 'pending'",
+  ).bind(orderId, userId).first();
+  if (!order || Number(order.amount || 0) !== amount || String(order.currency || "") !== currency) return;
+  if (Number(session.amount_total || 0) < amount) return;
+
+  await env.DB.prepare(
+    `UPDATE lead_topup_orders
+     SET status = 'paid', stripe_checkout_session_id = ?, stripe_payment_intent_id = ?, paid_at = datetime('now')
+     WHERE id = ? AND status = 'pending'`,
+  ).bind(String(session.id || ""), String(session.payment_intent || ""), orderId).run();
+  await creditLeadBalance(env, {
+    userId,
+    currency,
+    amount,
+    balanceType: "paid",
+    referenceType: "stripe_topup",
+    referenceId: orderId,
+    description: "Stripe contact balance top-up",
+  });
+}
+
+async function grantFounderLeadCredits(env: any, userId: string, founderSlotId: string) {
+  const amount = Math.max(0, Math.round(Number(env.FOUNDERS_INCLUDED_LEAD_CREDITS || 2500)));
+  if (!userId || !founderSlotId || !amount) return;
+  const existing = await env.DB.prepare(
+    `SELECT id FROM lead_balance_transactions
+     WHERE user_id = ? AND reference_type = 'founder_grant' AND reference_id = ?
+     LIMIT 1`,
+  ).bind(userId, founderSlotId).first();
+  if (existing) return;
+  const professional = await env.DB.prepare(
+    "SELECT country FROM professionals WHERE user_id = ? LIMIT 1",
+  ).bind(userId).first();
+  await creditLeadBalance(env, {
+    userId,
+    currency: leadCurrency(String(professional?.country || "ES")),
+    amount,
+    balanceType: "promotional",
+    referenceType: "founder_grant",
+    referenceId: founderSlotId,
+    description: "Founder promotional contact balance",
+  });
+}
+
 async function handleCheckoutCompleted(env: any, session: any) {
+  if (session.metadata?.regikaha_type === "lead_topup") {
+    await handleLeadTopup(env, session);
+    return;
+  }
   const founder = session.metadata?.regikaha_founder === "true";
   const status = founder ? "founder_trial_0_eur" : "active";
   await upsertSubscription(env, {
@@ -171,6 +277,7 @@ async function handleCheckoutCompleted(env: any, session: any) {
     contractAcceptanceId: session.metadata?.regikaha_contract_acceptance_id,
     founderSlotId: session.metadata?.regikaha_founder_slot_id,
     checkoutSessionId: String(session.id || ""),
+    paymentMethodStatus: null,
   });
   if (founder && session.metadata?.regikaha_founder_slot_id) {
     await env.DB.prepare(
@@ -183,6 +290,11 @@ async function handleCheckoutCompleted(env: any, session: any) {
       session.metadata.regikaha_founder_slot_id,
       session.metadata.regikaha_user_id,
     ).run();
+    await grantFounderLeadCredits(
+      env,
+      String(session.metadata?.regikaha_user_id || ""),
+      String(session.metadata.regikaha_founder_slot_id),
+    );
   }
 }
 
@@ -203,6 +315,7 @@ async function handleSubscription(env: any, subscription: any) {
     trialEnd,
     contractAcceptanceId: subscription.metadata?.regikaha_contract_acceptance_id,
     founderSlotId: subscription.metadata?.regikaha_founder_slot_id,
+    paymentMethodStatus: subscription.default_payment_method ? "attached" : null,
   });
   if (founder && subscription.metadata?.regikaha_founder_slot_id) {
     const founderStatus = status === "founder_trial_0_eur" ? "active" : status === "active" ? "converted" : status;
@@ -225,24 +338,34 @@ async function handleSubscription(env: any, subscription: any) {
   await scheduleTrialNotifications(env, subscription.metadata?.regikaha_user_id, String(subscription.id || ""), trialEnd);
 }
 
-async function updateInvoiceStatus(env: any, invoice: any, status: string) {
+async function updateInvoiceStatus(env: any, invoice: any, requestedStatus: string) {
   const subscriptionId = String(invoice.subscription || "");
   if (!subscriptionId) return;
+  const existing = await env.DB.prepare(
+    `SELECT user_id,role,status,trial_ends_at
+     FROM subscriptions WHERE stripe_subscription_id = ? LIMIT 1`,
+  ).bind(subscriptionId).first();
+  const founderTrialActive = String(existing?.status || "") === "founder_trial_0_eur"
+    && existing?.trial_ends_at
+    && new Date(String(existing.trial_ends_at)).getTime() > Date.now();
+  const status = requestedStatus === "active" && founderTrialActive
+    ? "founder_trial_0_eur"
+    : requestedStatus;
   await env.DB.prepare(
     `UPDATE subscriptions
      SET status = ?, updated_at = datetime('now')
      WHERE stripe_subscription_id = ?`,
   ).bind(status, subscriptionId).run();
-  const row = await env.DB.prepare(
-    "SELECT user_id, role FROM subscriptions WHERE stripe_subscription_id = ? LIMIT 1",
-  ).bind(subscriptionId).first();
-  if (row?.user_id) {
+  if (existing?.user_id) {
     await upsertSubscription(env, {
       stripeSubscriptionId: subscriptionId,
-      userId: row.user_id,
-      role: row.role,
+      userId: existing.user_id,
+      role: existing.role,
       status,
     });
+    if (requestedStatus === "past_due") {
+      await recordBillingNotification(env, String(existing.user_id), subscriptionId, "payment_failed");
+    }
   }
 }
 
@@ -257,7 +380,12 @@ export async function onRequestPost(context: any) {
   const verified = await verifyStripeSignature(rawBody, signature, secret);
   if (!verified) return bad("Firma Stripe no válida", 400);
 
-  const event = JSON.parse(rawBody);
+  let event: any;
+  try {
+    event = JSON.parse(rawBody);
+  } catch {
+    return bad("Evento Stripe no válido", 400);
+  }
   if (!event?.id || !event?.type) return bad("Evento Stripe incompleto", 400);
   const processed = await env.DB.prepare(
     "SELECT event_id FROM stripe_webhook_events WHERE event_id = ?",
@@ -273,6 +401,14 @@ export async function onRequestPost(context: any) {
     case "customer.subscription.updated":
     case "customer.subscription.deleted":
       await handleSubscription(env, object);
+      if (event.type === "customer.subscription.deleted" && object.metadata?.regikaha_user_id) {
+        await recordBillingNotification(
+          env,
+          String(object.metadata.regikaha_user_id),
+          String(object.id || ""),
+          "subscription_cancelled",
+        );
+      }
       break;
     case "invoice.payment_succeeded":
       await updateInvoiceStatus(env, object, "active");

@@ -1,4 +1,4 @@
-import { privateJson, bad, isEmail, sessionCookie } from "../../apilib/http";
+import { privateJson, bad, isEmail, sessionCookieHeaders } from "../../apilib/http";
 import { verifyPassword, createSession } from "../../apilib/auth";
 import { panelPathForRole } from "../../lib/accounts";
 
@@ -21,6 +21,6 @@ export async function onRequestPost(context: any) {
   return privateJson(
     { ok: true, user: { id: user.id, email: user.email, role: user.role }, redirectTo: panelPathForRole(user.role) },
     200,
-    { "Set-Cookie": sessionCookie(token, maxAge, request) },
+    sessionCookieHeaders(token, maxAge, request),
   );
 }

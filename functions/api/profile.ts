@@ -34,7 +34,7 @@ export async function onRequestPost(context: any) {
     const city = String(b.city || pro.city || "").trim();
     const rawCountry = String(b.country || pro.country || "mercados activos").trim();
     const country = rawCountry.length <= 3 ? rawCountry.toUpperCase() : rawCountry;
-    map.seo_title = `${name} - profesional verificado en ${city || country} | RegiKaha`;
+    map.seo_title = `${name} - profesional en ${city || country} | RegiKaha`;
     map.seo_description = String(b.tagline || b.description || pro.short_tagline || pro.description || "")
       .trim()
       .slice(0, 160);

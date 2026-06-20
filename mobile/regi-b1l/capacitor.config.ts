@@ -1,9 +1,9 @@
 const config = {
   appId: "com.regikaha.regib1l",
-  appName: "Regi B1L",
+  appName: "Regi Works",
   webDir: "www",
   server: {
-    url: "https://regikaha.com/regi-b1l",
+    url: "https://regikaha.com/regi-works",
     cleartext: false,
   },
   android: {

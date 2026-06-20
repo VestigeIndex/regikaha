@@ -15,7 +15,7 @@ import {
 export const metadata: Metadata = buildMetadata({
   title: "Precios",
   description:
-    "RegiKaha es gratis para clientes. Para profesionales: Autónomo Nacional por 19,95 €/mes o Multi-mercado Pro por 49,95 €/mes, con tarifa anual al 10% de descuento. Sin comisiones por lead ni rankings comprados.",
+    "RegiKaha es gratis para clientes. Los profesionales eligen Autónomo Nacional por 19,95 €/mes o Multi-mercado Pro por 49,95 €/mes. Los contactos se desbloquean con saldo y precio visible, sin rankings comprados ni comisión sobre el proyecto.",
   path: "/precios",
 });
 
@@ -29,9 +29,9 @@ const clientFeatures = [
 const neverCharged = [
   "Ranking comprado",
   "Pago por aparecer primero",
-  "Comisión por lead",
+  "Comisión sobre el valor del proyecto",
   "Comisión por mensaje",
-  "Créditos artificiales",
+  "Cargos de contacto ocultos",
   "Trampas de visibilidad",
 ];
 
@@ -114,7 +114,8 @@ export default function PreciosPage() {
         </div>
 
         <div className="max-w-3xl mx-auto mt-12 card p-7">
-          <h2 className="font-bold text-ink">Lo que en RegiKaha nunca pagas</h2>
+          <h2 className="font-bold text-ink">Lo que la suscripción nunca compra</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">Cada oportunidad muestra su precio antes de desbloquear el contacto. El saldo promocional se usa primero y los contactos inválidos pueden reclamarse.</p>
           <div className="mt-4 grid sm:grid-cols-2 gap-x-8 gap-y-2.5">
             {neverCharged.map((item) => (
               <div key={item} className="flex items-center gap-2 text-sm text-muted">

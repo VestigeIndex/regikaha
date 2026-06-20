@@ -1,6 +1,8 @@
 import { json, bad, getSessionUser, isEmail } from "../../apilib/http";
 import { newId } from "../../apilib/auth";
 import { isActiveCountryCode } from "../../lib/market";
+import { getLeadPrice, leadQualityScore } from "../../lib/leads";
+import { isLocale } from "../../lib/i18n/config";
 
 function clean(value: unknown, max = 600): string {
   return String(value || "").trim().slice(0, max);
@@ -112,6 +114,7 @@ export async function onRequestPost(context: any) {
   const latitude = coordinate(b.latitude ?? b.placeLatitude, -90, 90);
   const longitude = coordinate(b.longitude ?? b.placeLongitude, -180, 180);
   const radiusKm = Math.max(10, Math.min(250, Number(b.radiusKm || 25) || 25));
+  const locale = isLocale(String(b.locale || "")) ? String(b.locale) : "es";
   if (clean(b.website, 200)) return bad("Solicitud no válida");
   if (!isEmail(email)) return bad("Email no válido");
   if (description.length < 20) return bad("Describe un poco más el proyecto");
@@ -123,15 +126,32 @@ export async function onRequestPost(context: any) {
 
   const projectId = newId("prj_");
   const sessionUser = await getSessionUser(env, request);
+  const pricing = getLeadPrice({
+    countryCode: country,
+    categoryId,
+    budgetRange: clean(b.budgetRange, 80),
+    urgency: clean(b.urgency || "flexible", 40),
+    clientType: clean(b.clientType || "particular", 80),
+  });
+  const qualityScore = leadQualityScore({
+    description,
+    hasPhone: Boolean(clean(b.phone, 80)),
+    hasCoordinates: latitude !== null && longitude !== null,
+    hasBudget: Boolean(clean(b.budgetRange, 80)),
+    hasPostalCode: Boolean(clean(b.postalCode, 20)),
+  });
   await env.DB.prepare(
       `INSERT INTO project_requests
-        (id,client_id,client_type,country,city,postal_code,latitude,longitude,radius_km,category_id,subcategory,description,urgency,budget_range,property_type,approximate_measures,status)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'published')`,
+        (id,client_id,client_type,country,region,city,postal_code,latitude,longitude,radius_km,category_id,subcategory,title,
+         description,urgency,budget_range,property_type,approximate_measures,status,locale,expires_at,max_professionals,
+         unlocked_count,quality_score,source,contact_name,contact_email,contact_phone)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'published',?,datetime('now','+30 days'),?,0,?,'web',?,?,?)`,
     ).bind(
       projectId,
       sessionUser?.id || null,
       clean(b.clientType || "particular", 80),
       country,
+      clean(b.region, 120),
       city,
       clean(b.postalCode, 20),
       latitude,
@@ -139,41 +159,37 @@ export async function onRequestPost(context: any) {
       radiusKm,
       categoryId,
       clean(b.subcategory, 120),
+      clean(b.title || b.subcategory || categoryId, 160),
       description,
       clean(b.urgency || "flexible", 40),
       clean(b.budgetRange, 80),
       clean(b.propertyType, 80),
       clean(b.approximateMeasures, 120),
+      locale,
+      pricing.maxProfessionals,
+      qualityScore,
+      clean(b.name || "Cliente", 120),
+      email,
+      clean(b.phone, 80),
     ).run();
 
   const matches = await matchProfessionals(env, { categoryId, country, city, latitude, longitude, radiusKm });
-  const quoteIds: string[] = [];
-  const quoteTargets = matches.length ? matches : [{ id: null, score: 0, distance: null }];
-  const statements = quoteTargets.flatMap((match: any) => {
-    const quoteId = newId("qr_");
-    quoteIds.push(quoteId);
-    const quote = env.DB.prepare(
-      `INSERT INTO quote_requests
-        (id,professional_id,category_id,service_id,client_name,client_email,client_phone,country,region,city,latitude,longitude,radius_km,description,budget_range,urgency,status)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'new')`,
-    ).bind(
-      quoteId, match.id, categoryId, null, clean(b.name || "Cliente", 120), email, clean(b.phone, 80),
-      country, clean(b.region, 120), city, latitude, longitude, radiusKm, description,
-      clean(b.budgetRange, 80), clean(b.urgency || "flexible", 40),
-    );
-    if (!match.id) return [quote];
-    const candidate = env.DB.prepare(
+  if (matches.length) {
+    await env.DB.batch(matches.map((match: any) => env.DB.prepare(
       "INSERT OR IGNORE INTO match_candidates (id,project_id,professional_id,country,city,category_id,score,reasons,status) VALUES (?,?,?,?,?,?,?,?,?)",
     ).bind(
       newId("match_"), projectId, match.id, country, city, categoryId, match.score,
       JSON.stringify(match.distance == null ? ["category", "country"] : ["category", "country", "radius"]),
       "candidate",
-    );
-    return [quote, candidate];
-  });
-  await env.DB.batch(statements);
+    )));
+  }
 
   await upsertCoverage(env, country, city, categoryId);
 
-  return json({ ok: true, projectId, quoteIds, matchedProfessionals: matches.length }, 201);
+  return json({
+    ok: true,
+    projectId,
+    matchedProfessionals: matches.length,
+    maxProfessionals: pricing.maxProfessionals,
+  }, 201);
 }

@@ -48,10 +48,11 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
       const res = await fetch(mode === "client" ? "/api/projects" : "/api/b2b-projects", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
+        credentials: "same-origin",
+        body: JSON.stringify({ ...payload, locale }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || t.ui.projectForm.unableToPublish);
+      if (!res.ok) throw new Error(t.ui.projectForm.unableToPublish);
       setSent(true);
       e.currentTarget.reset();
     } catch (err) {

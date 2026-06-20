@@ -1,7 +1,16 @@
 import { bad, json, isEmail, getSessionUser } from "../../apilib/http";
 import { panelPathForRole } from "../../lib/accounts";
 import { priceSecretName, type BillingInterval, type ProfessionalPlanId } from "../../lib/pricing";
-import { isBillingInterval, isOfferingRole, isProfessionalPlan } from "../../lib/billing/subscription";
+import {
+  allContractCheckboxesAccepted,
+  isBillingInterval,
+  isOfferingRole,
+  isProfessionalPlan,
+  planPriceCents,
+  trialRequiresPaymentMethod,
+} from "../../lib/billing/subscription";
+import { legalVersions } from "../../lib/legal/contractVersions";
+import { hashContractSnapshot } from "../../lib/legal/hashContract";
 
 const STRIPE_VERSION = "2026-02-25.clover";
 
@@ -19,6 +28,30 @@ function encodeForm(data: Record<string, string | number | boolean | undefined>)
     if (value !== undefined) params.set(key, String(value));
   }
   return params.toString();
+}
+
+async function validateStripePrice(secret: string, priceId: string, plan: ProfessionalPlanId, interval: BillingInterval) {
+  const response = await fetch(`https://api.stripe.com/v1/prices/${encodeURIComponent(priceId)}`, {
+    headers: {
+      authorization: `Bearer ${secret}`,
+      "stripe-version": STRIPE_VERSION,
+    },
+  });
+  const price: any = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(price?.error?.message || "No se pudo validar el precio de Stripe");
+
+  const expectedInterval = interval === "monthly" ? "month" : "year";
+  const expectedAmount = planPriceCents(plan, interval);
+  if (
+    price.active !== true
+    || price.type !== "recurring"
+    || price.currency !== "eur"
+    || price.recurring?.interval !== expectedInterval
+    || Number(price.recurring?.interval_count || 0) !== 1
+    || Number(price.unit_amount || 0) !== expectedAmount
+  ) {
+    throw new Error("El precio de Stripe no coincide con el plan aceptado");
+  }
 }
 
 // POST /api/checkout — crea una Stripe Checkout Session de suscripción.
@@ -62,8 +95,38 @@ export async function onRequestPost(context: any) {
       redirectTo: `/suscripcion/confirmar?plan=${plan}&interval=${interval}`,
     }, 409);
   }
+  if (String(acceptance.contract_version || "") !== legalVersions.contract) {
+    return json({
+      error: "El contrato ha cambiado y debe aceptarse de nuevo",
+      redirectTo: `/suscripcion/confirmar?plan=${plan}&interval=${interval}`,
+    }, 409);
+  }
 
-  const snapshot = JSON.parse(String(acceptance.contract_snapshot_json || "{}"));
+  let snapshot: any;
+  let acceptedCheckboxes: any;
+  try {
+    snapshot = JSON.parse(String(acceptance.contract_snapshot_json || "{}"));
+    acceptedCheckboxes = JSON.parse(String(acceptance.accepted_checkboxes_json || "{}"));
+  } catch {
+    return bad("El contrato guardado no es válido", 409);
+  }
+  const snapshotHash = await hashContractSnapshot(snapshot);
+  const expectedPrice = planPriceCents(plan, interval);
+  const requirePaymentMethod = trialRequiresPaymentMethod(env);
+  if (
+    snapshotHash !== String(acceptance.contract_snapshot_hash || "")
+    || snapshot?.commercialTerms?.userId !== user.id
+    || snapshot?.commercialTerms?.planId !== plan
+    || snapshot?.commercialTerms?.renewalInterval !== interval
+    || Number(snapshot?.commercialTerms?.futurePrice) !== expectedPrice
+    || snapshot?.commercialTerms?.paymentMethodRequired !== requirePaymentMethod
+    || !allContractCheckboxesAccepted(acceptedCheckboxes)
+  ) {
+    return json({
+      error: "El contrato guardado ya no coincide con las condiciones actuales",
+      redirectTo: `/suscripcion/confirmar?plan=${plan}&interval=${interval}`,
+    }, 409);
+  }
   const founder = snapshot?.commercialTerms?.founderTrial === true;
   const founderSlot = founder
     ? await env.DB.prepare(
@@ -78,6 +141,11 @@ export async function onRequestPost(context: any) {
   const priceEnv = priceSecretName(plan, interval);
   const price = String(env[priceEnv] || "");
   if (!price) return bad(`Falta configurar ${priceEnv}`, 500);
+  try {
+    await validateStripePrice(secret, price, plan, interval);
+  } catch (error) {
+    return bad(error instanceof Error ? error.message : "No se pudo validar el precio de Stripe", 500);
+  }
 
   const origin = request.headers.get("Origin") || new URL(request.url).origin;
   const email = String(user.email || body.email || "").trim().toLowerCase();
@@ -86,7 +154,11 @@ export async function onRequestPost(context: any) {
   const trialEnd = founder && acceptance.trial_ends_at
     ? Math.floor(new Date(String(acceptance.trial_ends_at)).getTime() / 1000)
     : undefined;
-  const requirePaymentMethod = String(env.BILLING_REQUIRE_PAYMENT_METHOD_FOR_TRIAL || "true") !== "false";
+  const existingCustomer = await env.DB.prepare(
+    `SELECT stripe_customer_id FROM subscriptions
+     WHERE user_id = ? AND stripe_customer_id IS NOT NULL
+     ORDER BY updated_at DESC LIMIT 1`,
+  ).bind(user.id).first();
   const payload = encodeForm({
     mode: "subscription",
     "line_items[0][price]": price,
@@ -97,8 +169,9 @@ export async function onRequestPost(context: any) {
     billing_address_collection: "required",
     "automatic_tax[enabled]": true,
     "tax_id_collection[enabled]": true,
-    "customer_email": isEmail(email) ? email : undefined,
-    payment_method_collection: founder && requirePaymentMethod ? "always" : undefined,
+    customer: existingCustomer?.stripe_customer_id || undefined,
+    "customer_email": !existingCustomer?.stripe_customer_id && isEmail(email) ? email : undefined,
+    payment_method_collection: founder && !requirePaymentMethod ? "if_required" : "always",
     "metadata[regikaha_plan]": plan,
     "metadata[regikaha_interval]": interval,
     "metadata[regikaha_user_id]": user.id,
@@ -114,6 +187,8 @@ export async function onRequestPost(context: any) {
     "subscription_data[metadata][regikaha_founder]": founder ? "true" : "false",
     "subscription_data[metadata][regikaha_founder_slot_id]": founderSlot?.id,
     "subscription_data[trial_end]": trialEnd,
+    "subscription_data[trial_settings][end_behavior][missing_payment_method]":
+      founder && !requirePaymentMethod ? "cancel" : undefined,
   });
 
   const stripeRes = await fetch("https://api.stripe.com/v1/checkout/sessions", {
@@ -122,6 +197,7 @@ export async function onRequestPost(context: any) {
       authorization: `Bearer ${secret}`,
       "content-type": "application/x-www-form-urlencoded",
       "stripe-version": STRIPE_VERSION,
+      "idempotency-key": `rk_checkout_${acceptanceId}`,
     },
     body: payload,
   });

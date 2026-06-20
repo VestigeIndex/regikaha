@@ -53,11 +53,18 @@ const SESSION_DAYS = 30;
 export async function createSession(env: any, userId: string): Promise<{ token: string; maxAge: number }> {
   const token = crypto.randomUUID() + crypto.randomUUID().replace(/-/g, "");
   const maxAge = SESSION_DAYS * 24 * 3600;
-  await env.DB.prepare(
-    `INSERT INTO sessions (id, user_id, expires_at) VALUES (?, ?, datetime('now', '+${SESSION_DAYS} days'))`,
-  )
-    .bind(token, userId)
-    .run();
+  await env.DB.batch([
+    env.DB.prepare("DELETE FROM sessions WHERE expires_at <= datetime('now')"),
+    env.DB.prepare(
+      `INSERT INTO sessions (id, user_id, expires_at) VALUES (?, ?, datetime('now', '+${SESSION_DAYS} days'))`,
+    ).bind(token, userId),
+    env.DB.prepare(
+      `DELETE FROM sessions
+       WHERE user_id = ? AND id NOT IN (
+         SELECT id FROM sessions WHERE user_id = ? ORDER BY created_at DESC, rowid DESC LIMIT 5
+       )`,
+    ).bind(userId, userId),
+  ]);
   return { token, maxAge };
 }
 

@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = buildMetadata({
   title: "Únete como profesional",
   description:
-    "Crea tu perfil profesional en RegiKaha y consigue clientes para tus servicios de reformas, construcción o mantenimiento. Primeros 300 verificados: 5 meses gratis. Sin pagar por leads.",
+    "Crea tu perfil profesional en RegiKaha, publica servicios y recibe oportunidades compatibles. Primeros 300 verificados: 5 meses gratis y saldo promocional de contactos.",
   path: "/registro",
 });
 
@@ -15,7 +15,7 @@ const benefits = [
   "Página profesional con SEO propio",
   "Portfolio y servicios ilimitados",
   "Solicitudes de clientes directas",
-  "Ranking justo, sin pagar por leads",
+  "Oportunidades con precio de contacto transparente",
 ];
 
 export default function RegistroPage() {

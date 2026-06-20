@@ -33,6 +33,7 @@ export type SubscriptionStatus =
 
 export const DEFAULT_FOUNDER_MONTHS = 5;
 export const DEFAULT_FOUNDER_SLOTS = 300;
+export const DEFAULT_FOUNDER_RESERVATION_HOURS = 24;
 
 export function isProfessionalPlan(value: string): value is ProfessionalPlanId {
   return value === "autonomo_nacional" || value === "europa_pro";
@@ -89,4 +90,13 @@ export function founderMonths(env: Record<string, unknown>): number {
 export function founderSlotLimit(env: Record<string, unknown>): number {
   const value = Number(env.BILLING_FOUNDER_SLOTS || DEFAULT_FOUNDER_SLOTS);
   return Number.isFinite(value) && value > 0 ? Math.min(Math.round(value), 10_000) : DEFAULT_FOUNDER_SLOTS;
+}
+
+export function founderReservationHours(env: Record<string, unknown>): number {
+  const value = Number(env.BILLING_FOUNDER_RESERVATION_HOURS || DEFAULT_FOUNDER_RESERVATION_HOURS);
+  return Number.isFinite(value) && value > 0 ? Math.min(Math.round(value), 168) : DEFAULT_FOUNDER_RESERVATION_HOURS;
+}
+
+export function trialRequiresPaymentMethod(env: Record<string, unknown>): boolean {
+  return String(env.BILLING_REQUIRE_PAYMENT_METHOD_FOR_TRIAL || "true") !== "false";
 }

@@ -105,6 +105,7 @@ export function RegistroForm() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "content-type": "application/json" },
+        credentials: "same-origin",
         body: JSON.stringify({
           ...form,
           yearsExperience: Number(form.yearsExperience || 0),

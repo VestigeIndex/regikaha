@@ -1,5 +1,5 @@
 export const legalVersions = {
-  contract: "subscription-contract-2026-06-18",
+  contract: "subscription-contract-2026-06-20",
   terms: "terms-professionals-2026-06-18",
   privacy: "privacy-2026-06-18",
   verificationPolicy: "verification-2026-06-18",

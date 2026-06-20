@@ -8,7 +8,9 @@ export async function onRequestGet(context: any) {
 
   try {
     const subscription = await env.DB.prepare(
-      `SELECT id, role, plan, interval, status, current_period_end, trial_ends_at, stripe_customer_id, stripe_subscription_id, updated_at
+      `SELECT id, role, plan, interval, status, current_period_end, trial_ends_at, first_charge_at,
+              future_price_cents, currency, stripe_customer_id, stripe_subscription_id,
+              cancel_at_period_end, payment_method_status, updated_at
        FROM subscriptions
        WHERE user_id = ?
        ORDER BY updated_at DESC
@@ -25,7 +27,8 @@ export async function onRequestGet(context: any) {
       ).bind(user.id).first(),
       env.DB.prepare(
         `SELECT id,plan_id,role,contract_version,price_today,future_price,currency,trial_ends_at,
-                first_charge_at,renewal_interval,contract_snapshot_hash,accepted_locale,accepted_at
+                first_charge_at,renewal_interval,contract_snapshot_hash,contract_snapshot_json,
+                accepted_checkboxes_json,accepted_locale,accepted_at
          FROM subscription_contract_acceptances
          WHERE user_id = ?
          ORDER BY accepted_at DESC

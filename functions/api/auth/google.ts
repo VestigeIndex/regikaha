@@ -1,4 +1,4 @@
-import { bad, isEmail, privateJson, sessionCookie } from "../../../apilib/http";
+import { bad, isEmail, privateJson, sessionCookieHeaders } from "../../../apilib/http";
 import { createSession, newId } from "../../../apilib/auth";
 
 interface GoogleTokenInfo {
@@ -89,6 +89,6 @@ export async function onRequestPost(context: any) {
       professional: professional || null,
     },
     200,
-    { "Set-Cookie": sessionCookie(token, maxAge, request) },
+    sessionCookieHeaders(token, maxAge, request),
   );
 }

@@ -1,4 +1,4 @@
-export const b1lLocales = ["es", "en", "fr", "de", "it", "pt", "nl", "ca", "ar", "zh"] as const;
+export const b1lLocales = ["es", "en", "fr", "de", "it", "pt", "nl"] as const;
 export type B1LLocale = (typeof b1lLocales)[number];
 
 export type B1LTab =

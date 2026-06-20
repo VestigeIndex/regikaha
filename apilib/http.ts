@@ -34,16 +34,11 @@ function isProductionDomain(request: Request): boolean {
   return hostname === "regikaha.com" || hostname === "www.regikaha.com";
 }
 
-function cookieDomain(request: Request): string[] {
-  return isProductionDomain(request) ? ["Domain=regikaha.com"] : [];
-}
-
 export function sessionCookie(token: string, maxAgeSec: number, request: Request): string {
   const expires = new Date(Date.now() + maxAgeSec * 1000).toUTCString();
   const parts = [
     `${SESSION_COOKIE}=${encodeURIComponent(token)}`,
     "Path=/",
-    ...cookieDomain(request),
     "HttpOnly",
     "Secure",
     "SameSite=Lax",
@@ -52,6 +47,17 @@ export function sessionCookie(token: string, maxAgeSec: number, request: Request
     `Expires=${expires}`,
   ];
   return parts.join("; ");
+}
+
+export function sessionCookieHeaders(token: string, maxAgeSec: number, request: Request): Headers {
+  const headers = new Headers();
+  headers.append("Set-Cookie", expiredCookie(LEGACY_SESSION_COOKIE));
+  if (isProductionDomain(request)) {
+    headers.append("Set-Cookie", expiredCookie(SESSION_COOKIE, "regikaha.com"));
+    headers.append("Set-Cookie", expiredCookie(LEGACY_SESSION_COOKIE, "regikaha.com"));
+  }
+  headers.append("Set-Cookie", sessionCookie(token, maxAgeSec, request));
+  return headers;
 }
 
 function expiredCookie(name: string, domain?: string): string {

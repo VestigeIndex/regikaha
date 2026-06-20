@@ -1,0 +1,16 @@
+{
+  "name": "Regi Works — Gestión profesional de obra",
+  "short_name": "Regi Works",
+  "description": "Clientes, obras, presupuestos, documentos, materiales y equipo en un espacio operativo profesional.",
+  "id": "/regi-works",
+  "start_url": "/regi-works",
+  "scope": "/regi-works",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f7f6",
+  "theme_color": "#063f30",
+  "lang": "es",
+  "icons": [
+    { "src": "/regi-works/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

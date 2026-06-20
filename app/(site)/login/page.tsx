@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { LoginForm } from "@/components/auth/LoginForm";
-import { PageHeader } from "@/components/site/PageHeader";
+import { LoginPageHeader } from "@/components/auth/LoginPageHeader";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -13,14 +13,9 @@ export const metadata: Metadata = buildMetadata({
 export default function LoginPage() {
   return (
     <>
-      <PageHeader
-        eyebrow="Acceso"
-        title="Iniciar sesión"
-        description="Entra con tu email y contraseña. RegiKaha recordará tu tipo de cuenta y te llevará al panel correcto."
-        breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Iniciar sesión" }]}
-      />
+      <LoginPageHeader />
       <section className="container-x py-14">
-        <Suspense fallback={<div className="card p-8 text-center text-sm text-muted">Preparando acceso...</div>}>
+        <Suspense fallback={<div className="card mx-auto h-72 max-w-xl animate-pulse bg-white" />}>
           <LoginForm />
         </Suspense>
       </section>

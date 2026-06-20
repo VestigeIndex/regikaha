@@ -11,8 +11,8 @@ export async function downloadQuotePdf(quote: Quote, data: B1LData, locale: B1LL
   const client = data.clients.find((entry) => entry.id === quote.clientId);
   const project = data.projects.find((entry) => entry.id === quote.projectId);
   const totals = quoteTotals(quote);
-  const verification = `RB1L-${quote.number}-${quote.updatedAt}`;
-  const qr = await QRCode.toDataURL(`https://regikaha.com/regi-b1l?verify=${encodeURIComponent(verification)}`, { width: 220, margin: 1 });
+  const verification = `RW-${quote.number}-${quote.updatedAt}`;
+  const qr = await QRCode.toDataURL(`https://regikaha.com/regi-works?verify=${encodeURIComponent(verification)}`, { width: 220, margin: 1 });
   const pdf = new jsPDF({ unit: "mm", format: "a4" });
   const money = new Intl.NumberFormat(locale, { style: "currency", currency: data.settings.currency });
   const pageWidth = pdf.internal.pageSize.getWidth();
@@ -22,7 +22,7 @@ export async function downloadQuotePdf(quote: Quote, data: B1LData, locale: B1LL
   pdf.setTextColor(255, 255, 255);
   pdf.setFont("helvetica", "bold");
   pdf.setFontSize(18);
-  pdf.text("Regi B1L", 16, 15);
+  pdf.text("Regi Works", 16, 15);
   pdf.setFontSize(9);
   pdf.text(data.settings.companyName, 16, 23);
   pdf.setTextColor(19, 35, 28);

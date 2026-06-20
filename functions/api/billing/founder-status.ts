@@ -1,9 +1,19 @@
 import { json } from "../../../apilib/http";
-import { founderMonths, founderSlotLimit } from "../../../lib/billing/subscription";
+import {
+  founderMonths,
+  founderReservationHours,
+  founderSlotLimit,
+  trialRequiresPaymentMethod,
+} from "../../../lib/billing/subscription";
 
 export async function onRequestGet(context: any) {
   const { env } = context;
   const limit = founderSlotLimit(env);
+  await env.DB.prepare(
+    `UPDATE founder_slots
+     SET status = 'expired'
+     WHERE status = 'reserved' AND datetime(reserved_at) < datetime('now', ?)`,
+  ).bind(`-${founderReservationHours(env)} hours`).run();
   const row = await env.DB.prepare(
     `SELECT COUNT(*) AS claimed
      FROM founder_slots
@@ -16,5 +26,7 @@ export async function onRequestGet(context: any) {
     remaining: Math.max(0, limit - claimed),
     available: claimed < limit,
     trialMonths: founderMonths(env),
+    reservationHours: founderReservationHours(env),
+    paymentMethodRequired: trialRequiresPaymentMethod(env),
   });
 }

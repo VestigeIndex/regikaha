@@ -1,5 +1,3 @@
-import { cn } from "@/lib/utils";
-
 export function CountryFlag({
   country,
   label,
@@ -9,15 +7,15 @@ export function CountryFlag({
   label: string;
   className?: string;
 }) {
+  const code = country.trim().toLowerCase();
   return (
     <span
-      className={cn(
-        `fi fi-${country.trim().toLowerCase()}`,
-        "inline-flex h-4 w-5 shrink-0 rounded-[3px] bg-cover bg-center shadow-[0_0_0_1px_rgba(15,92,74,0.16)]",
-        className,
-      )}
+      className={`inline-flex h-4 w-5 shrink-0 overflow-hidden rounded-[3px] bg-white shadow-[0_0_0_1px_rgba(15,92,74,0.16)] ${className || ""}`}
       aria-label={label}
       role="img"
-    />
+    >
+      <Image src={`/flags/${code}.svg`} alt="" width={28} height={20} className="h-full w-full object-cover" unoptimized />
+    </span>
   );
 }
+import Image from "next/image";

@@ -12,7 +12,7 @@ import { formatIntervalPrice, professionalPlans } from "@/lib/pricing";
 export const metadata: Metadata = buildMetadata({
   title: "Para profesionales",
   description:
-    "Consigue clientes para tus servicios de reformas, construcción o mantenimiento en tu país o en más regiones de los mercados activos. Página SEO propia, portfolio, solicitudes directas y ranking justo. Sin pagar por leads.",
+    "Consigue clientes para reformas, construcción o mantenimiento con página SEO propia, portfolio, solicitudes compatibles, saldo de contactos transparente y ranking justo.",
   path: "/para-profesionales",
 });
 
@@ -22,7 +22,7 @@ const benefits = [
   { icon: Inbox, title: "Solicitudes de clientes", text: "Recibe solicitudes reales y responde con pre-presupuestos iniciales no vinculantes." },
   { icon: Star, title: "Reseñas verificadas", text: "Construye reputación con valoraciones reales de clientes." },
   { icon: Scale, title: "Ranking justo", text: "Destaca por mérito. Nadie compra posiciones por encima de ti." },
-  { icon: Wallet, title: "Sin pagar por leads", text: "Cuota fija simple. Sin comisiones por mensaje ni por contacto." },
+  { icon: Wallet, title: "Contactos con precio claro", text: "Ves el precio antes de desbloquear y controlas el presupuesto semanal desde tu panel." },
 ];
 
 export default function ParaProfesionalesPage() {
@@ -69,7 +69,7 @@ export default function ParaProfesionalesPage() {
               {formatIntervalPrice(professionalPlans[1], "monthly")}.
             </p>
             <ul className="mt-5 space-y-2.5">
-              {["Sin comisiones por lead", "Sin rankings comprados", "Sin pagar por aparecer primero", "Cancela cuando quieras"].map((t) => (
+              {["Saldo promocional de contactos para fundadores", "Sin rankings comprados", "Sin pagar por aparecer primero", "Cancela cuando quieras"].map((t) => (
                 <li key={t} className="flex items-center gap-2.5 text-ink/80">
                   <span className="grid place-items-center h-6 w-6 rounded-full bg-forest-500/12 text-forest-600 shrink-0"><Check size={14} /></span>
                   {t}

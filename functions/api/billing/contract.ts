@@ -4,12 +4,15 @@ import {
   addMonths,
   allContractCheckboxesAccepted,
   founderMonths,
+  founderReservationHours,
   founderSlotLimit,
   isBillingInterval,
   isOfferingRole,
   isProfessionalPlan,
   planPriceCents,
+  trialRequiresPaymentMethod,
 } from "../../../lib/billing/subscription";
+import { isLocale } from "../../../lib/i18n/config";
 import { buildSubscriptionContractSnapshot } from "../../../lib/legal/buildSubscriptionContract";
 import { legalVersions } from "../../../lib/legal/contractVersions";
 import { hashContractSnapshot } from "../../../lib/legal/hashContract";
@@ -32,6 +35,13 @@ async function reserveFounderSlot(env: any, params: {
   trialMonths: number;
   trialEndsAt: string;
 }) {
+  const reservationModifier = `-${founderReservationHours(env)} hours`;
+  await env.DB.prepare(
+    `UPDATE founder_slots
+     SET status = 'expired'
+     WHERE status = 'reserved' AND datetime(reserved_at) < datetime('now', ?)`,
+  ).bind(reservationModifier).run();
+
   const existing = await env.DB.prepare(
     "SELECT * FROM founder_slots WHERE user_id = ? LIMIT 1",
   ).bind(params.user.id).first();
@@ -87,9 +97,10 @@ export async function onRequestPost(context: any) {
 
   const plan = String(body.plan || "");
   const interval = String(body.interval || "");
-  const locale = String(body.locale || "es").slice(0, 8);
+  const locale = String(body.locale || "");
   const founderRequested = body.founder === true;
   if (!isProfessionalPlan(plan) || !isBillingInterval(interval)) return bad("Plan no válido");
+  if (!isLocale(locale)) return bad("Idioma de contrato no válido");
   if (!allContractCheckboxesAccepted(body.checkboxes)) return bad("Debes aceptar todas las declaraciones del contrato");
 
   const profile = await profileForUser(env, user);
@@ -100,6 +111,7 @@ export async function onRequestPost(context: any) {
   const months = founderMonths(env);
   const trialEndsAt = founderRequested ? addMonths(now, months).toISOString() : undefined;
   const futurePrice = planPriceCents(plan, interval);
+  const paymentMethodRequired = trialRequiresPaymentMethod(env);
   const selectedPlan = `${plan}:${interval}`;
   let founderSlot: any = null;
 
@@ -128,6 +140,7 @@ export async function onRequestPost(context: any) {
     firstChargeAt: founderRequested ? trialEndsAt : acceptedAt,
     renewalInterval: interval,
     founderTrial: founderRequested,
+    paymentMethodRequired,
     acceptedCheckboxes: body.checkboxes,
   });
 

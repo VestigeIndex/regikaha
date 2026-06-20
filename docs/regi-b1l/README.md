@@ -1,6 +1,6 @@
-# Regi B1L
+# Regi Works
 
-Regi B1L is the professional operations workspace integrated at `/regi-b1l`. It is built inside the existing Next.js application and does not replace the RegiKaha marketplace.
+Regi Works is the professional operations workspace integrated at `/regi-works`. It is built inside the existing Next.js application and does not replace the RegiKaha marketplace. The legacy `/regi-b1l` route remains available for compatibility.
 
 ## Included
 
@@ -18,7 +18,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000/regi-b1l`.
+Open `http://localhost:3000/regi-works`.
 
 ## Data boundary
 

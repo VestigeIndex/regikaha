@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Calculator, ExternalLink, Inbox, LayoutDashboard, LogOut, Menu, Receipt, Star, User, Wrench, X } from "lucide-react";
+import { BriefcaseBusiness, Calculator, Coins, ExternalLink, Inbox, LayoutDashboard, LogOut, Menu, Radar, Receipt, SlidersHorizontal, Star, User, Wrench, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import {
   isPanelPathAllowed,
@@ -33,9 +33,13 @@ function navForRole(role: AccountRole, copy: DashboardCopy): NavItem[] {
   ];
   if (role === "professional") {
     nav.push(
+      { label: copy.nav.opportunities, href: "/panel/oportunidades", icon: <Radar size={18} /> },
+      { label: copy.nav.balance, href: "/panel/saldo", icon: <Coins size={18} /> },
+      { label: copy.nav.preferences, href: "/panel/preferencias", icon: <SlidersHorizontal size={18} /> },
       { label: copy.nav.requests, href: "/panel/solicitudes", icon: <Inbox size={18} /> },
       { label: copy.nav.profile, href: "/panel/perfil", icon: <User size={18} /> },
       { label: copy.nav.services, href: "/panel/servicios", icon: <Wrench size={18} /> },
+      { label: "Regi Works", href: "/regi-works", icon: <BriefcaseBusiness size={18} /> },
       { label: copy.nav.reviews, href: "/panel/resenas", icon: <Star size={18} /> },
     );
   }

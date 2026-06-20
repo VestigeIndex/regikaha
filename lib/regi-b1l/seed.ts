@@ -37,8 +37,8 @@ export const b1lSeed: B1LData = {
     { id: "lea-3", name: "Giulia Rossi", service: "Roof repair", city: "Milano", country: "IT", phone: "+39 333 221 9070", email: "giulia@example.com", status: "quoted", source: "regikaha", createdAt: now },
   ],
   documents: [
-    { id: "doc-1", type: "quote", number: "PRE-2026-014", title: "Reforma integral de cocina", clientId: "cli-1", projectId: "pro-1", status: "issued", amount: 18634, verificationCode: "RB1L-014-A8D2", createdAt: now },
-    { id: "doc-2", type: "certificate", number: "CER-2026-003", title: "Certificado de instalación eléctrica", clientId: "cli-3", projectId: "pro-3", status: "signed", verificationCode: "RB1L-003-C7F1", createdAt: now },
+    { id: "doc-1", type: "quote", number: "PRE-2026-014", title: "Reforma integral de cocina", clientId: "cli-1", projectId: "pro-1", status: "issued", amount: 18634, verificationCode: "RW-014-A8D2", createdAt: now },
+    { id: "doc-2", type: "certificate", number: "CER-2026-003", title: "Certificado de instalación eléctrica", clientId: "cli-3", projectId: "pro-3", status: "signed", verificationCode: "RW-003-C7F1", createdAt: now },
   ],
   team: [
     { id: "team-1", name: "Álvaro Rivera", role: "Project manager", phone: "+34 610 245 890", email: "alvaro@rivera.example", active: true },

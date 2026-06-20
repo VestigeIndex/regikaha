@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n/context";
 import type { Locale } from "@/lib/i18n/config";
+import { safeInternalPath } from "@/lib/accounts";
 
 declare global {
   interface Window {
@@ -94,16 +95,17 @@ export function GoogleConnectButton({ clientId, redirectTo = "/panel" }: GoogleC
             const res = await fetch("/api/auth/google", {
               method: "POST",
               headers: { "content-type": "application/json" },
+              credentials: "same-origin",
               body: JSON.stringify({ credential }),
             });
             const data = await res.json().catch(() => ({}));
             if (!res.ok) {
-              setError(data.error || copy.connect);
+              setError(copy.connect);
               return;
             }
             window.location.href = data.professional?.slug
               ? `/profesionales/${data.professional.slug}`
-              : redirectTo;
+              : safeInternalPath(redirectTo, "/panel");
           },
         });
         targetRef.current.innerHTML = "";

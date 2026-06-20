@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { CheckCircle2, UserPlus } from "lucide-react";
 import { europeanCountryOptions } from "@/lib/market";
 import { panelPathForRole, type AccountRole } from "@/lib/accounts";
@@ -11,7 +10,6 @@ import { accountRegisterDictionaries } from "@/lib/i18n/account-register";
 import { detectMarketCountry } from "@/lib/market-country";
 
 export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "professional" | "admin"> }) {
-  const router = useRouter();
   const { locale } = useI18n();
   const dictionary = accountRegisterDictionaries[locale];
   const copy = dictionary.roles[role];
@@ -44,6 +42,7 @@ export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "prof
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "content-type": "application/json" },
+        credentials: "same-origin",
         body: JSON.stringify({
           ...Object.fromEntries(form.entries()),
           plan: params.get("plan") === "europa_pro" ? "europa_pro" : "autonomo_nacional",
@@ -54,10 +53,7 @@ export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "prof
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || dictionary.unable);
       setDone(true);
-      setTimeout(() => {
-        router.push(data.redirectTo || panelPathForRole(role));
-        router.refresh();
-      }, 450);
+      window.location.assign(data.redirectTo || panelPathForRole(role));
     } catch (err) {
       setError(err instanceof Error ? err.message : dictionary.unable);
     } finally {

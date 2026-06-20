@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function ConfirmSubscriptionPage() {
   return (
     <section className="min-h-screen bg-canvas px-3 py-4 sm:px-5 sm:py-8 lg:px-8">
-      <Suspense fallback={<div className="card mx-auto max-w-4xl p-10 text-center text-muted">Preparando contrato seguro...</div>}>
+      <Suspense fallback={<div className="card mx-auto h-40 max-w-4xl animate-pulse bg-white" />}>
         <SubscriptionContractModal />
       </Suspense>
     </section>

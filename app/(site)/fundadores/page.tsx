@@ -19,7 +19,7 @@ const benefits = [
   `${site.founderFreeMonths} meses a 0 € en el plan profesional elegido`,
   "Insignia de fundador y antigüedad desde el inicio",
   "Perfil, servicios, portfolio y zonas de trabajo conservados",
-  "Solicitudes directas sin comisiones por lead",
+  "Saldo promocional para desbloquear los primeros contactos",
   "Ranking por relevancia y mérito, nunca por pagar más",
 ];
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n/context";
+import { useDirectTranslation } from "@/lib/i18n/useDirectTranslation";
 
 type FounderStatus = {
   limit: number;
@@ -13,6 +14,7 @@ type FounderStatus = {
 
 export function FounderAvailability({ compact = false }: { compact?: boolean }) {
   const { locale } = useI18n();
+  const { translate } = useDirectTranslation();
   const [status, setStatus] = useState<FounderStatus | null>(null);
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export function FounderAvailability({ compact = false }: { compact?: boolean }) 
     return () => { cancelled = true; };
   }, []);
 
-  if (!status) return <span className="text-sm text-muted">Consultando plazas reales...</span>;
+  if (!status) return <span className="text-sm text-muted">{translate("Consultando plazas reales...")}</span>;
   const percent = Math.min(100, Math.round((status.claimed / status.limit) * 100));
   const availableLabel = ({
     es: `${status.remaining} de ${status.limit} plazas disponibles`, fr: `${status.remaining} places disponibles sur ${status.limit}`,
@@ -47,7 +49,7 @@ export function FounderAvailability({ compact = false }: { compact?: boolean }) 
   if (compact) {
     return (
       <span className="text-sm font-semibold text-forest-800">
-        {status.available ? availableLabel : "Plazas fundador agotadas"}
+        {status.available ? availableLabel : translate("Plazas fundador agotadas")}
       </span>
     );
   }

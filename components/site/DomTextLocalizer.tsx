@@ -6,6 +6,7 @@ import { dictionaries } from "@/lib/i18n/dictionaries";
 import { domTextDictionaries } from "@/lib/i18n/dom.generated";
 import { releaseTextDictionaries } from "@/lib/i18n/release";
 import { subscriptionTextDictionaries } from "@/lib/i18n/subscription";
+import { commercialTextDictionaries } from "@/lib/i18n/commercial";
 import { marketsDictionaries } from "@/lib/i18n/markets";
 import { type Locale } from "@/lib/i18n/config";
 import { getActiveMarketBySlug } from "@/lib/market";
@@ -156,9 +157,9 @@ export function DomTextLocalizer() {
   const { locale } = useI18n();
 
   useEffect(() => {
-    // Regi B1L owns its ten-language dictionary and document direction.
-    if (window.location.pathname.startsWith("/regi-b1l")) return;
-    const dictionary = { ...domTextDictionaries[locale], ...releaseTextDictionaries[locale], ...subscriptionTextDictionaries[locale] };
+    // Regi Works owns its product dictionary and document direction.
+    if (window.location.pathname.startsWith("/regi-b1l") || window.location.pathname.startsWith("/regi-works")) return;
+    const dictionary = { ...domTextDictionaries[locale], ...releaseTextDictionaries[locale], ...subscriptionTextDictionaries[locale], ...commercialTextDictionaries[locale] };
     localizeDocumentMetadata(locale, dictionary);
     if (locale === "es") return;
     localizeNode(document, dictionary);

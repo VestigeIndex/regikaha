@@ -7,7 +7,7 @@ import Link from "next/link";
 import {
   ArrowLeft, Bell, BriefcaseBusiness, Building2, Calculator, CalendarClock, Check, ChevronRight,
   CircleGauge, ClipboardList, CloudOff, Download, ExternalLink, FileCheck2, FileText, FolderKanban,
-  HardHat, Info, Languages, MapPinned, Menu, MessageSquareText, PackageSearch, Phone, Plus, ReceiptText,
+  HardHat, Images, Info, Languages, MapPin, MapPinned, Menu, MessageSquareText, PackageSearch, Phone, Plus, ReceiptText,
   Search, Settings, ShieldCheck, Trash2, UserPlus, Users, UsersRound, WalletCards, X,
 } from "lucide-react";
 import { b1lDictionaries, b1lLanguageNames, detectB1LLocale, type B1LDictionary, type B1LKey } from "@/lib/regi-b1l/i18n";
@@ -118,11 +118,27 @@ function SignatureDialog({ t, quote, close, onSave }: { t: B1LDictionary; quote:
 
 export function RegiB1LApp() {
   const { data, update, reset, hydrated, saveState } = useB1LStore();
-  const [tab, setTab] = useState<B1LTab>("dashboard"); const [locale, setLocale] = useState<B1LLocale>("es"); const [modal, setModal] = useState<"client" | "project" | "quote" | "menu" | null>(null); const [signQuote, setSignQuote] = useState<Quote | null>(null); const [search, setSearch] = useState(""); const [material, setMaterial] = useState(""); const [materialResult, setMaterialResult] = useState<MaterialResult | null>(null); const [resetArmed, setResetArmed] = useState(false);
+  const [tab, setTab] = useState<B1LTab>("dashboard"); const [locale, setLocale] = useState<B1LLocale>("es"); const [localeReady, setLocaleReady] = useState(false); const [modal, setModal] = useState<"client" | "project" | "quote" | "menu" | null>(null); const [signQuote, setSignQuote] = useState<Quote | null>(null); const [search, setSearch] = useState(""); const [material, setMaterial] = useState(""); const [materialResult, setMaterialResult] = useState<MaterialResult | null>(null); const [resetArmed, setResetArmed] = useState(false); const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const t = b1lDictionaries[locale]; const money = useMemo(() => new Intl.NumberFormat(locale, { style: "currency", currency: data.settings.currency }), [locale, data.settings.currency]); const regionNames = useMemo(() => new Intl.DisplayNames([locale], { type: "region" }), [locale]);
 
-  useEffect(() => { if (!hydrated) return; const stored = window.localStorage.getItem("regikaha:b1l:locale"); const detected = stored && b1lLocales.includes(stored as B1LLocale) ? stored as B1LLocale : detectB1LLocale(); setLocale(detected); }, [hydrated]);
-  useEffect(() => { document.documentElement.dir = locale === "ar" ? "rtl" : "ltr"; document.documentElement.lang = locale; window.localStorage.setItem("regikaha:b1l:locale", locale); }, [locale]);
+  useEffect(() => {
+    if (!hydrated) return;
+    const stored = window.localStorage.getItem("regikaha:b1l:locale");
+    const configured = data.settings.locale;
+    const detected = b1lLocales.includes(configured)
+      ? configured
+      : stored && b1lLocales.includes(stored as B1LLocale)
+        ? stored as B1LLocale
+        : detectB1LLocale();
+    setLocale(detected);
+    setLocaleReady(true);
+  }, [data.settings.locale, hydrated]);
+  useEffect(() => {
+    if (!localeReady) return;
+    document.documentElement.dir = "ltr";
+    document.documentElement.lang = locale;
+    window.localStorage.setItem("regikaha:b1l:locale", locale);
+  }, [locale, localeReady]);
 
   const openTab = (next: B1LTab) => { setTab(next); setModal(null); setSearch(""); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const filtered = <T extends object>(rows: T[]) => search ? rows.filter((row) => JSON.stringify(row).toLowerCase().includes(search.toLowerCase())) : rows;
@@ -131,17 +147,119 @@ export function RegiB1LApp() {
   const pendingQuotes = data.quotes.filter((quote) => quote.status === "draft" || quote.status === "sent").length;
   const openLeads = data.leads.filter((lead) => !["won", "lost"].includes(lead.status)).length;
   const activeProjects = data.projects.filter((project) => project.status === "active").length;
+  const selectedProject = data.projects.find((project) => project.id === selectedProjectId) || data.projects[0];
+  const selectedClient = selectedProject ? data.clients.find((client) => client.id === selectedProject.clientId) : null;
+  const selectedQuote = selectedProject ? data.quotes.find((quote) => quote.projectId === selectedProject.id) : null;
 
   function saveLocale(next: B1LLocale) { setLocale(next); update((current) => ({ ...current, settings: { ...current.settings, locale: next } })); }
   function deleteRow(collection: "clients" | "projects" | "quotes" | "team", id: string) { update((current) => ({ ...current, [collection]: current[collection].filter((entry) => entry.id !== id) })); }
   async function addPhotos(projectId: string, files: FileList | null) { if (!files) return; const project = data.projects.find((entry) => entry.id === projectId); const remaining = 5 - (project?.photos.length ?? 0); const additions = await Promise.all([...files].slice(0, remaining).map(async (file) => ({ id: newId("photo"), name: file.name, dataUrl: await compressImage(file), createdAt: new Date().toISOString() }))); update((current) => ({ ...current, projects: current.projects.map((entry) => entry.id === projectId ? { ...entry, photos: [...entry.photos, ...additions] } : entry) })); }
   function convertLead(id: string) { const lead = data.leads.find((entry) => entry.id === id); if (!lead) return; const client: Client = { id: newId("cli"), name: lead.name, phone: lead.phone, email: lead.email, address: "", city: lead.city, country: lead.country, preferredLanguage: locale, notes: lead.service, createdAt: new Date().toISOString() }; update((current) => ({ ...current, clients: [client, ...current.clients], leads: current.leads.map((entry) => entry.id === id ? { ...entry, status: "won" } : entry) })); openTab("clients"); }
 
-  function renderDashboard() { const pipeline = [[t["status.new"], data.leads.filter((x) => x.status === "new").length], [t["status.contacted"], data.leads.filter((x) => x.status === "contacted").length], [t["status.quoted"], data.leads.filter((x) => x.status === "quoted").length], [t["status.won"], data.leads.filter((x) => x.status === "won").length], [t["status.lost"], data.leads.filter((x) => x.status === "lost").length]] as const; return <><PageHead title={t["dashboard.title"]} subtitle={`${t["dashboard.greeting"]}, ${data.settings.companyName}`} action={<button className={styles.button} onClick={() => setModal("quote")}><Plus size={17} /><span>{t["dashboard.newQuote"]}</span></button>} />
-    <div className={styles.kpis}><div className={styles.kpi}><span className={styles.kpiLabel}>{t["dashboard.activeProjects"]}</span><strong className={styles.kpiValue}>{activeProjects}<HardHat className={styles.kpiIcon} size={20} /></strong></div><div className={styles.kpi}><span className={styles.kpiLabel}>{t["dashboard.openLeads"]}</span><strong className={styles.kpiValue}>{openLeads}<MessageSquareText className={styles.kpiIcon} size={20} /></strong></div><div className={styles.kpi}><span className={styles.kpiLabel}>{t["dashboard.pendingQuotes"]}</span><strong className={styles.kpiValue}>{pendingQuotes}<Calculator className={styles.kpiIcon} size={20} /></strong></div><div className={styles.kpi}><span className={styles.kpiLabel}>{t["quotes.total"]}</span><strong className={styles.kpiValue}>{money.format(data.quotes.filter((q) => q.status === "accepted").reduce((sum, q) => sum + quoteTotals(q).total, 0))}<WalletCards className={styles.kpiIcon} size={20} /></strong></div></div>
-    <div className={styles.pipeline}>{pipeline.map(([label, count]) => <div className={styles.pipelineItem} key={label}><span>{label}</span><strong>{count}</strong></div>)}</div>
-    <div className={styles.dashboardGrid}><div className={styles.stack}><section className={styles.panel}><div className={styles.panelHead}><h2>{t["dashboard.recentProjects"]}</h2><button className={styles.iconButton} onClick={() => openTab("projects")} aria-label={t["nav.projects"]}><ChevronRight size={17} /></button></div><TableProjects rows={data.projects.slice(0, 4)} t={t} money={money} clientName={projectClient} /></section><section className={styles.panel}><div className={styles.panelHead}><h2>{t["dashboard.recentQuotes"]}</h2><button className={styles.iconButton} onClick={() => openTab("quotes")} aria-label={t["nav.quotes"]}><ChevronRight size={17} /></button></div><TableQuotes rows={data.quotes.slice(0, 4)} t={t} money={money} clientName={projectClient} /></section></div>
-    <aside className={styles.stack}><section className={styles.panel}><div className={styles.panelHead}><h2>{t["dashboard.alerts"]}</h2><Bell size={16} /></div><div className={styles.panelBody}><div className={styles.alerts}><div className={styles.alert}><div className={styles.alertIcon}><CalendarClock size={16} /></div><p>{t["dashboard.quoteAlert"]}<br /><small>{data.quotes.find((q) => q.status === "sent")?.number}</small></p></div><div className={styles.alert}><div className={styles.alertIcon}><HardHat size={16} /></div><p>{t["dashboard.projectAlert"]}<br /><small>{data.projects.find((p) => p.status === "active")?.title}</small></p></div></div></div></section><section className={styles.panel}><div className={styles.panelHead}><h2>{t["dashboard.quickActions"]}</h2></div><div className={styles.panelBody}><div className={styles.quick}><button className={styles.buttonSecondary} onClick={() => setModal("client")}><UserPlus size={18} />{t["dashboard.newClient"]}</button><button className={styles.buttonSecondary} onClick={() => setModal("project")}><FolderKanban size={18} />{t["projects.new"]}</button><button className={styles.buttonSecondary} onClick={() => openTab("materials")}><PackageSearch size={18} />{t["nav.materials"]}</button><button className={styles.buttonSecondary} onClick={() => openTab("documents")}><FileText size={18} />{t["nav.documents"]}</button></div></div></section><div className={styles.notice}><CloudOff size={17} />{t["dashboard.localNotice"]}</div></aside></div></>; }
+  function renderDashboard() {
+    const stages: Array<{ status: ProjectStatus; icon: typeof HardHat }> = [
+      { status: "planning", icon: ClipboardList },
+      { status: "active", icon: HardHat },
+      { status: "completed", icon: FileCheck2 },
+    ];
+    return (
+      <>
+        <PageHead title="Regi Works" subtitle={`${t["dashboard.greeting"]}, ${data.settings.companyName}`} action={<button className={styles.button} onClick={() => setModal("quote")}><Plus size={17} /><span>{t["dashboard.newQuote"]}</span></button>} />
+        <div className={styles.worksStrip}>
+          <div><span>{t["dashboard.activeProjects"]}</span><strong>{activeProjects}</strong></div>
+          <div><span>{t["dashboard.openLeads"]}</span><strong>{openLeads}</strong></div>
+          <div><span>{t["dashboard.pendingQuotes"]}</span><strong>{pendingQuotes}</strong></div>
+          <div><span>{t["quotes.total"]}</span><strong>{money.format(data.quotes.filter((quote) => quote.status === "accepted").reduce((sum, quote) => sum + quoteTotals(quote).total, 0))}</strong></div>
+        </div>
+        <div className={styles.workStageRail}>
+          {stages.map(({ status, icon: Icon }) => (
+            <button key={status} type="button" className={selectedProject?.status === status ? styles.workStageActive : ""} onClick={() => {
+              if (!selectedProject) return;
+              update((current) => ({ ...current, projects: current.projects.map((project) => project.id === selectedProject.id ? { ...project, status } : project) }));
+            }}>
+              <Icon size={18} /><span>{t[statusKey(status)]}</span><strong>{data.projects.filter((project) => project.status === status).length}</strong>
+            </button>
+          ))}
+        </div>
+        <div className={styles.workBoard}>
+          <aside className={styles.workQueue}>
+            <div className={styles.workQueueHead}><div><span>Regi Works</span><h2>{t["dashboard.recentProjects"]}</h2></div><button className={styles.iconButton} onClick={() => setModal("project")} aria-label={t["projects.new"]}><Plus size={17} /></button></div>
+            <div className={styles.workQueueList}>
+              {data.projects.slice(0, 8).map((project) => (
+                <button key={project.id} type="button" onClick={() => setSelectedProjectId(project.id)} className={selectedProject?.id === project.id ? styles.workQueueSelected : ""}>
+                  <span className={styles.workQueueStatus} data-status={project.status} />
+                  <span><strong>{project.title}</strong><small>{project.city} · {project.trade}</small><small>{project.dueDate}</small></span>
+                  <ChevronRight size={17} />
+                </button>
+              ))}
+            </div>
+            <button className={styles.workQueueMore} onClick={() => openTab("projects")}>{t["nav.projects"]}<ChevronRight size={16} /></button>
+          </aside>
+          <section className={styles.workCanvas}>
+            {selectedProject ? (
+              <>
+                <header className={styles.workCanvasHead}>
+                  <div><span>{t[statusKey(selectedProject.status)]}</span><h2>{selectedProject.title}</h2><p>{selectedClient?.name || "-"} · {selectedProject.city}</p></div>
+                  <select className={styles.select} value={selectedProject.status} onChange={(event) => update((current) => ({ ...current, projects: current.projects.map((project) => project.id === selectedProject.id ? { ...project, status: event.target.value as ProjectStatus } : project) }))}>
+                    {(["planning", "active", "paused", "completed"] as ProjectStatus[]).map((status) => <option key={status} value={status}>{t[statusKey(status)]}</option>)}
+                  </select>
+                </header>
+                <div className={styles.workFacts}>
+                  <span><MapPin size={15} />{selectedProject.address || selectedProject.city}</span>
+                  <span><BriefcaseBusiness size={15} />{selectedProject.trade}</span>
+                  <span><WalletCards size={15} />{money.format(selectedProject.budget)}</span>
+                  <span><CalendarClock size={15} />{selectedProject.dueDate}</span>
+                </div>
+                <nav className={styles.workTabs}>
+                  <button onClick={() => openTab("clients")}><Users size={16} />{t["quotes.client"]}</button>
+                  <button onClick={() => openTab("projects")}><Images size={16} />{t["projects.addPhotos"]}</button>
+                  <button onClick={() => openTab("projects")}><CalendarClock size={16} />{t["projects.start"]}</button>
+                  <button onClick={() => openTab("quotes")}><ReceiptText size={16} />{t["nav.quotes"]}</button>
+                  <button onClick={() => openTab("materials")}><PackageSearch size={16} />{t["nav.materials"]}</button>
+                  <button onClick={() => openTab("documents")}><FileText size={16} />{t["nav.documents"]}</button>
+                </nav>
+                <div className={styles.workDetail}>
+                  <div className={styles.workClient}>
+                    <h3>{t["quotes.client"]}</h3>
+                    <strong>{selectedClient?.name || "-"}</strong>
+                    <a href={`tel:${selectedClient?.phone || ""}`}><Phone size={15} />{selectedClient?.phone || "-"}</a>
+                    <a href={`mailto:${selectedClient?.email || ""}`}><MessageSquareText size={15} />{selectedClient?.email || "-"}</a>
+                    <p>{selectedProject.notes || t["common.notes"]}</p>
+                  </div>
+                  <div className={styles.workNext}>
+                    <h3>{t["dashboard.alerts"]}</h3>
+                    <div><CalendarClock size={22} /><span><small>{t["projects.due"]}</small><strong>{selectedProject.dueDate}</strong></span></div>
+                    <div><ReceiptText size={22} /><span><small>{t["nav.quotes"]}</small><strong>{selectedQuote?.number || t["dashboard.newQuote"]}</strong></span></div>
+                    <button className={styles.button} onClick={() => setModal("quote")}><Plus size={16} />{t["dashboard.newQuote"]}</button>
+                  </div>
+                </div>
+              </>
+            ) : <div className={styles.empty}>{t["projects.subtitle"]}</div>}
+          </section>
+          <aside className={styles.workUtility}>
+            <section>
+              <div className={styles.workUtilityHead}><h2>{t["nav.leads"]}</h2><button onClick={() => openTab("leads")}>{t["common.actions"]}<ChevronRight size={14} /></button></div>
+              {data.leads.slice(0, 4).map((lead) => (
+                <button className={styles.opportunityRow} key={lead.id} onClick={() => openTab("leads")}>
+                  <span><strong>{lead.city}</strong><small>{lead.service}</small></span><Badge value={lead.status} t={t} />
+                </button>
+              ))}
+            </section>
+            <section>
+              <div className={styles.workUtilityHead}><h2>{t["dashboard.quickActions"]}</h2></div>
+              <div className={styles.workQuick}>
+                <button onClick={() => setModal("client")}><UserPlus size={18} />{t["dashboard.newClient"]}</button>
+                <button onClick={() => setModal("project")}><FolderKanban size={18} />{t["projects.new"]}</button>
+                <button onClick={() => openTab("materials")}><PackageSearch size={18} />{t["nav.materials"]}</button>
+                <button onClick={() => openTab("documents")}><FileText size={18} />{t["nav.documents"]}</button>
+              </div>
+            </section>
+            <div className={styles.worksPrinciple}><ShieldCheck size={20} /><p>{t["plans.billingNotice"]}</p></div>
+          </aside>
+        </div>
+      </>
+    );
+  }
 
   function renderLeads() { return <><PageHead title={t["leads.title"]} subtitle={t["leads.subtitle"]} /><div className={styles.toolbar}><SearchBox value={search} onChange={setSearch} label={t["common.search"]} /></div><section className={styles.panel}><div className={styles.tableWrap}><table className={styles.table}><thead><tr><th>{t["common.name"]}</th><th>{t["leads.service"]}</th><th>{t["common.city"]}</th><th>{t["leads.source"]}</th><th>{t["common.status"]}</th><th>{t["common.actions"]}</th></tr></thead><tbody>{filtered(data.leads).map((lead) => <tr key={lead.id}><td data-label={t["common.name"]}><div className={styles.rowTitle}>{lead.name}</div><div className={styles.rowMeta}>{lead.email}</div></td><td data-label={t["leads.service"]}>{lead.service}</td><td data-label={t["common.city"]}>{lead.city}, {regionNames.of(lead.country)}</td><td data-label={t["leads.source"]}>{lead.source === "regikaha" ? "RegiKaha" : t["common.add"]}</td><td data-label={t["common.status"]}><select className={styles.select} value={lead.status} onChange={(e) => update((current) => ({ ...current, leads: current.leads.map((entry) => entry.id === lead.id ? { ...entry, status: e.target.value as LeadStatus } : entry) }))}>{(["new","contacted","quoted","won","lost"] as LeadStatus[]).map((status) => <option key={status} value={status}>{t[statusKey(status)]}</option>)}</select></td><td data-label={t["common.actions"]}><div className={styles.rowActions}><a className={styles.iconButton} href={`tel:${lead.phone}`} aria-label={t["common.call"]} title={t["common.call"]}><Phone size={15} /></a>{lead.status !== "won" && <button className={styles.buttonSecondary} onClick={() => convertLead(lead.id)}><UserPlus size={15} />{t["leads.convert"]}</button>}</div></td></tr>)}</tbody></table></div></section></>; }
 
@@ -161,16 +279,16 @@ export function RegiB1LApp() {
 
   function renderPlans() { const select = (plan: "local"|"europe") => update((current) => ({ ...current, settings: { ...current.settings, plan } })); return <><PageHead title={t["plans.title"]} subtitle={t["plans.subtitle"]} /><div className={styles.plans}>{(["local","europe"] as const).map((plan) => { const price = plan === "local" ? 19.95 : 49.95; const current = data.settings.plan === plan; return <article key={plan} className={`${styles.plan} ${current ? styles.planCurrent : ""}`}><h2>{t[`plans.${plan}`]}</h2><p>{t[`plans.${plan}Desc`]}</p><div className={styles.price}>{money.format(price)} <small>/ {t["plans.month"]}</small></div><div className={styles.annual}>{money.format(price * 12 * .9)} / {t["plans.year"]} · {t["plans.annualSaving"]}</div><button className={current ? styles.buttonSecondary : styles.button} disabled={current} onClick={() => select(plan)}>{current ? <Check size={16} /> : <WalletCards size={16} />}{current ? t["plans.current"] : t["plans.choose"]}</button></article>; })}</div><br /><div className={styles.notice}><ShieldCheck size={17} />{t["plans.billingNotice"]}</div></>; }
 
-  function renderSettings() { function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); const f = new FormData(event.currentTarget); update((current) => ({ ...current, settings: { ...current.settings, companyName: String(f.get("companyName")), taxId: String(f.get("taxId")), email: String(f.get("email")), phone: String(f.get("phone")), address: String(f.get("address")), city: String(f.get("city")), country: f.get("country") as CountryCode, currency: f.get("currency") as "EUR"|"CHF"|"GBP", defaultTaxRate: Number(f.get("tax")) } })); } function exportData() { const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })); link.download = "regi-b1l-backup.json"; link.click(); URL.revokeObjectURL(link.href); } return <><PageHead title={t["settings.title"]} subtitle={t["settings.subtitle"]} /><div className={styles.settingsGrid}><section className={styles.panel}><div className={styles.panelHead}><h2>{t["settings.company"]}</h2><Building2 size={16} /></div><div className={styles.panelBody}><form onSubmit={submit}><div className={styles.formGrid}><Field label={t["settings.company"]}><input className={styles.field} name="companyName" defaultValue={data.settings.companyName} /></Field><Field label={t["settings.taxId"]}><input className={styles.field} name="taxId" defaultValue={data.settings.taxId} /></Field><Field label={t["common.email"]}><input className={styles.field} name="email" type="email" defaultValue={data.settings.email} /></Field><Field label={t["common.phone"]}><input className={styles.field} name="phone" defaultValue={data.settings.phone} /></Field><Field label={t["common.address"]}><input className={styles.field} name="address" defaultValue={data.settings.address} /></Field><Field label={t["common.city"]}><input className={styles.field} name="city" defaultValue={data.settings.city} /></Field><Field label={t["common.country"]}><CountrySelect name="country" locale={locale} defaultValue={data.settings.country} /></Field><Field label={t["settings.currency"]}><select className={styles.select} name="currency" defaultValue={data.settings.currency}><option>EUR</option><option>CHF</option><option>GBP</option></select></Field><Field label={t["settings.defaultTax"]}><input className={styles.field} name="tax" type="number" defaultValue={data.settings.defaultTaxRate} /></Field></div><div className={styles.formActions}><button className={styles.button}><Check size={16} />{t["common.save"]}</button></div></form></div></section><section className={styles.stack}><section className={styles.panel}><div className={styles.panelHead}><h2>{t["settings.data"]}</h2><ShieldCheck size={16} /></div><div className={styles.panelBody}><div className={styles.quoteEditor}><p className={styles.notice}><CloudOff size={17} />{t["settings.privacyNotice"]}</p><button className={styles.buttonSecondary} onClick={exportData}><Download size={16} />{t["settings.export"]}</button><button className={`${styles.buttonSecondary} ${styles.danger}`} onClick={() => { if (resetArmed) { reset(); setResetArmed(false); } else { setResetArmed(true); window.setTimeout(() => setResetArmed(false), 4000); } }}><Trash2 size={16} />{resetArmed ? t["common.confirmReset"] : t["common.resetData"]}</button></div></div></section></section></div></>; }
+  function renderSettings() { function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); const f = new FormData(event.currentTarget); update((current) => ({ ...current, settings: { ...current.settings, companyName: String(f.get("companyName")), taxId: String(f.get("taxId")), email: String(f.get("email")), phone: String(f.get("phone")), address: String(f.get("address")), city: String(f.get("city")), country: f.get("country") as CountryCode, currency: f.get("currency") as "EUR"|"CHF"|"GBP", defaultTaxRate: Number(f.get("tax")) } })); } function exportData() { const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })); link.download = "regi-works-backup.json"; link.click(); URL.revokeObjectURL(link.href); } return <><PageHead title={t["settings.title"]} subtitle={t["settings.subtitle"]} /><div className={styles.settingsGrid}><section className={styles.panel}><div className={styles.panelHead}><h2>{t["settings.company"]}</h2><Building2 size={16} /></div><div className={styles.panelBody}><form onSubmit={submit}><div className={styles.formGrid}><Field label={t["settings.company"]}><input className={styles.field} name="companyName" defaultValue={data.settings.companyName} /></Field><Field label={t["settings.taxId"]}><input className={styles.field} name="taxId" defaultValue={data.settings.taxId} /></Field><Field label={t["common.email"]}><input className={styles.field} name="email" type="email" defaultValue={data.settings.email} /></Field><Field label={t["common.phone"]}><input className={styles.field} name="phone" defaultValue={data.settings.phone} /></Field><Field label={t["common.address"]}><input className={styles.field} name="address" defaultValue={data.settings.address} /></Field><Field label={t["common.city"]}><input className={styles.field} name="city" defaultValue={data.settings.city} /></Field><Field label={t["common.country"]}><CountrySelect name="country" locale={locale} defaultValue={data.settings.country} /></Field><Field label={t["settings.currency"]}><select className={styles.select} name="currency" defaultValue={data.settings.currency}><option>EUR</option><option>CHF</option><option>GBP</option></select></Field><Field label={t["settings.defaultTax"]}><input className={styles.field} name="tax" type="number" defaultValue={data.settings.defaultTaxRate} /></Field></div><div className={styles.formActions}><button className={styles.button}><Check size={16} />{t["common.save"]}</button></div></form></div></section><section className={styles.stack}><section className={styles.panel}><div className={styles.panelHead}><h2>{t["settings.data"]}</h2><ShieldCheck size={16} /></div><div className={styles.panelBody}><div className={styles.quoteEditor}><p className={styles.notice}><CloudOff size={17} />{t["settings.privacyNotice"]}</p><button className={styles.buttonSecondary} onClick={exportData}><Download size={16} />{t["settings.export"]}</button><button className={`${styles.buttonSecondary} ${styles.danger}`} onClick={() => { if (resetArmed) { reset(); setResetArmed(false); } else { setResetArmed(true); window.setTimeout(() => setResetArmed(false), 4000); } }}><Trash2 size={16} />{resetArmed ? t["common.confirmReset"] : t["common.resetData"]}</button></div></div></section></section></div></>; }
 
   const views: Record<B1LTab, () => React.ReactNode> = { dashboard: renderDashboard, leads: renderLeads, clients: renderClients, projects: renderProjects, quotes: renderQuotes, documents: renderDocuments, materials: renderMaterials, providers: renderProviders, team: renderTeam, plans: renderPlans, settings: renderSettings };
   if (!hydrated) return <div className={styles.app} />;
-  return <div className={styles.app}><PwaRegister /><div className={styles.shell}><aside className={styles.sidebar}><Link href="/" className={styles.brand}><span className={styles.brandMark}>B1</span><span><strong>Regi B1L</strong><span>{t["app.subtitle"]}</span></span></Link><nav className={styles.nav}>{navItems.map(({ id, icon: Icon }) => <button key={id} className={`${styles.navButton} ${tab === id ? styles.navActive : ""}`} onClick={() => openTab(id)}><Icon size={17} />{t[navKey(id)]}</button>)}</nav><div className={styles.sidebarFoot}><Link className={styles.backLink} href="/"><ArrowLeft size={15} />{t["app.back"]}</Link></div></aside><main className={styles.main}><header className={styles.mobileTop}><button className={styles.mobileBrand} onClick={() => setModal("menu")} aria-label={t["app.subtitle"]}><span className={styles.brandMark}>B1</span><Menu size={19} /></button><LocaleSelect locale={locale} onChange={saveLocale} /></header><header className={styles.topbar}><div className={styles.topTitle}>{t[navKey(tab)]}</div><div className={styles.topActions}><span className={styles.saveState}>{saveState === "saving" ? <CloudOff size={14} /> : <Check size={14} />}{saveState === "saving" ? t["app.saving"] : saveState === "saved" ? t["app.saved"] : t["app.local"]}</span><LocaleSelect locale={locale} onChange={saveLocale} /></div></header><div className={styles.content}>{views[tab]()}</div></main></div>
+  return <div className={styles.app}><PwaRegister /><div className={styles.shell}><aside className={styles.sidebar}><Link href="/" className={styles.brand}><span className={styles.brandMark}>W</span><span><strong>Regi Works</strong><span>by RegiKaha</span></span></Link><nav className={styles.nav}>{navItems.map(({ id, icon: Icon }) => <button key={id} className={`${styles.navButton} ${tab === id ? styles.navActive : ""}`} onClick={() => openTab(id)}><Icon size={17} />{t[navKey(id)]}</button>)}</nav><div className={styles.sidebarFoot}><Link className={styles.backLink} href="/"><ArrowLeft size={15} />{t["app.back"]}</Link></div></aside><main className={styles.main}><header className={styles.mobileTop}><button className={styles.mobileBrand} onClick={() => setModal("menu")} aria-label={t["app.subtitle"]}><span className={styles.mobileWordmark}>REGI <b>WORKS</b></span><Menu size={19} /></button><LocaleSelect locale={locale} onChange={saveLocale} /></header><header className={styles.topbar}><div className={styles.topTitle}><strong>REGI WORKS</strong><span>{t[navKey(tab)]}</span></div><div className={styles.topActions}><span className={styles.saveState}>{saveState === "saving" ? <CloudOff size={14} /> : <Check size={14} />}{saveState === "saving" ? t["app.saving"] : saveState === "saved" ? t["app.saved"] : t["app.local"]}</span><LocaleSelect locale={locale} onChange={saveLocale} /></div></header><div className={styles.content}>{views[tab]()}</div></main></div>
   <nav className={styles.bottomNav}>{(["dashboard","projects","quotes","materials","settings"] as B1LTab[]).map((id) => { const Item = navItems.find((item) => item.id === id)!; return <button key={id} className={tab === id ? styles.bottomActive : ""} onClick={() => openTab(id)}><Item.icon />{t[navKey(id)]}</button>; })}</nav>
   {modal === "client" && <ClientDialog t={t} locale={locale} close={() => setModal(null)} onCreate={(client) => { update((current) => ({ ...current, clients: [client, ...current.clients] })); setModal(null); }} />}
   {modal === "project" && <ProjectDialog t={t} locale={locale} clients={data.clients} close={() => setModal(null)} onCreate={(project) => { update((current) => ({ ...current, projects: [project, ...current.projects] })); setModal(null); }} />}
   {modal === "quote" && <QuoteDialog t={t} locale={locale} data={data} close={() => setModal(null)} onCreate={(quote) => { update((current) => ({ ...current, quotes: [quote, ...current.quotes] })); setModal(null); }} />}
-  {modal === "menu" && <Dialog title="Regi B1L" closeLabel={t["common.close"]} onClose={() => setModal(null)}><nav className={styles.nav}>{navItems.map(({ id, icon: Icon }) => <button key={id} className={`${styles.navButton} ${tab === id ? styles.navActive : ""}`} style={{ color: "#17382c" }} onClick={() => openTab(id)}><Icon size={17} />{t[navKey(id)]}</button>)}</nav><Link className={styles.backLink} style={{ color: "#17382c", marginTop: 12 }} href="/"><ArrowLeft size={15} />{t["app.back"]}</Link></Dialog>}
+  {modal === "menu" && <Dialog title="Regi Works" closeLabel={t["common.close"]} onClose={() => setModal(null)}><nav className={styles.nav}>{navItems.map(({ id, icon: Icon }) => <button key={id} className={`${styles.navButton} ${tab === id ? styles.navActive : ""}`} style={{ color: "#17382c" }} onClick={() => openTab(id)}><Icon size={17} />{t[navKey(id)]}</button>)}</nav><Link className={styles.backLink} style={{ color: "#17382c", marginTop: 12 }} href="/"><ArrowLeft size={15} />{t["app.back"]}</Link></Dialog>}
   {signQuote && <SignatureDialog t={t} quote={signQuote} close={() => setSignQuote(null)} onSave={(dataUrl, signer) => { update((current) => ({ ...current, quotes: current.quotes.map((quote) => quote.id === signQuote.id ? { ...quote, status: "accepted", signature: { dataUrl, signer, consent: true, signedAt: new Date().toISOString() }, updatedAt: new Date().toISOString() } : quote) })); setSignQuote(null); }} />}
   </div>;
 }

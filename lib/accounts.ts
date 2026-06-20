@@ -34,6 +34,14 @@ export function panelPathForRole(value: unknown): string {
   return rolePanelPaths[normalizeRole(value)];
 }
 
+export function safeInternalPath(value: unknown, fallback: string): string {
+  const path = String(value || "").trim();
+  if (!path.startsWith("/") || path.startsWith("//") || path.includes("\\") || /[\u0000-\u001f]/.test(path)) {
+    return fallback;
+  }
+  return path;
+}
+
 export const roleBillingPaths: Partial<Record<AccountRole, string>> = {
   professional: "/panel/profesional/facturacion",
   company: "/panel/empresa/facturacion",
@@ -46,7 +54,7 @@ export function isPanelPathAllowed(role: AccountRole, pathname: string): boolean
   const roleRoot = rolePanelPaths[role];
   if (pathname === roleRoot || pathname.startsWith(`${roleRoot}/`)) return true;
   if (role === "professional") {
-    return ["/panel/solicitudes", "/panel/perfil", "/panel/servicios", "/panel/resenas", "/panel/herramientas"]
+    return ["/panel/solicitudes", "/panel/oportunidades", "/panel/saldo", "/panel/preferencias", "/panel/perfil", "/panel/servicios", "/panel/resenas", "/panel/herramientas"]
       .some((path) => pathname === path || pathname.startsWith(`${path}/`));
   }
   if (role === "company" || role === "subcontractor") {

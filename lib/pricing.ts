@@ -40,8 +40,9 @@ export const professionalPlans: ProfessionalPlan[] = [
       "Cobertura en un país",
       "Selección de regiones y ciudades",
       "Portfolio, servicios y reseñas verificadas",
-      "Solicitudes directas sin pago por lead",
+      "Oportunidades compatibles y saldo de contactos transparente",
       "Ranking justo por mérito",
+      "Regi Works para presupuestos, obras y documentos",
     ],
   },
   {
@@ -65,6 +66,7 @@ export const professionalPlans: ProfessionalPlan[] = [
       "Perfil preparado para búsquedas transfronterizas",
       "Prioridad de revisión en verificación",
       "Soporte para expansión de cobertura",
+      "Regi Works con organización multi-mercado",
     ],
   },
 ];

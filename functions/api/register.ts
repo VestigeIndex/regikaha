@@ -1,4 +1,4 @@
-import { privateJson, bad, isEmail, sessionCookie, getSessionUser } from "../../apilib/http";
+import { privateJson, bad, isEmail, sessionCookieHeaders, getSessionUser } from "../../apilib/http";
 import { hashPassword, createSession, newId, slugify } from "../../apilib/auth";
 import { normalizeRole, panelPathForRole } from "../../lib/accounts";
 import { hashContractSnapshot } from "../../lib/legal/hashContract";
@@ -104,7 +104,7 @@ export async function onRequestPost(context: any) {
         redirectTo: billingRedirect(b, role, !!verification),
       },
       201,
-      { "Set-Cookie": sessionCookie(token, maxAge, request) },
+      sessionCookieHeaders(token, maxAge, request),
     );
   }
   if (!publicName) return bad("Falta el nombre comercial");
@@ -133,7 +133,7 @@ export async function onRequestPost(context: any) {
     ingenieria: "Ingeniería / peritación",
     multiservicio: "Empresa multiservicio",
   };
-  const seoTitle = `${publicName} - profesional verificado en ${city || country} | RegiKaha`;
+  const seoTitle = `${publicName} - profesional en ${city || country} | RegiKaha`;
   const seoDescription = String(b.tagline || b.description || "").trim().slice(0, 160);
 
   const stmts = [];
@@ -184,6 +184,6 @@ export async function onRequestPost(context: any) {
       redirectTo: billingRedirect(b, "professional", !!verification),
     },
     201,
-    { "Set-Cookie": sessionCookie(token, maxAge, request) },
+    sessionCookieHeaders(token, maxAge, request),
   );
 }
