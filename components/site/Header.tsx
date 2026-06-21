@@ -19,7 +19,7 @@ const navItems = [
   { key: "pricing", href: "/precios" },
 ] as const;
 
-const navLinkClass = "whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-semibold leading-none text-ink/75 transition hover:bg-forest-500/7 hover:text-forest-800 2xl:px-4";
+const navLinkClass = "whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold leading-none text-ink/75 transition hover:bg-forest-500/7 hover:text-forest-800 2xl:px-3.5";
 
 const roleLabels: Record<string, string> = {
   client: "Panel cliente",
@@ -92,12 +92,12 @@ export function Header() {
         scrolled ? "bg-white/95 shadow-soft backdrop-blur-xl" : "bg-white/90 backdrop-blur-xl",
       )}
     >
-      <div className="container-x flex h-[72px] items-center gap-4">
-        <div className="flex shrink-0 items-center">
-          <Logo />
+      <div className="container-x grid h-[72px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 xl:grid-cols-[190px_minmax(0,1fr)_auto] xl:gap-4">
+        <div className="flex min-w-0 items-center xl:w-[190px]">
+          <Logo className="max-w-[180px]" />
         </div>
 
-        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex" aria-label={t.ui.nav.openMenu}>
+        <nav className="hidden min-w-0 items-center justify-center gap-0.5 xl:flex" aria-label={t.ui.nav.openMenu}>
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} className={navLinkClass}>
               {t.ui.nav[item.key]}
@@ -106,7 +106,7 @@ export function Header() {
           <Link href="/ayuda" className={navLinkClass}>{headerCopy.help}</Link>
         </nav>
 
-        <div className="ml-auto hidden shrink-0 items-center gap-2 xl:flex">
+        <div className="hidden shrink-0 items-center justify-end gap-2 xl:flex">
           <LanguageSwitcher />
           {authenticated ? (
             <div className="relative">
