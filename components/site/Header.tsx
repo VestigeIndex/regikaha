@@ -11,7 +11,6 @@ import { headerDictionaries } from "@/lib/i18n/header";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { key: "search", href: "/buscar" },
   { key: "map", href: "/mapa" },
   { key: "categories", href: "/categorias" },
   { key: "howItWorks", href: "/como-funciona" },
@@ -19,7 +18,7 @@ const navItems = [
   { key: "pricing", href: "/precios" },
 ] as const;
 
-const navLinkClass = "whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold leading-none text-ink/75 transition hover:bg-forest-500/7 hover:text-forest-800";
+const navLinkClass = "whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-semibold leading-none text-ink/75 transition hover:bg-forest-500/7 hover:text-forest-800";
 
 const roleLabels: Record<string, string> = {
   client: "Panel cliente",
@@ -92,10 +91,10 @@ export function Header() {
         scrolled ? "bg-white/95 shadow-soft backdrop-blur-xl" : "bg-white/90 backdrop-blur-xl",
       )}
     >
-      <div className="container-x flex h-[72px] items-center gap-5">
-        <Logo className="w-[160px]" />
+      <div className="container-x flex h-[72px] items-center gap-4">
+        <Logo />
 
-        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 2xl:flex" aria-label={t.ui.nav.openMenu}>
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 overflow-hidden xl:flex">
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} className={navLinkClass}>
               {t.ui.nav[item.key]}
@@ -104,7 +103,14 @@ export function Header() {
           <Link href="/ayuda" className={navLinkClass}>{headerCopy.help}</Link>
         </nav>
 
-        <div className="ml-auto hidden shrink-0 items-center justify-end gap-2 2xl:flex">
+        <div className="ml-auto hidden shrink-0 items-center justify-end gap-1.5 xl:flex">
+          <Link
+            href="/buscar"
+            aria-label={t.ui.nav.search}
+            className="grid h-11 w-11 place-items-center rounded-full text-ink/75 transition hover:bg-forest-500/7 hover:text-forest-800"
+          >
+            <Search size={18} />
+          </Link>
           <LanguageSwitcher />
           {authenticated ? (
             <div className="relative">
@@ -139,16 +145,16 @@ export function Header() {
               )}
             </div>
           ) : (
-            <Link href="/conectar" className="btn btn-ghost h-11 whitespace-nowrap px-4">
+            <Link href="/conectar" className="btn btn-ghost h-11 whitespace-nowrap px-3.5">
               <LogIn size={16} /> {headerCopy.signIn}
             </Link>
           )}
-          <Link href="/publicar-proyecto" className="btn btn-primary h-11 whitespace-nowrap px-5 shadow-sm">
-            {t.ui.nav.publishProjectFree}
+          <Link href="/publicar-proyecto" className="btn btn-primary h-11 whitespace-nowrap px-4 shadow-sm">
+            {t.ui.nav.publishProject}
           </Link>
         </div>
 
-        <div className="ml-auto flex items-center gap-2 2xl:hidden">
+        <div className="ml-auto flex items-center gap-2 xl:hidden">
           <LanguageSwitcher compact />
           <button
             type="button"
@@ -163,7 +169,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="2xl:hidden absolute inset-x-0 top-[72px] z-40 h-[calc(100dvh-72px)] bg-white border-t hairline overflow-y-auto animate-fade-in">
+        <div className="xl:hidden absolute inset-x-0 top-[72px] z-40 h-[calc(100dvh-72px)] bg-white border-t hairline overflow-y-auto animate-fade-in">
           <div className="container-x py-5 flex flex-col gap-1">
             {navItems.map((item) => (
               <Link
