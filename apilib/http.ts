@@ -2,6 +2,8 @@
 
 export const SESSION_COOKIE = "__Secure-rk_session";
 export const LEGACY_SESSION_COOKIE = "rk_session";
+export const ACTIVE_ROLE_COOKIE = "__Secure-rk_active_role";
+export const LEGACY_ACTIVE_ROLE_COOKIE = "rk_active_role";
 
 export function json(data: unknown, status = 200, initHeaders: HeadersInit = {}): Response {
   const headers = new Headers(initHeaders);
@@ -49,6 +51,21 @@ export function sessionCookie(token: string, maxAgeSec: number, request: Request
   return parts.join("; ");
 }
 
+export function activeRoleCookie(role: string, maxAgeSec: number, request: Request): string {
+  const expires = new Date(Date.now() + maxAgeSec * 1000).toUTCString();
+  const parts = [
+    `${ACTIVE_ROLE_COOKIE}=${encodeURIComponent(role)}`,
+    "Path=/",
+    "HttpOnly",
+    "Secure",
+    "SameSite=Lax",
+    "Priority=High",
+    `Max-Age=${maxAgeSec}`,
+    `Expires=${expires}`,
+  ];
+  return parts.join("; ");
+}
+
 export function sessionCookieHeaders(token: string, maxAgeSec: number, request: Request): Headers {
   const headers = new Headers();
   headers.append("Set-Cookie", expiredCookie(LEGACY_SESSION_COOKIE));
@@ -57,6 +74,17 @@ export function sessionCookieHeaders(token: string, maxAgeSec: number, request: 
     headers.append("Set-Cookie", expiredCookie(LEGACY_SESSION_COOKIE, "regikaha.com"));
   }
   headers.append("Set-Cookie", sessionCookie(token, maxAgeSec, request));
+  return headers;
+}
+
+export function sessionCookieHeadersWithRole(token: string, maxAgeSec: number, request: Request, role: string): Headers {
+  const headers = sessionCookieHeaders(token, maxAgeSec, request);
+  headers.append("Set-Cookie", expiredCookie(LEGACY_ACTIVE_ROLE_COOKIE));
+  if (isProductionDomain(request)) {
+    headers.append("Set-Cookie", expiredCookie(ACTIVE_ROLE_COOKIE, "regikaha.com"));
+    headers.append("Set-Cookie", expiredCookie(LEGACY_ACTIVE_ROLE_COOKIE, "regikaha.com"));
+  }
+  headers.append("Set-Cookie", activeRoleCookie(role, maxAgeSec, request));
   return headers;
 }
 
@@ -74,14 +102,29 @@ function expiredCookie(name: string, domain?: string): string {
   return parts.join("; ");
 }
 
+export function activeRoleCookieHeaders(role: string, maxAgeSec: number, request: Request): Headers {
+  const headers = new Headers();
+  headers.append("Set-Cookie", expiredCookie(LEGACY_ACTIVE_ROLE_COOKIE));
+  if (isProductionDomain(request)) {
+    headers.append("Set-Cookie", expiredCookie(ACTIVE_ROLE_COOKIE, "regikaha.com"));
+    headers.append("Set-Cookie", expiredCookie(LEGACY_ACTIVE_ROLE_COOKIE, "regikaha.com"));
+  }
+  headers.append("Set-Cookie", activeRoleCookie(role, maxAgeSec, request));
+  return headers;
+}
+
 export function clearSessionCookies(request: Request): string[] {
   const cookies = [
     expiredCookie(SESSION_COOKIE),
     expiredCookie(LEGACY_SESSION_COOKIE),
+    expiredCookie(ACTIVE_ROLE_COOKIE),
+    expiredCookie(LEGACY_ACTIVE_ROLE_COOKIE),
   ];
   if (isProductionDomain(request)) {
     cookies.push(expiredCookie(SESSION_COOKIE, "regikaha.com"));
     cookies.push(expiredCookie(LEGACY_SESSION_COOKIE, "regikaha.com"));
+    cookies.push(expiredCookie(ACTIVE_ROLE_COOKIE, "regikaha.com"));
+    cookies.push(expiredCookie(LEGACY_ACTIVE_ROLE_COOKIE, "regikaha.com"));
   }
   return cookies;
 }
@@ -89,6 +132,10 @@ export function clearSessionCookies(request: Request): string[] {
 export function getSessionTokens(request: Request): string[] {
   return [getCookie(request, SESSION_COOKIE), getCookie(request, LEGACY_SESSION_COOKIE)]
     .filter((token): token is string => Boolean(token));
+}
+
+export function getRequestedActiveRole(request: Request): string | null {
+  return getCookie(request, ACTIVE_ROLE_COOKIE) || getCookie(request, LEGACY_ACTIVE_ROLE_COOKIE);
 }
 
 /** Devuelve el usuario autenticado (o null) a partir de la cookie de sesión. */
