@@ -18,7 +18,7 @@ const navItems = [
   { key: "pricing", href: "/precios" },
 ] as const;
 
-const navLinkClass = "whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold leading-none text-ink/75 transition hover:bg-forest-500/7 hover:text-forest-800 2xl:px-3.5";
+const navLinkClass = "whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold leading-none text-ink/75 transition hover:bg-forest-500/7 hover:text-forest-800";
 
 const roleLabels: Record<string, string> = {
   client: "Panel cliente",
@@ -29,8 +29,13 @@ const roleLabels: Record<string, string> = {
 
 function HeaderBrand() {
   return (
-    <Link href="/" className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-forest-700 text-white shadow-soft transition hover:bg-forest-800" aria-label="RegiKaha inicio">
-      <Home size={21} strokeWidth={2.2} />
+    <Link href="/" className="inline-flex w-[160px] shrink-0 items-center gap-2 overflow-hidden whitespace-nowrap" aria-label="RegiKaha inicio">
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-forest-700 text-white shadow-soft transition group-hover:bg-forest-800">
+        <Home size={21} strokeWidth={2.2} />
+      </span>
+      <span className="min-w-0 whitespace-nowrap text-[1.18rem] font-extrabold leading-none tracking-tight text-ink">
+        Regi<span className="text-forest-600">Kaha</span>
+      </span>
     </Link>
   );
 }
@@ -99,10 +104,13 @@ export function Header() {
         scrolled ? "bg-white/95 shadow-soft backdrop-blur-xl" : "bg-white/90 backdrop-blur-xl",
       )}
     >
-      <div className="container-x grid h-[72px] grid-cols-[44px_minmax(0,1fr)_auto] items-center gap-4">
+      <div
+        className="container-x grid h-[72px] items-center gap-4"
+        style={{ gridTemplateColumns: "160px minmax(0, 1fr) auto" }}
+      >
         <HeaderBrand />
 
-        <nav className="hidden min-w-0 items-center justify-start gap-1 xl:flex" aria-label={t.ui.nav.openMenu}>
+        <nav className="hidden min-w-0 items-center justify-center gap-1 2xl:flex" aria-label={t.ui.nav.openMenu}>
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} className={navLinkClass}>
               {t.ui.nav[item.key]}
@@ -111,7 +119,7 @@ export function Header() {
           <Link href="/ayuda" className={navLinkClass}>{headerCopy.help}</Link>
         </nav>
 
-        <div className="hidden shrink-0 items-center justify-end gap-2 xl:flex">
+        <div className="hidden shrink-0 items-center justify-end gap-2 2xl:flex">
           <LanguageSwitcher />
           {authenticated ? (
             <div className="relative">
@@ -155,7 +163,7 @@ export function Header() {
           </Link>
         </div>
 
-        <div className="ml-auto flex items-center gap-2 xl:hidden">
+        <div className="ml-auto flex items-center gap-2 2xl:hidden">
           <LanguageSwitcher compact />
           <button
             type="button"
@@ -170,7 +178,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="xl:hidden absolute inset-x-0 top-[72px] z-40 h-[calc(100dvh-72px)] bg-white border-t hairline overflow-y-auto animate-fade-in">
+        <div className="2xl:hidden absolute inset-x-0 top-[72px] z-40 h-[calc(100dvh-72px)] bg-white border-t hairline overflow-y-auto animate-fade-in">
           <div className="container-x py-5 flex flex-col gap-1">
             {navItems.map((item) => (
               <Link
