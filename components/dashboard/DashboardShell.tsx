@@ -27,7 +27,7 @@ interface SessionState {
 }
 
 function navForRole(role: AccountRole, copy: DashboardCopy): NavItem[] {
-  if (role === "admin") return [];
+  if (role === "admin" || role === "superadmin") return [];
   const nav: NavItem[] = [
     { label: copy.nav.overview, href: panelPathForRole(role), icon: <LayoutDashboard size={18} /> },
   ];
@@ -68,11 +68,11 @@ export function DashboardShell({ children, nav: providedNav, badge }: { children
           return;
         }
         const role = normalizeRole(data.user?.role);
-        if (role === "admin" && !pathname.startsWith("/admin")) {
+        if ((role === "admin" || role === "superadmin") && !pathname.startsWith("/admin")) {
           router.replace("/admin");
           return;
         }
-        if (role !== "admin" && !isPanelPathAllowed(role, pathname)) {
+        if (role !== "admin" && role !== "superadmin" && !isPanelPathAllowed(role, pathname)) {
           router.replace(panelPathForRole(role));
           return;
         }
@@ -96,23 +96,24 @@ export function DashboardShell({ children, nav: providedNav, badge }: { children
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-canvas grid place-items-center px-4" role="status" aria-live="polite">
-        <div className="text-center">
+      <div className="min-h-screen bg-canvas grid place-items-center px-4" aria-busy="true">
+        <div className="w-full max-w-xs text-center">
           <Logo />
-          <p className="mt-5 text-sm text-muted">{copy.loading}</p>
+          <span className="sr-only">{copy.loading}</span>
+          <div className="mx-auto mt-6 h-2 w-40 animate-pulse rounded bg-forest-600/15" aria-hidden="true" />
         </div>
       </div>
     );
   }
 
   const role = session.user.role;
-  const roleLabel = badge || (role === "admin" ? "Admin" : copy.roles[role]);
+  const roleLabel = badge || (role === "admin" ? "Admin" : role === "superadmin" ? "Superadmin" : copy.roles[role]);
   const sidebar = (
     <div className="flex h-full flex-col">
       <div className="border-b hairline px-5 py-5">
         <Logo />
         <div className="mt-3 flex items-center gap-2">
-          <span className="chip bg-mint text-forest-800">RegiKaha · {roleLabel}</span>
+          <span className="chip bg-mint text-forest-800">Regi Kaha · {roleLabel}</span>
         </div>
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto p-3" aria-label={copy.navigation}>
@@ -206,13 +207,13 @@ export function DashboardHeader({ title, subtitle, action }: { title: string; su
   );
 }
 
-export function StatCard({ icon, label, value, hint }: { icon: ReactNode; label: string; value: string | number; hint?: string }) {
+export function StatCard({ icon, label, value, hint, loading = false }: { icon: ReactNode; label: string; value: string | number; hint?: string; loading?: boolean }) {
   return (
     <div className="card p-5">
       <div className="flex items-center justify-between">
         <span className="grid place-items-center h-10 w-10 rounded-xl bg-forest-500/12 text-forest-600">{icon}</span>
       </div>
-      <p className="mt-4 text-2xl font-bold text-ink leading-none">{value}</p>
+      {loading ? <div className="mt-4 h-6 w-14 animate-pulse rounded bg-ink/10" aria-hidden="true" /> : <p className="mt-4 text-2xl font-bold text-ink leading-none">{value}</p>}
       <p className="text-sm text-muted mt-1.5">{label}</p>
       {hint && <p className="text-xs text-forest-700 mt-1">{hint}</p>}
     </div>

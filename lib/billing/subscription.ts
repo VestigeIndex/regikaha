@@ -44,7 +44,7 @@ export function isBillingInterval(value: string): value is BillingInterval {
 }
 
 export function isOfferingRole(role: string): boolean {
-  return role === "professional" || role === "company" || role === "subcontractor" || role === "admin";
+  return role === "professional" || role === "company" || role === "subcontractor" || role === "admin" || role === "superadmin";
 }
 
 export function isActiveSubscriptionStatus(status?: string | null): boolean {

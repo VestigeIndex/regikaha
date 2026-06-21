@@ -1,12 +1,14 @@
-# RegiKaha
+# Regi Kaha
 
-**Marketplace español de profesionales verificados** para reformas, construcción,
-instalaciones, mantenimiento, arquitectura, ingeniería y servicios técnicos.
+**Marketplace europeo de profesionales verificados** para reformas, construcción,
+instalaciones, mantenimiento, arquitectura, ingeniería y servicios técnicos en
+España, Francia, Italia, Portugal, Suiza, Alemania, Países Bajos, Bélgica,
+Irlanda y Reino Unido.
 
 > Compara profesionales verificados por precio, calidad, portfolio y valoraciones reales.
 > Gratis para clientes · Ranking justo, sin pay-to-win.
 
-Identidad verde · Europa por países · construido con Next.js.
+Identidad verde · 10 mercados europeos · construido con Next.js.
 
 ---
 
@@ -100,10 +102,18 @@ El paquete original incluye **10 prompts** (no fotos). Cada uno está en
 
 Regenerar todos los SVG: `node scripts/generate-assets.mjs`.
 
-## ☁️ Despliegue — Cloudflare Pages (auto-deploy)
+## ☁️ Despliegue — Cloudflare Pages
 
 El sitio se exporta como **HTML estático** (`output: "export"` → carpeta `out/`) y se publica en
-**Cloudflare Pages**. El despliegue es automático con **GitHub Actions**:
+**Cloudflare Pages**. La vía recomendada para producción es el despliegue manual con Wrangler:
+
+```bash
+npm run build
+npx wrangler d1 migrations apply regikaha-db --remote
+npx wrangler pages deploy out --project-name regikaha --branch main
+```
+
+Hay un workflow documentado para GitHub Actions, pero no es necesario tocarlo para despliegues manuales ni para alinear el repositorio.
 
 - Workflow: `.github/workflows/deploy.yml` (se ejecuta en cada push a `main`).
 - Crea/actualiza el proyecto Pages `regikaha`, despliega `out/` y vincula el dominio
@@ -115,13 +125,11 @@ El sitio se exporta como **HTML estático** (`output: "export"` → carpeta `out
 Requisito para el dominio: **regikaha.com** debe estar añadido como **zona** en la misma cuenta de
 Cloudflare para que el CNAME se cree solo. URL provisional: `https://regikaha.pages.dev`.
 
-Despliegue manual (opcional): `npm run build && npx wrangler pages deploy out --project-name=regikaha`.
-
 La capa de datos está aislada detrás de interfaces (`lib/types.ts`) para migrar de mock a
 **D1 / R2** sin reescribir la UI (conectar `QuoteForm` y registro a Workers + D1, imágenes a R2).
 
 ## 📌 Notas
 
-- Los datos de profesionales, reseñas y precios son **mock realistas** para demostración.
+- Los datos de demo solo se activan con `NEXT_PUBLIC_ENABLE_DEMO_DATA=true`.
 - Los documentos legales son **plantillas** y deben revisarse con asesoría jurídica.
 - Cliente gratis · Autónomo Nacional 19,95 €/mes o 215,46 €/año + IVA/VAT · Europa Pro 49,95 €/mes o 539,46 €/año + IVA/VAT · Primeros 300 verificados: 5 meses gratis.

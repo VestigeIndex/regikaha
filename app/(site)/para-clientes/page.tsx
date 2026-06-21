@@ -16,7 +16,7 @@ export const metadata: Metadata = buildMetadata({
 
 const benefits = [
   { icon: Gift, title: "Gratis para clientes", text: "Buscar, comparar y pedir presupuesto sin coste ni compromiso." },
-  { icon: BadgeCheck, title: "Profesionales verificados", text: "Identidad, NIF/CIF y actividad comprobados por RegiKaha." },
+  { icon: BadgeCheck, title: "Profesionales verificados", text: "Identidad, NIF/CIF y actividad comprobados por Regi Kaha." },
   { icon: GitCompare, title: "Comparación transparente", text: "Precio, calidad, portfolio y valoraciones, lado a lado." },
   { icon: Hammer, title: "Trabajos reales", text: "Mira el antes y el después de proyectos completados." },
   { icon: Star, title: "Reseñas verificadas", text: "Opiniones de clientes con un servicio realizado." },
@@ -29,7 +29,7 @@ export default function ParaClientesPage() {
       <PageHeader
         eyebrow="Para clientes"
         title="Encuentra profesionales verificados para tu reforma, obra o instalación"
-        description="RegiKaha te permite comparar profesionales antes de contratar. Consulta trabajos realizados, precios orientativos, valoraciones reales, especialidades y zona de servicio."
+        description="Regi Kaha te permite comparar profesionales antes de contratar. Consulta trabajos realizados, precios orientativos, valoraciones reales, especialidades y zona de servicio."
         breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Para clientes" }]}
       >
         <Link href="/buscar" className="btn btn-primary text-base">Buscar profesionales</Link>
@@ -39,7 +39,7 @@ export default function ParaClientesPage() {
         <SectionHeading
           eyebrow="No contrates a ciegas"
           title="Compara antes de empezar tu obra o reforma"
-          description="Antes de contratar, compara trabajos realizados, precios orientativos, reseñas y especialidades. RegiKaha te ayuda a elegir con más información y menos riesgo."
+          description="Antes de contratar, compara trabajos realizados, precios orientativos, reseñas y especialidades. Regi Kaha te ayuda a elegir con más información y menos riesgo."
           align="center"
         />
         <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">

@@ -4,7 +4,7 @@ import { BuildersActions, BuildersCards } from "@/components/marketplace/Localiz
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "RegiKaha para constructoras",
+  title: "Regi Kaha para constructoras",
   description:
     "Publica necesidades de subcontrata, busca empresas por especialidad en el mapa y compara disponibilidad, documentación y experiencia.",
   path: "/constructoras",

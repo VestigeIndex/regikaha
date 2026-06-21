@@ -11,7 +11,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Cómo funciona",
   description:
-    "Así funciona RegiKaha: los clientes buscan, comparan y piden presupuesto gratis; los profesionales verificados destacan por mérito. Verificación real y reseñas verificadas.",
+    "Así funciona Regi Kaha: los clientes buscan, comparan y piden presupuesto gratis; los profesionales verificados destacan por mérito. Verificación real y reseñas verificadas.",
   path: "/como-funciona",
 });
 
@@ -28,7 +28,7 @@ export default function ComoFuncionaPage() {
       <PageHeader
         eyebrow="Cómo funciona"
         title="Simple para clientes, justo para profesionales"
-        description="RegiKaha conecta a clientes con profesionales verificados de reformas y servicios técnicos. Sin rankings comprados y con valoraciones reales."
+        description="Regi Kaha conecta a clientes con profesionales verificados de reformas y servicios técnicos. Sin rankings comprados y con valoraciones reales."
         breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Cómo funciona" }]}
       />
 
@@ -39,7 +39,7 @@ export default function ComoFuncionaPage() {
           <SectionHeading
             eyebrow="Verificación"
             title="Qué significa “profesional verificado”"
-            description="La verificación es lo que hace de RegiKaha un marketplace de confianza. Esto es lo que comprobamos antes de mostrar el sello."
+            description="La verificación es lo que hace de Regi Kaha un marketplace de confianza. Esto es lo que comprobamos antes de mostrar el sello."
             align="center"
           />
           <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">

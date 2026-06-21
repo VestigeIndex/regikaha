@@ -1,6 +1,6 @@
-# RegiNova — Brief de 10 imágenes hiperrealistas
+# Regi Kaha — Brief de 10 imágenes hiperrealistas
 
-Usar 10 imágenes hiperrealistas para la web RegiNova.
+Usar imágenes hiperrealistas para la web Regi Kaha.
 
 Estilo:
 - realista
@@ -8,7 +8,7 @@ Estilo:
 - moderno
 - profesional
 - luz natural
-- España / Europa mediterránea cuando sea posible
+- Europa real, con escenas válidas para España, Francia, Italia, Portugal, Suiza, Alemania, Países Bajos, Bélgica, Irlanda y Reino Unido
 - sin texto incrustado
 - sin estética de IA evidente
 - sin personas demasiado perfectas
@@ -86,5 +86,5 @@ Uso:
 - sección testimonios
 - página “para clientes”
 
-## Nota para Claude
-Si no puede generar imágenes directamente, usar este brief para placeholders, prompts o integración posterior.
+## Nota para Codex
+Si no se generan imágenes nuevas directamente, usar este brief para assets, prompts o integración posterior.

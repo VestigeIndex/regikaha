@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { LogIn, Mail } from "lucide-react";
 import { GoogleConnectButton } from "@/components/auth/GoogleConnectButton";
 import { integrations } from "@/lib/integrations";
-import { normalizeRole, panelPathForRole, registrationPaths, safeInternalPath, type AccountRole } from "@/lib/accounts";
+import { normalizeRole, panelPathForRole, registrationPaths, safeInternalPath, type AccountRole, type PublicAccountRole } from "@/lib/accounts";
 import { dashboardDictionaries } from "@/lib/i18n/dashboard";
 import { useI18n } from "@/lib/i18n/context";
 import { useDirectTranslation } from "@/lib/i18n/useDirectTranslation";
@@ -18,13 +18,13 @@ export function LoginForm({ defaultRole = "client", adminMode = false }: { defau
   const selectedRole = normalizeRole(params.get("role"), defaultRole);
   const role = adminMode ? "admin" : selectedRole;
   const redirectTo = safeInternalPath(params.get("next"), panelPathForRole(role));
-  const roleLabel = role === "admin" ? "Admin" : dashboardDictionaries[locale].roles[role];
+  const roleLabel = role === "admin" ? "Admin" : role === "superadmin" ? "Superadmin" : dashboardDictionaries[locale].roles[role];
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const registerHref = useMemo(() => {
     if (adminMode) return "/conectar";
     const role = selectedRole === "admin" ? "client" : selectedRole;
-    return registrationPaths[role as Exclude<AccountRole, "admin">];
+    return registrationPaths[role as PublicAccountRole];
   }, [adminMode, selectedRole]);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {

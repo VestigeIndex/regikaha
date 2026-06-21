@@ -17,7 +17,7 @@ export function LocalizedPageHeader({
   const header = t.ui.pageHeaders[id];
 
   useEffect(() => {
-    document.title = `${header.title} | RegiKaha`;
+    document.title = `${header.title} | Regi Kaha`;
     const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
     if (description) description.content = header.description;
   }, [header.description, header.title]);

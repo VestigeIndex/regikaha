@@ -168,7 +168,7 @@ export function BillingPanel({ role }: { role: "professional" | "company" | "sub
         pdf.text(lines, margin, y);
         y += lines.length * 5 + 2;
       };
-      write("RegiKaha", 16, true);
+      write("Regi Kaha", 16, true);
       write(translate("Resumen del contrato de suscripción"), 14, true);
       write(`${translate("Versión")}: ${data.contract.contract_version || pendingLabel}`);
       write(`${translate("Aceptado")}: ${formatDate(data.contract.accepted_at, locale, pendingLabel)}`);

@@ -1,7 +1,7 @@
 import type { ServiceItem } from "@/lib/types";
 
 /** Servicios ofrecidos por los profesionales. Cada uno genera su página SEO. */
-export const services: ServiceItem[] = [
+const seedServices: ServiceItem[] = [
   {
     id: "svc-1",
     professionalId: "pro-reformas-costa",
@@ -394,6 +394,8 @@ export const services: ServiceItem[] = [
     isActive: true,
   },
 ];
+
+export const services: ServiceItem[] = process.env.NEXT_PUBLIC_ENABLE_DEMO_DATA === "true" ? seedServices : [];
 
 export function getServicesByProfessional(professionalId: string): ServiceItem[] {
   return services.filter((s) => s.professionalId === professionalId && s.isActive);

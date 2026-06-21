@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { EmailVerification } from "@/components/auth/EmailVerification";
 
 export const metadata: Metadata = {
-  title: "Verificar email | RegiKaha",
+  title: "Verificar email | Regi Kaha",
   robots: { index: false, follow: false },
 };
 

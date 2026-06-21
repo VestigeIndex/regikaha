@@ -7,8 +7,9 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = buildMetadata({
   title: "Únete como profesional",
   description:
-    "Crea tu perfil profesional en RegiKaha, publica servicios y recibe oportunidades compatibles. Primeros 300 verificados: 5 meses gratis y saldo promocional de contactos.",
+    "Crea tu perfil profesional en Regi Kaha, publica servicios y recibe oportunidades compatibles. Primeros 300 verificados: 5 meses gratis y saldo promocional de contactos.",
   path: "/registro",
+  noindex: true,
 });
 
 const benefits = [

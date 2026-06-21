@@ -1,6 +1,6 @@
-# Deploy to RegiKaha
+# Deploy to Regi Kaha
 
-Regi Works is part of the existing static Next.js export. It must use the same conservative manual Cloudflare Pages deployment as the rest of RegiKaha.
+Regi Works is part of the existing static Next.js export. It must use the same conservative manual Cloudflare Pages deployment as the rest of Regi Kaha.
 
 ```bash
 npm ci

@@ -1,4 +1,4 @@
--- RegiKaha release foundation.
+-- Regi Kaha release foundation.
 -- Idempotente: solo crea tablas e índices nuevos. No borra seeds ni modifica datos existentes.
 
 CREATE TABLE IF NOT EXISTS profiles (

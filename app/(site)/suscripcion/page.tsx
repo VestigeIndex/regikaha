@@ -5,7 +5,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Suscripción profesional",
-  description: "Elige cobertura, revisa el contrato digital y activa tu acceso profesional en RegiKaha.",
+  description: "Elige cobertura, revisa el contrato digital y activa tu acceso profesional en Regi Kaha.",
   path: "/suscripcion",
 });
 

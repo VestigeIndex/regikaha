@@ -152,7 +152,7 @@ export async function onRequestPost(context: any) {
   if (!isEmail(email)) return bad("Email no válido");
   if (description.length < 20) return bad("Describe un poco más el proyecto");
   if (!country || !city || !categoryId) return bad("Faltan país, ciudad o categoría");
-  if (!isActiveCountryCode(country)) return bad("País no disponible todavía en RegiKaha");
+  if (!isActiveCountryCode(country)) return bad("País no disponible todavía en Regi Kaha");
   if (String(b.acceptsPreEstimate) !== "true" && b.acceptsPreEstimate !== true) {
     return bad("Debes aceptar recibir pre-presupuestos no vinculantes");
   }

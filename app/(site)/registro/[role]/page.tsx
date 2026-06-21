@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ role: str
   const { role } = await params;
   if (!roles.includes(role as RouteRole)) return { title: "Registro no encontrado" };
   const item = registrationRoleCopy("es", role as RouteRole);
-  return buildMetadata({ title: item.title, description: item.text, path: `/registro/${role}` });
+  return buildMetadata({ title: item.title, description: item.text, path: `/registro/${role}`, noindex: true });
 }
 
 export default async function RegistroRolePage({ params }: { params: Promise<{ role: string }> }) {

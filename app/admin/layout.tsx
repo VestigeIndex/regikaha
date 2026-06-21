@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { LayoutDashboard, ShieldCheck, Users, MessageSquareWarning } from "lucide-react";
+import { LayoutDashboard, ShieldCheck, UserCog, Users, MessageSquareWarning } from "lucide-react";
 import { DashboardShell, type NavItem } from "@/components/dashboard/DashboardShell";
 
 export const metadata: Metadata = {
@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 const nav: NavItem[] = [
   { label: "Resumen", href: "/admin", icon: <LayoutDashboard size={18} /> },
+  { label: "Usuarios", href: "/admin/usuarios", icon: <UserCog size={18} /> },
   { label: "Verificaciones", href: "/admin/verificaciones", icon: <ShieldCheck size={18} /> },
   { label: "Profesionales", href: "/admin/profesionales", icon: <Users size={18} /> },
   { label: "Moderación de reseñas", href: "/admin/resenas", icon: <MessageSquareWarning size={18} /> },

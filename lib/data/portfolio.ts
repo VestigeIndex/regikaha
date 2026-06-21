@@ -1,7 +1,7 @@
 import type { PortfolioItem } from "@/lib/types";
 
 /** Trabajos realizados (antes/después) de los profesionales. */
-export const portfolioItems: PortfolioItem[] = [
+const seedPortfolioItems: PortfolioItem[] = [
   {
     id: "port-1",
     professionalId: "pro-reformas-costa",
@@ -107,6 +107,8 @@ export const portfolioItems: PortfolioItem[] = [
     completionDate: "2026-04-25",
   },
 ];
+
+export const portfolioItems: PortfolioItem[] = process.env.NEXT_PUBLIC_ENABLE_DEMO_DATA === "true" ? seedPortfolioItems : [];
 
 export function getPortfolioByProfessional(professionalId: string): PortfolioItem[] {
   return portfolioItems.filter((p) => p.professionalId === professionalId);

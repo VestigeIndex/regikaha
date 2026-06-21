@@ -1,4 +1,4 @@
-# RegiKaha Geodata
+# Regi Kaha Geodata
 
 Arquitectura conservadora para incorporar ciudades, pueblos, municipios, comunas, boroughs, distritos y códigos postales de los países activos sin meter listas gigantes en componentes React.
 

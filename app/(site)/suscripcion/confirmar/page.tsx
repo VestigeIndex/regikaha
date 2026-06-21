@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { SubscriptionContractModal } from "@/components/billing/SubscriptionContractModal";
 
 export const metadata: Metadata = {
-  title: "Confirmar suscripción | RegiKaha",
+  title: "Confirmar suscripción | Regi Kaha",
   description: "Revisa y acepta el contrato digital antes de activar tu suscripción profesional.",
   robots: { index: false, follow: false },
 };

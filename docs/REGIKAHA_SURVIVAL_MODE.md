@@ -1,4 +1,4 @@
-# RegiKaha Survival Mode
+# Regi Kaha Survival Mode
 
 Survival mode keeps infrastructure spend behind customer value. It is active by default through both code defaults and `wrangler.jsonc`.
 

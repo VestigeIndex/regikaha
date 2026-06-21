@@ -46,7 +46,7 @@ export function ConnectAccountChooser() {
     <>
       <PageHeader
         eyebrow={translate("Conectar")}
-        title={translate("Conecta con RegiKaha")}
+        title={translate("Conecta con Regi Kaha")}
         description={translate("¿Qué necesitas hacer? Elige tu tipo de cuenta para entrar al panel correcto o crear una cuenta nueva.")}
         breadcrumbs={[
           { name: translate("Inicio"), path: "/" },

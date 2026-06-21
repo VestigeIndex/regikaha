@@ -10,7 +10,7 @@ import { accountRegisterDictionaries } from "@/lib/i18n/account-register";
 import { detectMarketCountry } from "@/lib/market-country";
 import { Turnstile } from "@/components/security/Turnstile";
 
-export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "professional" | "admin"> }) {
+export function AccountRegisterForm({ role }: { role: Exclude<AccountRole, "professional" | "admin" | "superadmin"> }) {
   const { locale } = useI18n();
   const dictionary = accountRegisterDictionaries[locale];
   const copy = dictionary.roles[role];

@@ -17,9 +17,10 @@ import { formatPriceFrom, priceTypeLabel } from "@/lib/utils";
 import { site } from "@/lib/site";
 
 export function generateStaticParams() {
-  return publicProfessionals.flatMap((p) =>
+  const params = publicProfessionals.flatMap((p) =>
     getServicesByProfessional(p.id).map((s) => ({ slug: p.slug, service: s.slug })),
   );
+  return params.length ? params : [{ slug: "__dynamic__", service: "__dynamic__" }];
 }
 
 export async function generateMetadata({
@@ -31,10 +32,10 @@ export async function generateMetadata({
   const pro = getProfessionalBySlug(slug);
   const svc = pro ? getServiceBySlug(pro.id, service) : undefined;
   if (!pro || !svc) return { title: "Servicio no encontrado" };
-  const country = pro.country || "España";
+  const country = pro.country || "Europa";
   return {
     title: `${svc.title} en ${pro.city}, ${country} — ${pro.publicName} | ${site.name}`,
-    description: `${svc.description} ${priceTypeLabel(svc.priceType)} ${formatPriceFrom(svc.priceFrom)}. Pide pre-presupuesto inicial a ${pro.publicName}, profesional verificado en RegiKaha.`,
+    description: `${svc.description} ${priceTypeLabel(svc.priceType)} ${formatPriceFrom(svc.priceFrom)}. Pide pre-presupuesto inicial a ${pro.publicName}, profesional verificado en Regi Kaha.`,
     alternates: { canonical: `/profesionales/${pro.slug}/${svc.slug}` },
   };
 }
@@ -50,7 +51,7 @@ export default async function ServicePage({
   if (!pro || !svc) notFound();
 
   const category = getCategoryById(svc.categoryId);
-  const country = pro.country || "España";
+  const country = pro.country || "Europa";
 
   return (
     <article className="pb-8">

@@ -35,7 +35,8 @@ export async function onRequestPost(context: any) {
   ).bind(id, name, email, subject, message, locale).run();
 
   await sendEmail(env, {
-    to: { email: "help@regikaha.com", name: "RegiKaha" },
+    to: { email: "help@regikaha.com", name: "Regi Kaha" },
+    replyTo: { email, name },
     subject: `[Contacto] ${subject}`,
     text: `Nombre: ${name}\nEmail: ${email}\nIdioma: ${locale}\n\n${message}`,
     tags: { type: "contact_form" },

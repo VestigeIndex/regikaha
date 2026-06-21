@@ -1,7 +1,7 @@
 import type { Review } from "@/lib/types";
 
 /** Reseñas verificadas. Solo `status: "published"` se muestra en público. */
-export const reviews: Review[] = [
+const seedReviews: Review[] = [
   {
     id: "rev-1",
     professionalId: "pro-reformas-costa",
@@ -302,6 +302,8 @@ export const reviews: Review[] = [
     createdAt: "2026-06-10",
   },
 ];
+
+export const reviews: Review[] = process.env.NEXT_PUBLIC_ENABLE_DEMO_DATA === "true" ? seedReviews : [];
 
 export function getReviewsByProfessional(professionalId: string): Review[] {
   return reviews

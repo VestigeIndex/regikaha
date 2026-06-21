@@ -1,5 +1,5 @@
 /**
- * Modelo de datos de RegiKaha.
+ * Modelo de datos de Regi Kaha.
  *
  * Estos tipos reflejan las entidades del marketplace y están diseñados para
  * mapearse 1:1 con tablas de base de datos (Cloudflare D1 / PostgreSQL) en el

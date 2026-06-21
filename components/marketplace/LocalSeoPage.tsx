@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, BadgeCheck, FileText, Map, MapPin, Search } from "lucide-react";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { categories, getProfessionalsByCategory } from "@/lib/data";
@@ -93,7 +94,7 @@ export function LocalSeoPage({ locale, place, category }: { locale: Locale; plac
     <>
       <JsonLd data={schemas} />
       <section className="relative flex min-h-[420px] items-end overflow-hidden bg-ink">
-        <img src={image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-45" width="1600" height="900" />
+        <Image src={image} alt="" fill sizes="100vw" className="object-cover opacity-45" priority={place.isFeatured} />
         <div className="absolute inset-0 bg-ink/35" />
         <div className="container-x relative py-10 text-white sm:py-14">
           <nav className="mb-5 flex flex-wrap items-center gap-2 text-sm text-white/75" aria-label="Breadcrumb">

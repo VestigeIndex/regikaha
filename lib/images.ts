@@ -1,5 +1,5 @@
 /**
- * Manifiesto de imágenes de marca (las 10 del brief de RegiKaha).
+ * Manifiesto de imágenes de marca (las 10 del brief de Regi Kaha).
  *
  * Cada entrada apunta a un placeholder SVG premium y al prompt original con el
  * que generar la foto hiperrealista definitiva. Para usar fotos reales:

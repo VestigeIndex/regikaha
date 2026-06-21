@@ -7,6 +7,7 @@ import {
 
 const writeMethods = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 const allowedHosts = new Set(["regikaha.com", "www.regikaha.com", "regikaha.pages.dev"]);
+const csrfExemptPaths = new Set(["/api/stripe/webhook"]);
 
 function corsHeaders(request: Request) {
   const headers = new Headers();
@@ -33,9 +34,23 @@ function originAllowed(request: Request) {
   }
 }
 
+function csrfAllowed(request: Request) {
+  if (!writeMethods.has(request.method)) return true;
+  const url = new URL(request.url);
+  if (csrfExemptPaths.has(url.pathname)) return true;
+
+  const fetchSite = request.headers.get("Sec-Fetch-Site");
+  if (fetchSite && fetchSite !== "same-origin" && fetchSite !== "same-site" && fetchSite !== "none") return false;
+
+  const hasSessionCookie = /(?:^|;\s*)(?:__Secure-rk_session|rk_session)=/.test(request.headers.get("Cookie") || "");
+  if (hasSessionCookie && !request.headers.get("Origin")) return false;
+  return originAllowed(request);
+}
+
 export async function onRequest(context: any) {
   const { request, env } = context;
   if (!originAllowed(request)) return safeJsonResponse({ error: "origin_not_allowed" }, 403);
+  if (!csrfAllowed(request)) return safeJsonResponse({ error: "csrf_validation_failed" }, 403);
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(request) });
 
   if (writeMethods.has(request.method)) {

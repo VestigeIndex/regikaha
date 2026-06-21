@@ -23,7 +23,8 @@ import { professionalSchema, breadcrumbSchema, professionalSeoTitle } from "@/li
 import { formatPriceFrom, plural } from "@/lib/utils";
 
 export function generateStaticParams() {
-  return publicProfessionals.map((p) => ({ slug: p.slug }));
+  const params = publicProfessionals.map((p) => ({ slug: p.slug }));
+  return params.length ? params : [{ slug: "__dynamic__" }];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -31,10 +32,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const pro = getProfessionalBySlug(slug);
   if (!pro) return { title: "Profesional no encontrado" };
   const primary = getCategoryById(pro.categoryIds[0]);
-  const country = pro.country || "España";
+  const country = pro.country || "Europa";
   return {
     title: professionalSeoTitle(pro, primary),
-    description: `${pro.shortTagline}. Compara precios orientativos, portfolio, valoraciones reales (${pro.averageRating}/5) y zona de servicio de ${pro.publicName} en ${pro.city}, ${country}. Pide pre-presupuesto gratis en RegiKaha.`,
+    description: `${pro.shortTagline}. Compara precios orientativos, portfolio, valoraciones reales (${pro.averageRating}/5) y zona de servicio de ${pro.publicName} en ${pro.city}, ${country}. Pide pre-presupuesto gratis en Regi Kaha.`,
     alternates: { canonical: `/profesionales/${pro.slug}` },
   };
 }
@@ -57,7 +58,7 @@ export default async function ProfessionalPage({ params }: { params: Promise<{ s
   const servicesList = getServicesByProfessional(pro.id);
   const reviews = getReviewsByProfessional(pro.id);
   const portfolio = getPortfolioByProfessional(pro.id);
-  const country = pro.country || "España";
+  const country = pro.country || "Europa";
 
   const avgSub = (key: (typeof subRatings)[number]["key"]) =>
     reviews.length ? reviews.reduce((s, r) => s + r[key], 0) / reviews.length : 0;

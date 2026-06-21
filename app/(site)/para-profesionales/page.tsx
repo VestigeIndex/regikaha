@@ -69,7 +69,7 @@ export default function ParaProfesionalesPage() {
               {formatIntervalPrice(professionalPlans[1], "monthly")}.
             </p>
             <ul className="mt-5 space-y-2.5">
-              {["Saldo promocional de contactos para fundadores", "Sin rankings comprados", "Sin pagar por aparecer primero", "Cancela cuando quieras"].map((t) => (
+              {["Saldo promocional de contactos para fundadores", "Sin rankings comprados", "Nadie compra posiciones", "Cancela cuando quieras"].map((t) => (
                 <li key={t} className="flex items-center gap-2.5 text-ink/80">
                   <span className="grid place-items-center h-6 w-6 rounded-full bg-forest-500/12 text-forest-600 shrink-0"><Check size={14} /></span>
                   {t}

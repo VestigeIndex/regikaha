@@ -1,6 +1,6 @@
-export type AccountRole = "client" | "professional" | "company" | "subcontractor" | "admin";
+export type AccountRole = "client" | "professional" | "company" | "subcontractor" | "admin" | "superadmin";
 
-export const accountRoles: AccountRole[] = ["client", "professional", "company", "subcontractor", "admin"];
+export const accountRoles: AccountRole[] = ["client", "professional", "company", "subcontractor", "admin", "superadmin"];
 
 export const roleLabels: Record<AccountRole, string> = {
   client: "Cliente",
@@ -8,6 +8,7 @@ export const roleLabels: Record<AccountRole, string> = {
   company: "Empresa o constructora",
   subcontractor: "Subcontrata",
   admin: "Admin",
+  superadmin: "Superadmin",
 };
 
 export const rolePanelPaths: Record<AccountRole, string> = {
@@ -16,9 +17,12 @@ export const rolePanelPaths: Record<AccountRole, string> = {
   company: "/panel/empresa",
   subcontractor: "/panel/subcontrata",
   admin: "/admin",
+  superadmin: "/admin",
 };
 
-export const registrationPaths: Record<Exclude<AccountRole, "admin">, string> = {
+export type PublicAccountRole = Exclude<AccountRole, "admin" | "superadmin">;
+
+export const registrationPaths: Record<PublicAccountRole, string> = {
   client: "/registro/cliente",
   professional: "/registro/profesional",
   company: "/registro/empresa",
@@ -50,7 +54,7 @@ export const roleBillingPaths: Partial<Record<AccountRole, string>> = {
 
 export function isPanelPathAllowed(role: AccountRole, pathname: string): boolean {
   if (pathname === "/panel") return true;
-  if (role === "admin") return false;
+  if (role === "admin" || role === "superadmin") return false;
   const roleRoot = rolePanelPaths[role];
   if (pathname === roleRoot || pathname.startsWith(`${roleRoot}/`)) return true;
   if (role === "professional") {

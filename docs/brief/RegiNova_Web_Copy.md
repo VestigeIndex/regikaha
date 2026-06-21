@@ -1,24 +1,24 @@
-# RegiNova — Textos listos para web
+# Regi Kaha — Textos listos para web
 
 ## Hero
 
 ### Título
-Compara profesionales verificados para reformas y servicios técnicos en toda España
+Compara profesionales verificados para reformas y servicios técnicos en 10 países europeos
 
 ### Subtítulo
 Encuentra empresas de reformas, técnicos, instaladores, arquitectos e ingenieros por precio, calidad, zona de trabajo, portfolio y valoraciones reales.
 
 ### CTAs
-Buscar profesionales  
+Buscar profesionales
 Soy profesional
 
 ---
 
 ## Confianza
 
-Profesionales verificados.  
-Valoraciones reales.  
-Sin rankings comprados.  
+Profesionales verificados.
+Valoraciones reales.
+Sin rankings comprados.
 Gratis para clientes.
 
 ---
@@ -27,13 +27,13 @@ Gratis para clientes.
 
 No contrates a ciegas.
 
-Antes de empezar una obra o reforma, compara trabajos realizados, precios orientativos, reseñas y especialidades. RegiNova te ayuda a elegir con más información y menos riesgo.
+Antes de empezar una obra o reforma, compara trabajos realizados, precios orientativos, reseñas y especialidades. Regi Kaha te ayuda a elegir con más información y menos riesgo.
 
 ---
 
 ## Ranking justo
 
-En RegiNova nadie paga por aparecer primero.
+En Regi Kaha nadie paga por aparecer primero.
 
 Los profesionales destacan por calidad, precio justo, trabajos reales, rapidez de respuesta y valoraciones verificadas.
 
@@ -57,13 +57,13 @@ Crea tu perfil profesional, publica tus servicios, muestra tus trabajos realizad
 
 ## Oferta fundadores
 
-Los primeros 300 profesionales verificados reciben 5 meses gratis de RegiNova Pro.
+Los primeros 300 profesionales verificados reciben 5 meses gratis en el plan profesional elegido.
 
-Después: 49,95 €/mes + IVA o 499 €/año + IVA.
+Después: 19,95 €/mes + IVA/VAT en Autónomo Nacional o 49,95 €/mes + IVA/VAT en Multi-mercado Pro. Anual con 10% de descuento.
 
-Sin comisiones por lead.  
-Sin rankings comprados.  
-Sin pagar por aparecer primero.
+El precio del contacto se muestra antes de desbloquearlo.
+Sin rankings comprados.
+Nadie paga por aparecer primero.
 
 ---
 
@@ -71,5 +71,5 @@ Sin pagar por aparecer primero.
 
 Tu próximo proyecto empieza comparando profesionales verificados.
 
-Buscar profesionales  
+Buscar profesionales
 Unirme como profesional

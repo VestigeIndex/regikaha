@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Check, Crown, CreditCard, FileSignature, ShieldCheck } from "lucide-react";
 import { PageHeader } from "@/components/site/PageHeader";
@@ -41,9 +42,9 @@ export default function FundadoresPage() {
       <section className="container-x py-12 sm:py-16">
         <div className="grid overflow-hidden rounded-lg border border-[var(--hairline)] bg-white lg:grid-cols-[.92fr_1.08fr]">
           <div className="relative min-h-72 lg:min-h-[560px]">
-            <img src="/images/photos/carpinteria.webp" alt="Profesional de carpintería trabajando en una instalación de alta calidad" className="absolute inset-0 h-full w-full object-cover" />
+            <Image src="/images/photos/carpinteria.webp" alt="Profesional de carpintería trabajando en una instalación de alta calidad" fill sizes="(min-width: 1024px) 46vw, 100vw" className="object-cover" />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent p-6 text-white">
-              <span className="inline-flex items-center gap-2 text-sm font-semibold"><Crown size={17} /> Miembro fundador RegiKaha</span>
+              <span className="inline-flex items-center gap-2 text-sm font-semibold"><Crown size={17} /> Miembro fundador Regi Kaha</span>
               <p className="mt-2 max-w-md text-sm leading-relaxed text-white/85">Cinco meses para construir reputación, completar tu perfil y demostrar trabajos reales.</p>
             </div>
           </div>

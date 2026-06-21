@@ -156,7 +156,7 @@ export function SubscriptionContractModal() {
             <SummaryRow label={translate("Si no se paga")} value={translate("Acceso comercial limitado")} />
           </dl>
           {founderRequested && !founderAvailable ? <p className="mt-4 rounded-md bg-amber-50 p-3 text-xs text-amber-800">{translate("Las plazas fundador se han agotado. Continuarás con el plan normal.")}</p> : null}
-          <p className="mt-5 text-xs leading-relaxed text-muted">{translate("Puedes cancelar desde el portal de facturación. RegiKaha no garantiza leads ni compra posiciones.")}</p>
+          <p className="mt-5 text-xs leading-relaxed text-muted">{translate("Puedes cancelar desde el portal de facturación. Regi Kaha no garantiza leads ni compra posiciones.")}</p>
           {message && <p className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-700">{message}</p>}
           <button type="button" onClick={acceptAndCheckout} disabled={pending || !allAccepted} className="btn btn-primary mt-5 w-full disabled:cursor-not-allowed disabled:opacity-50">
             {pending ? translate("Abriendo Stripe...") : founder ? translate("Aceptar y activar 0 €") : translate("Aceptar y suscribirme")}

@@ -1,0 +1,5 @@
+Contact: mailto:help@regikaha.com
+Canonical: https://regikaha.com/.well-known/security.txt
+Preferred-Languages: es, en, fr, de, it, pt, nl
+Policy: https://regikaha.com/seguridad
+Expires: 2027-06-21T23:59:59Z

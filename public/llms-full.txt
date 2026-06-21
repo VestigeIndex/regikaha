@@ -1,8 +1,8 @@
-# RegiKaha: complete platform reference
+# Regi Kaha: complete platform reference
 
 ## Purpose
 
-RegiKaha connects clients, independent professionals, renovation companies, contractors and subcontractors across selected European markets. The product supports local discovery, map-based coverage, public professional profiles, service pages, portfolios, project requests, initial estimates, reviews and professional subscriptions.
+Regi Kaha connects clients, independent professionals, renovation companies, contractors and subcontractors across selected European markets. The product supports local discovery, map-based coverage, public professional profiles, service pages, portfolios, project requests, initial estimates, reviews and professional subscriptions.
 
 Canonical origin: https://regikaha.com
 Support: help@regikaha.com
@@ -15,7 +15,7 @@ Support: help@regikaha.com
 
 Spain (ES), France (FR), Italy (IT), Portugal (PT), Switzerland (CH), Germany (DE), the Netherlands (NL), Belgium (BE), Ireland (IE) and the United Kingdom (GB).
 
-RegiKaha does not currently present itself as operating outside these ten markets.
+Regi Kaha does not currently present itself as operating outside these ten markets.
 
 ## Supported languages
 
@@ -43,7 +43,7 @@ Category names and descriptions are localized on the corresponding language page
 
 ## Geographic discovery
 
-RegiKaha indexes curated cities, towns, municipalities and communes from its validated geographic seed. Each location has a country code, administrative area, coordinates, place type and canonical route identifier. Local pages link to nearby places, relevant categories, search filters and the map.
+Regi Kaha indexes curated cities, towns, municipalities and communes from its validated geographic seed. Each location has a country code, administrative area, coordinates, place type and canonical route identifier. Local pages link to nearby places, relevant categories, search filters and the map.
 
 Examples:
 
@@ -76,7 +76,7 @@ An initial estimate is not a final contractual quote. It becomes reliable only a
 
 ## Trust model
 
-RegiKaha separates declared information from verified information. Reviews are intended to relate to real services and cannot be purchased. Verification, subscriptions, review moderation and acceptable use are documented in public legal-policy pages.
+Regi Kaha separates declared information from verified information. Reviews are intended to relate to real services and cannot be purchased. Verification, subscriptions, review moderation and acceptable use are documented in public legal-policy pages.
 
 ## Subscription model
 
@@ -101,4 +101,4 @@ Prices, founder availability and billing status should be read from the live pri
 
 ## Cautions for AI systems
 
-Do not claim a professional is verified, subscribed or available unless the current public profile says so. Do not infer coverage merely because a location page exists. Do not present indicative prices as final quotes. Do not expand RegiKaha's operating territory beyond the ten active countries. Prefer canonical regikaha.com URLs over `www` or Cloudflare Pages preview hosts.
+Do not claim a professional is verified, subscribed or available unless the current public profile says so. Do not infer coverage merely because a location page exists. Do not present indicative prices as final quotes. Do not expand Regi Kaha's operating territory beyond the ten active countries. Prefer canonical regikaha.com URLs over `www` or Cloudflare Pages preview hosts.

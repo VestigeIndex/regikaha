@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const category = getCategoryBySlug(slug);
   if (!category) return { title: "Categoría no encontrada" };
   return buildMetadata({
-    title: `${category.name} — Profesionales verificados en España`,
-    description: `${category.description} Compara precios orientativos, portfolio y valoraciones reales en RegiKaha. Pide presupuesto gratis.`,
+    title: `${category.name} — Profesionales verificados en 10 países europeos`,
+    description: `${category.description} Compara precios orientativos, portfolio y valoraciones reales en España, Francia, Italia, Portugal, Suiza, Alemania, Países Bajos, Bélgica, Irlanda y Reino Unido.`,
     path: `/categorias/${category.slug}`,
     image: categorySeoImage(category.id),
   });

@@ -42,7 +42,7 @@ export {
 };
 
 /**
- * RANKING JUSTO — el núcleo ético de RegiKaha.
+ * RANKING JUSTO — el núcleo ético de Regi Kaha.
  *
  * La puntuación de mérito NO incluye ningún factor de pago, plan ni puja.
  * Combina exclusivamente señales de calidad y servicio:

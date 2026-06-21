@@ -1,7 +1,7 @@
 import type { Locale } from "./config";
 
 /**
- * Diccionarios de RegiKaha. `en` define la FORMA del diccionario; todos los
+ * Diccionarios de Regi Kaha. `en` define la FORMA del diccionario; todos los
  * demás idiomas se tipan como `Dictionary`, por lo que TypeScript obliga a que
  * cada idioma tenga TODAS las claves (sin fallback). Al añadir una clave nueva,
  * el build falla hasta traducirla en los 24 idiomas.

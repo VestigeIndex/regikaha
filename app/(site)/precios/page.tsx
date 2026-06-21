@@ -15,7 +15,7 @@ import {
 export const metadata: Metadata = buildMetadata({
   title: "Precios",
   description:
-    "RegiKaha es gratis para clientes. Los profesionales eligen Autónomo Nacional por 19,95 €/mes o Multi-mercado Pro por 49,95 €/mes. Los contactos se desbloquean con saldo y precio visible, sin rankings comprados ni comisión sobre el proyecto.",
+    "Regi Kaha es gratis para clientes. Los profesionales eligen Autónomo Nacional por 19,95 €/mes o Multi-mercado Pro por 49,95 €/mes. Los contactos se desbloquean con saldo y precio visible, sin rankings comprados ni comisión sobre el proyecto.",
   path: "/precios",
 });
 
@@ -30,7 +30,7 @@ const neverCharged = [
   "Ranking comprado",
   "Pago por aparecer primero",
   "Comisión sobre el valor del proyecto",
-  "Comisión por mensaje",
+  "Precio oculto por mensaje",
   "Cargos de contacto ocultos",
   "Trampas de visibilidad",
 ];

@@ -40,11 +40,11 @@ export async function onRequestPost(context: any) {
     offers_urgent: b.offersUrgent !== undefined ? (b.offersUrgent ? 1 : 0) : undefined,
   };
   if (b.publicName || b.tagline || b.city || b.country) {
-    const name = String(b.publicName || pro.public_name || "Profesional RegiKaha").trim();
+    const name = String(b.publicName || pro.public_name || "Profesional Regi Kaha").trim();
     const city = String(b.city || pro.city || "").trim();
     const rawCountry = String(b.country || pro.country || "mercados activos").trim();
     const country = rawCountry.length <= 3 ? rawCountry.toUpperCase() : rawCountry;
-    map.seo_title = `${name} - profesional en ${city || country} | RegiKaha`;
+    map.seo_title = `${name} - profesional en ${city || country} | Regi Kaha`;
     map.seo_description = String(b.tagline || b.description || pro.short_tagline || pro.description || "")
       .trim()
       .slice(0, 160);

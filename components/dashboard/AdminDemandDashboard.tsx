@@ -14,10 +14,13 @@ export function AdminDemandDashboard() {
 
   useEffect(() => {
     async function load() {
-      const res = await fetch("/api/admin/demand");
-      const body = await res.json().catch(() => ({}));
-      if (res.ok) {
-        setData(body);
+      const [res, overviewRes] = await Promise.all([
+        fetch("/api/admin/demand", { cache: "no-store" }),
+        fetch("/api/admin/overview", { cache: "no-store" }),
+      ]);
+      const [body, overview] = await Promise.all([res.json().catch(() => ({})), overviewRes.json().catch(() => ({}))]);
+      if (res.ok && overviewRes.ok) {
+        setData({ ...body, overview: overview.metrics || {} });
         setError(null);
       } else {
         setError(body.error || "No tienes permisos para ver el panel interno.");
@@ -47,10 +50,17 @@ export function AdminDemandDashboard() {
       )}
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={<BarChart3 size={19} />} label="Demandas cliente" value={loading ? "..." : demandTotal} />
-        <StatCard icon={<ClipboardList size={19} />} label="Demandas B2B" value={loading ? "..." : b2bTotal} />
-        <StatCard icon={<MapPin size={19} />} label="Zonas monitorizadas" value={loading ? "..." : coverage.length} />
-        <StatCard icon={<Users size={19} />} label="Tareas captación" value={loading ? "..." : tasks.length} />
+        <StatCard icon={<Users size={19} />} label="Usuarios" value={data.overview?.users || 0} loading={loading} />
+        <StatCard icon={<ShieldCheck size={19} />} label="Profesionales activos" value={data.overview?.professionals || 0} loading={loading} />
+        <StatCard icon={<BarChart3 size={19} />} label="Proyectos" value={data.overview?.projects || 0} loading={loading} />
+        <StatCard icon={<ClipboardList size={19} />} label="Denuncias abiertas" value={data.overview?.openReports || 0} loading={loading} />
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard icon={<BarChart3 size={19} />} label="Demandas cliente" value={demandTotal} loading={loading} />
+        <StatCard icon={<ClipboardList size={19} />} label="Demandas B2B" value={b2bTotal} loading={loading} />
+        <StatCard icon={<MapPin size={19} />} label="Zonas monitorizadas" value={coverage.length} loading={loading} />
+        <StatCard icon={<Users size={19} />} label="Tareas captación" value={tasks.length} loading={loading} />
       </div>
 
       <div className="mt-6 grid xl:grid-cols-[1.2fr_1fr] gap-6">

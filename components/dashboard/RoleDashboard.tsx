@@ -1,13 +1,15 @@
+"use client";
+
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { ArrowRight, BriefcaseBusiness, Building2, Heart, Inbox, MapPin, MessageSquare, Receipt, Settings, Star, UserRound } from "lucide-react";
 import { DashboardHeader, StatCard } from "@/components/dashboard/DashboardShell";
 import type { AccountRole } from "@/lib/accounts";
 
-const roleContent: Record<Exclude<AccountRole, "admin">, {
+const roleContent: Record<Exclude<AccountRole, "admin" | "superadmin">, {
   title: string;
   subtitle: string;
-  stats: { label: string; value: string | number; hint?: string; icon: ReactNode }[];
+  stats: { label: string; metric: string; hint?: string; icon: ReactNode }[];
   actions: { label: string; href: string }[];
   sections: { title: string; items: string[] }[];
 }> = {
@@ -15,10 +17,10 @@ const roleContent: Record<Exclude<AccountRole, "admin">, {
     title: "Panel cliente",
     subtitle: "Gestiona proyectos, favoritos, pre-presupuestos y reseñas desde un solo sitio.",
     stats: [
-      { label: "Proyectos", value: 0, hint: "Publica gratis el primero", icon: <Inbox size={19} /> },
-      { label: "Favoritos", value: 0, icon: <Heart size={19} /> },
-      { label: "Mensajes", value: 0, icon: <MessageSquare size={19} /> },
-      { label: "Reseñas pendientes", value: 0, icon: <Star size={19} /> },
+      { label: "Proyectos", metric: "projects", hint: "Publica gratis el primero", icon: <Inbox size={19} /> },
+      { label: "Favoritos", metric: "favorites", icon: <Heart size={19} /> },
+      { label: "Mensajes", metric: "messages", icon: <MessageSquare size={19} /> },
+      { label: "Reseñas pendientes", metric: "pendingReviews", icon: <Star size={19} /> },
     ],
     actions: [
       { label: "Publicar proyecto gratis", href: "/publicar-proyecto" },
@@ -33,10 +35,10 @@ const roleContent: Record<Exclude<AccountRole, "admin">, {
     title: "Panel profesional",
     subtitle: "Completa tu perfil, servicios, portfolio, zonas de operación y plan.",
     stats: [
-      { label: "Solicitudes", value: "Ver", hint: "Panel existente", icon: <Inbox size={19} /> },
-      { label: "Servicios", value: "Editar", icon: <BriefcaseBusiness size={19} /> },
-      { label: "Zonas", value: "Configurar", icon: <MapPin size={19} /> },
-      { label: "Plan", value: "Activo", icon: <Receipt size={19} /> },
+      { label: "Solicitudes", metric: "requests", icon: <Inbox size={19} /> },
+      { label: "Servicios", metric: "services", icon: <BriefcaseBusiness size={19} /> },
+      { label: "Zonas", metric: "areas", icon: <MapPin size={19} /> },
+      { label: "Plan", metric: "plan", icon: <Receipt size={19} /> },
     ],
     actions: [
       { label: "Resumen profesional", href: "/panel" },
@@ -52,10 +54,10 @@ const roleContent: Record<Exclude<AccountRole, "admin">, {
     title: "Panel empresa",
     subtitle: "Publica necesidades B2B, guarda candidatos y gestiona solicitudes de subcontrata.",
     stats: [
-      { label: "Necesidades B2B", value: 0, hint: "Publica la primera", icon: <Building2 size={19} /> },
-      { label: "Candidatos", value: 0, icon: <UserRound size={19} /> },
-      { label: "Mensajes", value: 0, icon: <MessageSquare size={19} /> },
-      { label: "Plan", value: "Preparado", icon: <Receipt size={19} /> },
+      { label: "Necesidades B2B", metric: "projects", hint: "Publica la primera", icon: <Building2 size={19} /> },
+      { label: "Candidatos", metric: "candidates", icon: <UserRound size={19} /> },
+      { label: "Mensajes", metric: "messages", icon: <MessageSquare size={19} /> },
+      { label: "Plan", metric: "plan", icon: <Receipt size={19} /> },
     ],
     actions: [
       { label: "Publicar necesidad", href: "/publicar-subcontrata" },
@@ -70,10 +72,10 @@ const roleContent: Record<Exclude<AccountRole, "admin">, {
     title: "Panel subcontrata",
     subtitle: "Gestiona oportunidades B2B, disponibilidad, zonas, documentación y plan.",
     stats: [
-      { label: "Oportunidades", value: 0, hint: "Se activan por zona", icon: <BriefcaseBusiness size={19} /> },
-      { label: "Mensajes", value: 0, icon: <MessageSquare size={19} /> },
-      { label: "Zonas", value: "Configurar", icon: <MapPin size={19} /> },
-      { label: "Verificación", value: "Pendiente", icon: <Settings size={19} /> },
+      { label: "Oportunidades", metric: "opportunities", hint: "Se activan por zona", icon: <BriefcaseBusiness size={19} /> },
+      { label: "Mensajes", metric: "messages", icon: <MessageSquare size={19} /> },
+      { label: "Zonas", metric: "areas", icon: <MapPin size={19} /> },
+      { label: "Verificación", metric: "verification", icon: <Settings size={19} /> },
     ],
     actions: [
       { label: "Ver oportunidades", href: "/subcontratas" },
@@ -86,8 +88,18 @@ const roleContent: Record<Exclude<AccountRole, "admin">, {
   },
 };
 
-export function RoleDashboard({ role }: { role: Exclude<AccountRole, "admin"> }) {
+export function RoleDashboard({ role }: { role: Exclude<AccountRole, "admin" | "superadmin"> }) {
   const content = roleContent[role];
+  const [metrics, setMetrics] = useState<Record<string, string | number> | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/dashboard", { credentials: "same-origin", cache: "no-store" })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("dashboard unavailable")))
+      .then((data) => { if (!cancelled) setMetrics(data.metrics || {}); })
+      .catch(() => { if (!cancelled) setMetrics({}); });
+    return () => { cancelled = true; };
+  }, []);
   return (
     <>
       <DashboardHeader
@@ -105,7 +117,7 @@ export function RoleDashboard({ role }: { role: Exclude<AccountRole, "admin"> })
       />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {content.stats.map((stat) => (
-          <StatCard key={stat.label} icon={stat.icon} label={stat.label} value={stat.value} hint={stat.hint} />
+          <StatCard key={stat.label} icon={stat.icon} label={stat.label} value={metrics?.[stat.metric] ?? 0} hint={stat.hint} loading={metrics === null} />
         ))}
       </div>
       <div className="mt-6 grid gap-4 lg:grid-cols-2">

@@ -1,4 +1,4 @@
-// Helpers HTTP compartidos por las Pages Functions de RegiKaha.
+// Helpers HTTP compartidos por las Pages Functions de Regi Kaha.
 
 export const SESSION_COOKIE = "__Secure-rk_session";
 export const LEGACY_SESSION_COOKIE = "rk_session";
@@ -96,7 +96,7 @@ export async function getSessionUser(env: any, request: Request): Promise<any | 
   for (const token of getSessionTokens(request)) {
     const row = await env.DB.prepare(
       `SELECT u.* FROM sessions s JOIN users u ON u.id = s.user_id
-       WHERE s.id = ? AND s.expires_at > datetime('now')`,
+       WHERE s.id = ? AND s.expires_at > datetime('now') AND u.status = 'active' AND u.deleted_at IS NULL`,
     )
       .bind(token)
       .first();
@@ -120,26 +120,26 @@ export async function requireRole(env: any, request: Request, roles: string | st
 }
 
 export function requireProfessional(env: any, request: Request): Promise<any | Response> {
-  return requireRole(env, request, ["professional", "admin"]);
+  return requireRole(env, request, ["professional", "admin", "superadmin"]);
 }
 
 export function requireCompany(env: any, request: Request): Promise<any | Response> {
-  return requireRole(env, request, ["company", "admin"]);
+  return requireRole(env, request, ["company", "admin", "superadmin"]);
 }
 
 export function requireSubcontractor(env: any, request: Request): Promise<any | Response> {
-  return requireRole(env, request, ["subcontractor", "admin"]);
+  return requireRole(env, request, ["subcontractor", "admin", "superadmin"]);
 }
 
 /** Exige sesión con rol admin para APIs internas. */
 export async function requireAdmin(env: any, request: Request): Promise<any | Response> {
-  return requireRole(env, request, "admin");
+  return requireRole(env, request, ["admin", "superadmin"]);
 }
 
 export async function requireOwnerOrAdmin(env: any, request: Request, ownerUserId: string): Promise<any | Response> {
   const user = await requireUser(env, request);
   if (user instanceof Response) return user;
-  if (user.role !== "admin" && user.id !== ownerUserId) return bad("No autorizado", 403);
+  if (user.role !== "admin" && user.role !== "superadmin" && user.id !== ownerUserId) return bad("No autorizado", 403);
   return user;
 }
 

@@ -56,7 +56,7 @@ export function DashboardOverview() {
   if (loading) {
     return (
       <>
-        <DashboardHeader title="Panel" subtitle="Cargando tu actividad en RegiKaha." />
+        <DashboardHeader title="Panel" subtitle="Cargando tu actividad en Regi Kaha." />
         <div className="card p-8 text-sm text-muted">Preparando el resumen.</div>
       </>
     );
@@ -77,7 +77,7 @@ export function DashboardOverview() {
     <>
       <DashboardHeader
         title={`Hola, ${pro.public_name || "profesional"}`}
-        subtitle="Resumen de tu actividad en RegiKaha."
+        subtitle="Resumen de tu actividad en Regi Kaha."
         action={
           pro.slug && (
             <Link href={`/profesionales/${pro.slug}`} className="btn btn-secondary text-sm">

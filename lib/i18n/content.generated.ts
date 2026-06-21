@@ -1152,7 +1152,7 @@ export const generatedContentDictionaries = {
           "Español"
         ],
         "certifications": [],
-        "description": "Empresa de reformas en Madrid pendiente de verificación. La documentación está en revisión por el equipo de RegiKaha antes de mostrar el perfil completo en los listados públicos.",
+        "description": "Empresa de reformas en Madrid pendiente de verificación. La documentación está en revisión por el equipo de Regi Kaha antes de mostrar el perfil completo en los listados públicos.",
         "shortTagline": "Reformas en Madrid (en verificación)"
       },
       "pro-obrafacil": {
@@ -2355,7 +2355,7 @@ export const generatedContentDictionaries = {
           "Espagnol"
         ],
         "certifications": [],
-        "description": "Entreprise de rénovation à Madrid en attente de vérification. La documentation est en cours d'examen par l'équipe RegiKaha avant d'afficher le profil complet sur les listes publiques.",
+        "description": "Entreprise de rénovation à Madrid en attente de vérification. La documentation est en cours d'examen par l'équipe Regi Kaha avant d'afficher le profil complet sur les listes publiques.",
         "shortTagline": "Réformes à Madrid (en cours de vérification)"
       },
       "pro-obrafacil": {
@@ -3558,7 +3558,7 @@ export const generatedContentDictionaries = {
           "spagnolo"
         ],
         "certifications": [],
-        "description": "Impresa di ristrutturazione a Madrid in attesa di verifica. La documentazione è in fase di revisione da parte del team RegiKaha prima di visualizzare il profilo completo negli elenchi pubblici.",
+        "description": "Impresa di ristrutturazione a Madrid in attesa di verifica. La documentazione è in fase di revisione da parte del team Regi Kaha prima di visualizzare il profilo completo negli elenchi pubblici.",
         "shortTagline": "Riforme a Madrid (in fase di verifica)"
       },
       "pro-obrafacil": {
@@ -4761,7 +4761,7 @@ export const generatedContentDictionaries = {
           "Espanhol"
         ],
         "certifications": [],
-        "description": "Empresa de renovação em Madrid pendente de verificação. A documentação está sendo revisada pela equipe RegiKaha antes de exibir o perfil completo nas listagens públicas.",
+        "description": "Empresa de renovação em Madrid pendente de verificação. A documentação está sendo revisada pela equipe Regi Kaha antes de exibir o perfil completo nas listagens públicas.",
         "shortTagline": "Reformas em Madrid (em verificação)"
       },
       "pro-obrafacil": {
@@ -5964,7 +5964,7 @@ export const generatedContentDictionaries = {
           "Spanisch"
         ],
         "certifications": [],
-        "description": "Renovierungsunternehmen in Madrid bis zur Überprüfung. Die Dokumentation wird vom RegiKaha-Team überprüft, bevor das vollständige Profil in öffentlichen Einträgen angezeigt wird.",
+        "description": "Renovierungsunternehmen in Madrid bis zur Überprüfung. Die Dokumentation wird vom Regi Kaha-Team überprüft, bevor das vollständige Profil in öffentlichen Einträgen angezeigt wird.",
         "shortTagline": "Reformen in Madrid (in Prüfung)"
       },
       "pro-obrafacil": {
@@ -7167,7 +7167,7 @@ export const generatedContentDictionaries = {
           "Spaans"
         ],
         "certifications": [],
-        "description": "Renovatiebedrijf in Madrid in afwachting van verificatie. De documentatie wordt beoordeeld door het RegiKaha-team voordat het volledige profiel op openbare vermeldingen wordt weergegeven.",
+        "description": "Renovatiebedrijf in Madrid in afwachting van verificatie. De documentatie wordt beoordeeld door het Regi Kaha-team voordat het volledige profiel op openbare vermeldingen wordt weergegeven.",
         "shortTagline": "Hervormingen in Madrid (wordt geverifieerd)"
       },
       "pro-obrafacil": {
@@ -8370,7 +8370,7 @@ export const generatedContentDictionaries = {
           "Spanish"
         ],
         "certifications": [],
-        "description": "Renovation company in Madrid pending verification. The documentation is under review by the RegiKaha team before displaying the full profile on public listings.",
+        "description": "Renovation company in Madrid pending verification. The documentation is under review by the Regi Kaha team before displaying the full profile on public listings.",
         "shortTagline": "Reforms in Madrid (under verification)"
       },
       "pro-obrafacil": {

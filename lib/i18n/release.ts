@@ -1,7 +1,7 @@
 import type { Locale } from "./config";
 
 const es = {
-  "Conecta con RegiKaha": "Conecta con RegiKaha",
+  "Conecta con Regi Kaha": "Conecta con Regi Kaha",
   "Entrar como cliente": "Entrar como cliente",
   "Entrar como profesional": "Entrar como profesional",
   "Entrar como empresa": "Entrar como empresa",
@@ -78,7 +78,7 @@ const es = {
 };
 
 const en = {
-  "Conecta con RegiKaha": "Connect with RegiKaha",
+  "Conecta con Regi Kaha": "Connect with Regi Kaha",
   "Entrar como cliente": "Sign in as client",
   "Entrar como profesional": "Sign in as professional",
   "Entrar como empresa": "Sign in as company",
@@ -155,7 +155,7 @@ const en = {
 };
 
 const fr: typeof en = {
-  "Conecta con RegiKaha": "Se connecter à RegiKaha",
+  "Conecta con Regi Kaha": "Se connecter à Regi Kaha",
   "Entrar como cliente": "Se connecter comme client",
   "Entrar como profesional": "Se connecter comme professionnel",
   "Entrar como empresa": "Se connecter comme entreprise",
@@ -232,7 +232,7 @@ const fr: typeof en = {
 };
 
 const it: typeof en = {
-  "Conecta con RegiKaha": "Connettiti a RegiKaha",
+  "Conecta con Regi Kaha": "Connettiti a Regi Kaha",
   "Entrar como cliente": "Accedi come cliente",
   "Entrar como profesional": "Accedi come professionista",
   "Entrar como empresa": "Accedi come azienda",
@@ -309,7 +309,7 @@ const it: typeof en = {
 };
 
 const pt: typeof en = {
-  "Conecta con RegiKaha": "Ligar-se ao RegiKaha",
+  "Conecta con Regi Kaha": "Ligar-se ao Regi Kaha",
   "Entrar como cliente": "Entrar como cliente",
   "Entrar como profesional": "Entrar como profissional",
   "Entrar como empresa": "Entrar como empresa",
@@ -386,7 +386,7 @@ const pt: typeof en = {
 };
 
 const de: typeof en = {
-  "Conecta con RegiKaha": "Mit RegiKaha verbinden",
+  "Conecta con Regi Kaha": "Mit Regi Kaha verbinden",
   "Entrar como cliente": "Als Kunde anmelden",
   "Entrar como profesional": "Als Fachkraft anmelden",
   "Entrar como empresa": "Als Unternehmen anmelden",
@@ -463,7 +463,7 @@ const de: typeof en = {
 };
 
 const nl: typeof en = {
-  "Conecta con RegiKaha": "Verbinden met RegiKaha",
+  "Conecta con Regi Kaha": "Verbinden met Regi Kaha",
   "Entrar como cliente": "Inloggen als klant",
   "Entrar como profesional": "Inloggen als professional",
   "Entrar como empresa": "Inloggen als bedrijf",

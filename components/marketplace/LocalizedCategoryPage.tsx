@@ -138,7 +138,7 @@ export function LocalizedCategoryPage({
         <p className="mt-8 text-sm text-muted">
           {t.ui.categoryPage.proJoinPrefix} {categoryNameLower}?{" "}
           <Link href="/registro" className="font-semibold text-forest-700 hover:underline">
-            {t.ui.categoryPage.proJoinSuffix.replace("RegiKaha", site.name)}
+            {t.ui.categoryPage.proJoinSuffix.replace("Regi Kaha", site.name)}
           </Link>{" "}
           {t.ui.categoryPage.joinAndGetClients}
         </p>

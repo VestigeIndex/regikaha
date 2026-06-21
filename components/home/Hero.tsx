@@ -61,7 +61,7 @@ export function Hero() {
                   <Star size={18} fill="currentColor" />
                 </span>
                 <div>
-                  <p className="text-lg font-bold text-ink leading-none">{stats.averageRating}/5</p>
+                  <p className="text-lg font-bold text-ink leading-none">{stats.reviewsCount > 0 ? `${stats.averageRating}/5` : t.ui.common.noRatings}</p>
                   <p className="text-xs text-muted mt-0.5">{t.heroExtra.avgRating}</p>
                 </div>
               </div>

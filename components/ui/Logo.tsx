@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-/** Logotipo RegiKaha: marca de obra/hoja en verde + wordmark. */
+/** Logotipo Regi Kaha: marca de obra/hoja en verde + wordmark. */
 export function Logo({ className, mono = false }: { className?: string; mono?: boolean }) {
   return (
-    <Link href="/" className={cn("inline-flex items-center gap-2.5 group", className)} aria-label="RegiKaha — inicio">
+    <Link href="/" className={cn("inline-flex items-center gap-2.5 group", className)} aria-label="Regi Kaha — inicio">
       <span
         className="grid place-items-center h-9 w-9 rounded-xl shadow-soft"
         style={{ background: mono ? "rgba(255,255,255,0.16)" : "var(--gradient-brand)" }}
@@ -33,7 +33,7 @@ export function Logo({ className, mono = false }: { className?: string; mono?: b
           mono ? "text-white" : "text-ink",
         )}
       >
-        Regi<span className={mono ? "text-mint" : "text-forest-600"}>Kaha</span>
+        Regi <span className={mono ? "text-mint" : "text-forest-600"}>Kaha</span>
       </span>
     </Link>
   );

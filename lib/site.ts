@@ -3,13 +3,13 @@
 import { formatIntervalPrice, professionalPlans } from "./pricing";
 
 export const site = {
-  name: "RegiKaha",
-  legalName: "RegiKaha",
+  name: "Regi Kaha",
+  legalName: "Regi Kaha",
   url: "https://regikaha.com",
   email: "help@regikaha.com",
   tagline: "Compara profesionales verificados para reformas y servicios técnicos en mercados europeos seleccionados",
   description:
-    "RegiKaha conecta clientes con profesionales verificados para reformas, construcción, instalaciones, mantenimiento, arquitectura e ingeniería en mercados europeos seleccionados. Compara por precio, calidad, zona de cobertura, portfolio y valoraciones reales. Gratis para clientes.",
+    "Regi Kaha conecta clientes con profesionales verificados para reformas, construcción, instalaciones, mantenimiento, arquitectura e ingeniería en mercados europeos seleccionados. Compara por precio, calidad, zona de cobertura, portfolio y valoraciones reales. Gratis para clientes.",
   founderPrice: {
     monthly: formatIntervalPrice(professionalPlans[0], "monthly"),
     yearly: formatIntervalPrice(professionalPlans[0], "yearly"),
@@ -72,9 +72,9 @@ export const footerNav: { title: string; links: { label: string; href: string }[
     ],
   },
   {
-    title: "RegiKaha",
+    title: "Regi Kaha",
     links: [
-      { label: "Sobre RegiKaha", href: "/sobre" },
+      { label: "Sobre Regi Kaha", href: "/sobre" },
       { label: "Contacto", href: "/contacto" },
       { label: "Aviso legal", href: "/legal/aviso-legal" },
       { label: "Privacidad", href: "/legal/privacidad" },

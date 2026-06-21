@@ -18,7 +18,7 @@ export async function onRequestPost(context: any) {
   if (challenge) return challenge;
   if (!isEmail(email)) return bad("Email no válido");
   if (!country || !city) return bad("Faltan país o ciudad");
-  if (!isActiveCountryCode(country)) return bad("País no disponible todavía en RegiKaha");
+  if (!isActiveCountryCode(country)) return bad("País no disponible todavía en Regi Kaha");
   if (description.length < 20) return bad("Describe brevemente lo que necesitas");
   if (description.length > 2400) return bad("La descripción es demasiado larga");
   if (b.professionalId) {

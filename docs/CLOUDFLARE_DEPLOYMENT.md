@@ -1,4 +1,4 @@
-# RegiKaha on Cloudflare
+# Regi Kaha on Cloudflare
 
 ## Architecture
 
@@ -20,9 +20,12 @@ npx wrangler pages secret put TURNSTILE_SECRET_KEY --project-name regikaha
 npx wrangler pages secret put STRIPE_SECRET_KEY --project-name regikaha
 npx wrangler pages secret put STRIPE_WEBHOOK_SECRET --project-name regikaha
 npx wrangler pages secret put GOOGLE_CLIENT_SECRET --project-name regikaha
+npx wrangler pages secret put RESEND_API_KEY --project-name regikaha
 ```
 
 The Turnstile secret is already configured in the Pages project. The site key is public by design and is present in `lib/integrations.ts`.
+
+Transactional email uses Resend from `Regi Kaha <no-reply@regikaha.com>` with replies routed to `help@regikaha.com`. Keep the API key only as a Pages secret and verify the `regikaha.com` sending domain in Resend before relying on production email delivery.
 
 ## Validate and deploy
 
@@ -58,7 +61,7 @@ List R2 objects from an S3-compatible client configured with scoped R2 credentia
 
 ## Rollback
 
-1. Open Workers & Pages > RegiKaha > Deployments.
+1. Open Workers & Pages > Regi Kaha > Deployments.
 2. Select the last known-good production deployment and choose rollback.
 3. D1 migrations are additive. Restore data only from a verified export; do not reverse schema by dropping tables or columns.
 

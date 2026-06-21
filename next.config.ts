@@ -10,8 +10,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   trailingSlash: false,
   images: {
-    // Usamos <img> con SVG locales; en export las imágenes no se optimizan.
-    // Al conectar R2/CDN se podrá cambiar por next/image con loader.
+    // Export estático: next/image emite etiquetas sin optimización dinámica.
+    // Las imágenes públicas quedan servidas directamente desde Pages/CDN.
     unoptimized: true,
   },
 };

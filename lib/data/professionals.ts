@@ -600,7 +600,7 @@ const seedProfessionals: Professional[] = [
     responseTimeHours: 12,
     priceFrom: 2000,
     description:
-      "Empresa de reformas en Madrid pendiente de verificación. La documentación está en revisión por el equipo de RegiKaha antes de mostrar el perfil completo en los listados públicos.",
+      "Empresa de reformas en Madrid pendiente de verificación. La documentación está en revisión por el equipo de Regi Kaha antes de mostrar el perfil completo en los listados públicos.",
     shortTagline: "Reformas en Madrid (en verificación)",
     logoColor: "#94a3b8",
     coverImage: "/images/photos/ventanas.webp",
@@ -650,7 +650,7 @@ const seedProfessionals: Professional[] = [
   },
 ];
 
-export const professionals: Professional[] = seedProfessionals.map((professional) => ({
+export const professionals: Professional[] = (process.env.NEXT_PUBLIC_ENABLE_DEMO_DATA === "true" ? seedProfessionals : []).map((professional) => ({
   ...professional,
   source: "seed",
   isSeedProfile: true,

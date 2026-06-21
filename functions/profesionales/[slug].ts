@@ -52,9 +52,9 @@ export async function onRequestGet(context: any) {
   const services = serviceRows.results || [];
   const portfolio = portfolioRows.results || [];
   const origin = new URL(context.request.url).origin;
-  const publicName = p.public_name || "Profesional RegiKaha";
+  const publicName = p.public_name || "Profesional Regi Kaha";
   const area = [p.city, p.region, p.country].filter(Boolean).join(", ");
-  const title = p.seo_title || `${publicName} - profesional verificado en ${area || "mercados activos"} | RegiKaha`;
+  const title = p.seo_title || `${publicName} - profesional verificado en ${area || "mercados activos"} | Regi Kaha`;
   const description = p.seo_description || p.short_tagline || String(p.description || "").slice(0, 155);
   const schema = {
     "@context": "https://schema.org",
@@ -94,7 +94,7 @@ export async function onRequestGet(context: any) {
     <script type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>
     ${styles()}
   </head><body>
-    <header class="hero"><div class="wrap top"><a class="brand" href="/">RegiKaha</a><span class="pill">Profesional verificado</span></div></header>
+    <header class="hero"><div class="wrap top"><a class="brand" href="/">Regi Kaha</a><span class="pill">Profesional verificado</span></div></header>
     <main class="wrap head">
       <article class="card main">
         <div class="profile">

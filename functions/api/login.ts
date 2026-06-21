@@ -18,8 +18,9 @@ export async function onRequestPost(context: any) {
   if (!user || !(await verifyPassword(password, user.password_hash))) {
     return bad("Email o contraseña incorrectos", 401);
   }
+  if (user.status !== "active" || user.deleted_at) return bad("Cuenta no disponible", 403);
   const requestedRole = String(b.role || "");
-  if (requestedRole === "admin" && user.role !== "admin") return bad("No autorizado", 403);
+  if (requestedRole === "admin" && user.role !== "admin" && user.role !== "superadmin") return bad("No autorizado", 403);
   const { token, maxAge } = await createSession(env, user.id);
   return privateJson(
     { ok: true, user: { id: user.id, email: user.email, role: user.role }, redirectTo: panelPathForRole(user.role) },

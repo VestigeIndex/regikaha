@@ -1,5 +1,5 @@
 /**
- * Configuración i18n de RegiKaha — nivel europeo.
+ * Configuración i18n de Regi Kaha — nivel europeo.
  *
  * Cubre los idiomas operativos de los países objetivo:
  * España, Francia, Italia, Portugal, Suiza, Alemania, Países Bajos,

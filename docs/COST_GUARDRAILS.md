@@ -61,8 +61,8 @@ Stay on D1 while relational data fits the documented limits and query latency is
 ## Other account websites
 
 - `regitramites.com`: unchanged; review separately before adding dynamic bindings.
-- `vestigeindex.com`: unchanged and expected to remain static; no RegiKaha binding is added.
+- `vestigeindex.com`: unchanged and expected to remain static; no Regi Kaha binding is added.
 - `utxosuite.com`: unchanged and expected to remain static.
 - `idovio.com`: unchanged and expected to remain static until a narrowly scoped licensing/payment API is needed.
 
-This repository contains only RegiKaha, so no configuration for the other projects is modified.
+This repository contains only Regi Kaha, so no configuration for the other projects is modified.

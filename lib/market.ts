@@ -1,7 +1,7 @@
 export const europeMarket = {
   label: "Mercados activos",
   description:
-    "RegiKaha opera en mercados europeos seleccionados: España, Francia, Italia, Portugal, Suiza, Alemania, Países Bajos, Bélgica, Irlanda y Reino Unido.",
+    "Regi Kaha opera en mercados europeos seleccionados: España, Francia, Italia, Portugal, Suiza, Alemania, Países Bajos, Bélgica, Irlanda y Reino Unido.",
   primaryCountry: "España",
   primaryCountryCode: "ES",
 } as const;

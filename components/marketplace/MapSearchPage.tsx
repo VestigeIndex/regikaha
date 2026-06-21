@@ -49,7 +49,7 @@ function mapRemoteProfessional(row: any, locale: Locale, professionalLabel: stri
     slug: row.slug,
     type: row.type || "autonomo",
     typeLabel: row.type_label || professionalLabel,
-    publicName: row.public_name || `${professionalLabel} RegiKaha`,
+    publicName: row.public_name || `${professionalLabel} Regi Kaha`,
     legalName: row.legal_name || "",
     nifCif: row.nif_cif || "",
     email: row.email || "",

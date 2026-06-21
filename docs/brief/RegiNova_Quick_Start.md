@@ -1,8 +1,8 @@
-# RegiNova — Guía rápida para usar con Claude
+# Regi Kaha — Guía rápida de continuidad
 
-1. Sube o pega el archivo `RegiNova_Claude_Master_Prompt.md`.
-2. Pídele a Claude que lo trate como especificación completa y que no haga preguntas innecesarias.
-3. Indícale que construya primero:
+1. Usa el prompt maestro actualizado como especificación de producto, no como demo.
+2. Mantén la plataforma existente: no reemplazar, no simplificar y no borrar datos.
+3. Prioriza primero:
    - Home
    - Buscar profesionales
    - Perfil profesional
@@ -12,11 +12,12 @@
    - Oferta fundadores
 4. Recuérdale:
    - color verde
-   - España primero
+   - 10 mercados europeos: España, Francia, Italia, Portugal, Suiza, Alemania, Países Bajos, Bélgica, Irlanda y Reino Unido
    - sin pay-to-win
    - cliente gratis
-   - profesional 49,95 €/mes o 499 €/año
+   - profesional 19,95 €/mes nacional o 49,95 €/mes multi-mercado
+   - anual con 10% de descuento
    - primeros 300 verificados 5 meses gratis
    - mismo estilo de REGITrámites pero adaptado a reformas/construcción
-5. Las imágenes deben seguir `RegiNova_10_Image_Brief.md`.
+5. Las imágenes deben seguir el brief hiperrealista de Regi Kaha.
 6. No aceptar demos vacías ni lorem ipsum.

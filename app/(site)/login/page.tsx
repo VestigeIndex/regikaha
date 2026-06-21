@@ -6,8 +6,9 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Iniciar sesión",
-  description: "Inicia sesión en RegiKaha con email y contraseña o Google Connect cuando esté configurado.",
+  description: "Inicia sesión en Regi Kaha con email y contraseña o Google Connect cuando esté configurado.",
   path: "/login",
+  noindex: true,
 });
 
 export default function LoginPage() {

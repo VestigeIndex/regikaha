@@ -41,7 +41,7 @@ export async function onRequestPost(context: any) {
   if (challenge) return challenge;
   if (!isEmail(email)) return bad("Email de empresa no válido");
   if (!country || !city || !requiredSpecialty) return bad("Faltan país, ciudad o especialidad");
-  if (!isActiveCountryCode(country)) return bad("País no disponible todavía en RegiKaha");
+  if (!isActiveCountryCode(country)) return bad("País no disponible todavía en Regi Kaha");
   if (description.length < 20) return bad("Describe un poco más la necesidad de subcontrata");
 
   const requestId = newId("b2b_");

@@ -106,25 +106,25 @@ function localizedDocumentTitle(locale: Locale, dictionary: Record<string, strin
   const market = marketSlug ? getActiveMarketBySlug(decodeURIComponent(marketSlug)) : null;
 
   if (path === "/") {
-    return `RegiKaha — ${dictionaries[locale].hero.title}`;
+    return `Regi Kaha — ${dictionaries[locale].hero.title}`;
   }
 
   if (path === "/mercados") {
-    return `${marketsDictionaries[locale].index.title} | RegiKaha`;
+    return `${marketsDictionaries[locale].index.title} | Regi Kaha`;
   }
 
   if (market) {
     const name = countryName(market.code, locale, market.name);
-    return `${verifiedProfessionalsTitle(locale, name)} | RegiKaha`;
+    return `${verifiedProfessionalsTitle(locale, name)} | Regi Kaha`;
   }
 
   if (path.startsWith("/profesionales/")) {
     const name = document.querySelector("h1")?.textContent?.trim();
-    if (name) return `${verifiedProfileTitle(locale, name)} | RegiKaha`;
+    if (name) return `${verifiedProfileTitle(locale, name)} | Regi Kaha`;
   }
 
   const heading = document.querySelector("main h1, body > div h1")?.textContent?.trim();
-  if (heading) return `${heading} | RegiKaha`;
+  if (heading) return `${heading} | Regi Kaha`;
 
   return replaceKnownPhrases(document.title, dictionary);
 }

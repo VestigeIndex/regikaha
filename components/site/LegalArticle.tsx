@@ -36,7 +36,7 @@ export function LegalArticle({
       </div>
 
       <div className="mt-10 rounded-xl bg-canvas ring-1 ring-forest-600/10 p-4 text-xs text-muted">
-        Puedes contactar con RegiKaha para cualquier consulta sobre estas condiciones,
+        Puedes contactar con Regi Kaha para cualquier consulta sobre estas condiciones,
         privacidad, moderación o retirada de contenidos a través del correo de contacto publicado.
       </div>
     </div>

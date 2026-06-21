@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check, ShieldCheck } from "lucide-react";
 import { FounderAvailability } from "@/components/billing/FounderAvailability";
@@ -32,7 +33,7 @@ export function SubscriptionPlanChooser() {
             </Link>
           </div>
           <div className="relative min-h-56 lg:min-h-full">
-            <img src="/images/photos/mantenimiento.webp" alt={translate("Técnico profesional trabajando con equipamiento industrial")} className="absolute inset-0 h-full w-full object-cover" />
+            <Image src="/images/photos/mantenimiento.webp" alt={translate("Técnico profesional trabajando con equipamiento industrial")} fill sizes="(min-width: 1024px) 48vw, 100vw" className="object-cover" />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 to-transparent p-5 text-sm text-white/85 lg:hidden">
               {translate("Suscripción, contrato y actividad profesional en un único flujo.")}
             </div>

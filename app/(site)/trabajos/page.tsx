@@ -10,7 +10,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Trabajos realizados",
   description:
-    "Galería de trabajos realizados por profesionales verificados de RegiKaha: reformas, baños, cocinas, fachadas, energía solar y más. Resultados reales, antes y después.",
+    "Galería de trabajos que los profesionales de Regi Kaha publican con información del proyecto, ubicación aproximada y especialidad.",
   path: "/trabajos",
 });
 
@@ -19,13 +19,19 @@ export default function TrabajosPage() {
     <>
       <PageHeader
         eyebrow="Portfolio"
-        title="Trabajos realizados por profesionales verificados"
-        description="Resultados reales de proyectos completados. Pasa el cursor sobre cada imagen para ver el antes."
+        title="Trabajos publicados por profesionales"
+        description="Solo mostramos portfolios asociados a perfiles activos. Las galerías aparecen cuando el profesional aporta sus propios proyectos."
         breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Trabajos realizados" }]}
       />
 
       <section className="container-x py-14">
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {portfolioItems.length === 0 ? (
+          <div className="mx-auto max-w-2xl py-10 text-center">
+            <h2 className="text-xl font-bold text-ink">Aún no hay portfolios públicos en producción</h2>
+            <p className="mt-3 text-muted">Estamos revisando los primeros perfiles antes de publicar sus trabajos. Puedes publicar tu proyecto gratis y activaremos la búsqueda en tu zona.</p>
+            <Link href="/publicar-proyecto" className="btn btn-primary mt-6">Publicar proyecto</Link>
+          </div>
+        ) : <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {portfolioItems.map((item, i) => {
             const pro = getProfessionalById(item.professionalId);
             return (
@@ -44,7 +50,7 @@ export default function TrabajosPage() {
               </Reveal>
             );
           })}
-        </div>
+        </div>}
       </section>
 
       <CtaBand

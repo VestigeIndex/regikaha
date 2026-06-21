@@ -36,7 +36,7 @@ export const subscriptionContractSections: Record<
   summary: {
     title: "Lo esencial antes de aceptar",
     paragraphs: [
-      "La suscripción habilita herramientas profesionales, visibilidad legítima y gestión de oportunidades. RegiKaha no ejecuta obras ni garantiza clientes o ingresos.",
+      "La suscripción habilita herramientas profesionales, visibilidad legítima y gestión de oportunidades. Regi Kaha no ejecuta obras ni garantiza clientes o ingresos.",
       "El precio futuro, la fecha de primer cobro, la renovación y la consecuencia de impago se muestran en el resumen fijo.",
     ],
   },
@@ -57,7 +57,7 @@ export const subscriptionContractSections: Record<
   verification: {
     title: "Suscripción y verificación",
     paragraphs: [
-      "Pagar no equivale a identidad verificada. RegiKaha separa suscripción activa, identidad, empresa y documentación verificadas.",
+      "Pagar no equivale a identidad verificada. Regi Kaha separa suscripción activa, identidad, empresa y documentación verificadas.",
       "Debes mantener información veraz, licencias, seguros y registros aplicables a tu actividad y país.",
     ],
   },
@@ -85,7 +85,7 @@ export const subscriptionContractSections: Record<
   privacy: {
     title: "Privacidad, documentos y prueba",
     paragraphs: [
-      "RegiKaha guarda versiones legales, precios, fechas, checkboxes, hash del contrato y huellas técnicas hasheadas para acreditar la aceptación.",
+      "Regi Kaha guarda versiones legales, precios, fechas, checkboxes, hash del contrato y huellas técnicas hasheadas para acreditar la aceptación.",
       "Los documentos se usan para verificación y no deben publicarse como información abierta.",
     ],
   },
@@ -93,8 +93,8 @@ export const subscriptionContractSections: Record<
     title: "Contrato completo de suscripción",
     paragraphs: [
       "Este contrato incorpora los Términos Profesionales, Política de Verificación, Política de Reseñas, ranking justo, Política de Suscripción y Privacidad vigentes en la versión indicada.",
-      "El profesional responde de presupuestos, facturación, licencias, seguros, personal, prevención y ejecución. RegiKaha actúa como plataforma tecnológica de intermediación.",
-      "RegiKaha no garantiza un número mínimo de solicitudes, clientes, ingresos o presupuestos. El pago no mejora artificialmente el ranking.",
+      "El profesional responde de presupuestos, facturación, licencias, seguros, personal, prevención y ejecución. Regi Kaha actúa como plataforma tecnológica de intermediación.",
+      "Regi Kaha no garantiza un número mínimo de solicitudes, clientes, ingresos o presupuestos. El pago no mejora artificialmente el ranking.",
     ],
   },
 };

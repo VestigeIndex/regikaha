@@ -1,10 +1,10 @@
-# RegiNova — Prompt Maestro Completo para Claude
+# Regi Kaha — Prompt Maestro Completo para Claude
 
 ## Rol de Claude
 
 Actúa como diseñador senior de producto, arquitecto UX/UI, copywriter, arquitecto full-stack, diseñador de marca y constructor de marketplaces.
 
-Debes construir **RegiNova**, una plataforma web española tipo marketplace para profesionales verificados de reformas, construcción, instalaciones, mantenimiento, arquitectura, ingeniería y servicios técnicos.
+Debes construir **Regi Kaha**, una plataforma web europea tipo marketplace para 10 países para profesionales verificados de reformas, construcción, instalaciones, mantenimiento, arquitectura, ingeniería y servicios técnicos.
 
 Usa **Claude Design** y todo lo necesario para crear una página moderna, funcional, premium, clara, escalable y lista para convertirse en producto real.
 
@@ -15,25 +15,25 @@ No construyas una demo vacía. Construye una base real de producto.
 # 1. Nombre y marca
 
 ## Nombre
-**RegiNova**
+**Regi Kaha**
 
 Uso público preferido:
-- RegiNova
+- Regi Kaha
 
 Uso opcional en logo:
 - REGINOVA
 
 ## Identidad
-RegiNova es la plataforma hermana de REGITrámites, pero enfocada en construcción, reformas y servicios técnicos.
+Regi Kaha es la plataforma hermana de REGITrámites, pero enfocada en construcción, reformas y servicios técnicos.
 
-REGITrámites usa azul.  
-RegiNova debe usar **verde**.
+REGITrámites usa azul.
+Regi Kaha debe usar **verde**.
 
 ---
 
 # 2. Concepto del negocio
 
-RegiNova es un **marketplace español de profesionales verificados** para:
+Regi Kaha es un **marketplace europeo de profesionales verificados** para:
 
 - reformas integrales
 - reformas de baños
@@ -57,12 +57,12 @@ RegiNova es un **marketplace español de profesionales verificados** para:
 - peritajes técnicos
 - empresas multiservicio
 
-RegiNova no es una empresa de reformas.  
-RegiNova no es un directorio barato.  
-RegiNova no es un sistema de leads abusivo.  
-RegiNova no es pay-to-win.
+Regi Kaha no es una empresa de reformas.
+Regi Kaha no es un directorio barato.
+Regi Kaha no es un sistema de leads abusivo.
+Regi Kaha no es pay-to-win.
 
-RegiNova es un marketplace justo donde los clientes comparan profesionales por:
+Regi Kaha es un marketplace justo donde los clientes comparan profesionales por:
 
 - precio
 - calidad
@@ -81,7 +81,7 @@ RegiNova es un marketplace justo donde los clientes comparan profesionales por:
 
 ## Frase principal
 
-**Compara profesionales verificados para reformas y servicios técnicos en toda España.**
+**Compara profesionales verificados para reformas y servicios técnicos en 10 países europeos.**
 
 ## Subtítulo
 
@@ -93,7 +93,7 @@ Encuentra empresas de reformas, técnicos, instaladores, arquitectos e ingeniero
 
 ## Mensaje de confianza
 
-**En RegiNova nadie compra la primera posición. Los profesionales destacan por calidad, precio justo, trabajos reales y valoraciones verificadas.**
+**En Regi Kaha nadie compra la primera posición. Los profesionales destacan por calidad, precio justo, trabajos reales y valoraciones verificadas.**
 
 ---
 
@@ -101,7 +101,7 @@ Encuentra empresas de reformas, técnicos, instaladores, arquitectos e ingeniero
 
 ## Clientes
 
-El cliente usa RegiNova gratis.
+El cliente usa Regi Kaha gratis.
 
 Puede:
 
@@ -120,11 +120,11 @@ El profesional paga una cuota fija.
 
 ### Precio
 
-**49,95 €/mes + IVA**
+**19,95 €/mes + IVA/VAT** en Autónomo Nacional y **49,95 €/mes + IVA/VAT** en Multi-mercado Pro
 
 o
 
-**499 €/año + IVA**
+**215,46 €/año + IVA/VAT** o **539,46 €/año + IVA/VAT** con 10% de descuento anual
 
 ### Oferta fundadora
 
@@ -139,8 +139,8 @@ No hay:
 - ranking comprado
 - pago por aparecer primero
 - publicidad interna pay-to-win
-- comisión por lead
-- comisión por mensaje
+- comisión sobre el valor del proyecto
+- precio oculto por mensaje
 - créditos artificiales
 - trampas de visibilidad
 
@@ -313,7 +313,7 @@ Crear estas páginas:
 10. Precios
 11. Oferta fundadores
 12. Trabajos realizados / portfolio
-13. Sobre RegiNova
+13. Sobre Regi Kaha
 14. Preguntas frecuentes
 15. Contacto
 16. Aviso legal
@@ -332,7 +332,7 @@ Crear estas páginas:
 
 Título:
 
-**Compara profesionales verificados para reformas y servicios técnicos en toda España**
+**Compara profesionales verificados para reformas y servicios técnicos en 10 países europeos**
 
 Subtítulo:
 
@@ -399,17 +399,17 @@ Texto:
 
 **Sin rankings comprados**
 
-En RegiNova nadie paga por aparecer primero. Los profesionales destacan por su reputación, calidad, precio justo, trabajos reales y valoraciones verificadas.
+En Regi Kaha nadie paga por aparecer primero. Los profesionales destacan por su reputación, calidad, precio justo, trabajos reales y valoraciones verificadas.
 
 ## Bloque fundadores
 
 Texto:
 
-**Oferta fundadores RegiNova**
+**Oferta fundadores Regi Kaha**
 
-Los primeros 300 profesionales verificados reciben 5 meses gratis de RegiNova Pro.
+Los primeros 300 profesionales verificados reciben 5 meses gratis en el plan profesional elegido.
 
-Después: 49,95 €/mes + IVA o 499 €/año + IVA.
+Después: 19,95 €/mes + IVA/VAT en Autónomo Nacional o 49,95 €/mes + IVA/VAT en Multi-mercado Pro. Anual con 10% de descuento.
 
 ## CTA final
 
@@ -430,7 +430,7 @@ Título:
 
 Texto:
 
-RegiNova te permite comparar profesionales antes de contratar. Consulta trabajos realizados, precios orientativos, valoraciones reales, especialidades y zona de servicio.
+Regi Kaha te permite comparar profesionales antes de contratar. Consulta trabajos realizados, precios orientativos, valoraciones reales, especialidades y zona de servicio.
 
 Beneficios:
 
@@ -462,7 +462,7 @@ Beneficios:
 - solicitudes de clientes
 - reseñas verificadas
 - ranking justo
-- sin pagar por leads
+- contactos y oportunidades con precio transparente antes del desbloqueo
 - sin posiciones compradas
 - cuota fija simple
 
@@ -584,11 +584,11 @@ Cada servicio también puede generar página:
 
 ## SEO title ejemplo
 
-**Reformas integrales en Madrid | Profesional verificado | RegiNova**
+**Reformas integrales en Madrid | Profesional verificado | Regi Kaha**
 
 ## Meta description ejemplo
 
-Compara profesionales verificados para reformas integrales en Madrid. Consulta precios orientativos, portfolio, valoraciones reales y zona de servicio en RegiNova.
+Compara profesionales verificados para reformas integrales en Madrid. Consulta precios orientativos, portfolio, valoraciones reales y zona de servicio en Regi Kaha.
 
 ## Schema sugerido
 
@@ -757,7 +757,7 @@ Reglas:
 
 Texto:
 
-**Las valoraciones en RegiNova son verificadas. Ningún profesional puede pagar para mejorar su puntuación, ocultar opiniones legítimas o comprar posiciones.**
+**Las valoraciones en Regi Kaha son verificadas. Ningún profesional puede pagar para mejorar su puntuación, ocultar opiniones legítimas o comprar posiciones.**
 
 ---
 
@@ -846,7 +846,7 @@ Sí usar:
 
 # 23. Instrucción final para Claude
 
-Construye RegiNova ahora.
+Construye Regi Kaha ahora.
 
 Usa este brief como fuente de verdad.
 

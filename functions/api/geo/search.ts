@@ -84,7 +84,7 @@ async function geoSearchResponse(context: any) {
   const limit = clampLimit(url.searchParams.get("limit"));
 
   if (q.length < 2) return json({ total: 0, results: [] });
-  if (country && !isActiveCountryCode(country)) return bad("País no disponible en RegiKaha", 400);
+  if (country && !isActiveCountryCode(country)) return bad("País no disponible en Regi Kaha", 400);
 
   try {
     if (env.DB) {

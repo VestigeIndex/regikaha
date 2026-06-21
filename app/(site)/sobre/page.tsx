@@ -9,9 +9,9 @@ import { getPlatformStats } from "@/lib/data";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Sobre RegiKaha",
+  title: "Sobre Regi Kaha",
   description:
-    "RegiKaha conecta clientes con profesionales verificados para reformas y servicios técnicos en mercados europeos seleccionados. Nuestra misión: que contratar una reforma sea transparente, justo y sin riesgos.",
+    "Regi Kaha conecta clientes con profesionales verificados para reformas y servicios técnicos en mercados europeos seleccionados. Nuestra misión: que contratar una reforma sea transparente, justo y sin riesgos.",
   path: "/sobre",
 });
 
@@ -27,10 +27,10 @@ export default function SobrePage() {
   return (
     <>
       <PageHeader
-        eyebrow="Sobre RegiKaha"
+        eyebrow="Sobre Regi Kaha"
         title="Hacemos que contratar una reforma sea transparente y justo"
-        description="RegiKaha nace para resolver un problema real en los mercados donde opera: contratar reformas y servicios técnicos a ciegas, sin saber si el profesional es de fiar ni cuánto debería costar."
-        breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Sobre RegiKaha" }]}
+        description="Regi Kaha nace para resolver un problema real en los mercados donde opera: contratar reformas y servicios técnicos a ciegas, sin saber si el profesional es de fiar ni cuánto debería costar."
+        breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Sobre Regi Kaha" }]}
       />
 
       <section className="container-x py-16">
@@ -53,7 +53,7 @@ export default function SobrePage() {
               { v: `${stats.verifiedCount}+`, l: "Profesionales verificados" },
               { v: `${stats.categoriesCount}`, l: "Categorías" },
               { v: `${stats.averageRating}/5`, l: "Valoración media" },
-              { v: "100%", l: "Reseñas verificadas" },
+              { v: stats.reviewsCount > 0 ? `${stats.reviewsCount}` : "—", l: "Reseñas publicadas tras interacción" },
             ].map((s) => (
               <div key={s.l} className="card p-6 text-center">
                 <p className="text-3xl font-bold text-gradient">{s.v}</p>

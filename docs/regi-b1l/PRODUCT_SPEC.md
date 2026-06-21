@@ -2,11 +2,11 @@
 
 ## Audience
 
-Self-employed tradespeople, contractors and small construction companies operating in RegiKaha's selected European markets.
+Self-employed tradespeople, contractors and small construction companies operating in Regi Kaha's selected European markets.
 
 ## Core journeys
 
-1. Capture a lead from RegiKaha or manually and convert it into a client.
+1. Capture a lead from Regi Kaha or manually and convert it into a client.
 2. Create a job linked to a client, track status, dates, budget and up to five compressed photos.
 3. Build a line-item quote with discount and country-appropriate configurable VAT/tax.
 4. Record an internal acceptance signature and export a PDF with a verification QR.

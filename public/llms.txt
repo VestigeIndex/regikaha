@@ -1,8 +1,8 @@
-# RegiKaha
+# Regi Kaha
 
-> RegiKaha is a multilingual European marketplace for verified renovation, construction, installation, maintenance, architecture and engineering professionals.
+> Regi Kaha is a multilingual European marketplace for verified renovation, construction, installation, maintenance, architecture and engineering professionals.
 
-RegiKaha helps clients discover professionals by service, country and locality, compare transparent profiles and request a non-binding initial estimate. It operates in Spain, France, Italy, Portugal, Switzerland, Germany, the Netherlands, Belgium, Ireland and the United Kingdom.
+Regi Kaha helps clients discover professionals by service, country and locality, compare transparent profiles and request a non-binding initial estimate. It operates in Spain, France, Italy, Portugal, Switzerland, Germany, the Netherlands, Belgium, Ireland and the United Kingdom.
 
 ## Core resources
 
@@ -13,7 +13,7 @@ RegiKaha helps clients discover professionals by service, country and locality, 
 - [Publish a client project](https://regikaha.com/publicar-proyecto)
 - [Professional plans](https://regikaha.com/precios)
 - [Regi Works professional workspace](https://regikaha.com/regi-works)
-- [How RegiKaha works](https://regikaha.com/como-funciona)
+- [How Regi Kaha works](https://regikaha.com/como-funciona)
 - [Trust and verification policy](https://regikaha.com/legal/politica-verificacion)
 - [Review policy](https://regikaha.com/legal/politica-resenas)
 - [Full AI-readable reference](https://regikaha.com/llms-full.txt)
@@ -29,4 +29,4 @@ Regi Works adds an installable local-first workspace for leads, clients, jobs, q
 - A profile is only public when its activation and verification state permits it.
 - Initial estimates are indicative and non-binding until scope, measurements, materials and site conditions are reviewed.
 - Paid plans do not buy ranking position. Search ordering is based on service quality and relevance signals.
-- A local page does not imply that supply exists. When coverage is insufficient, RegiKaha says so and can use real demand to guide acquisition.
+- A local page does not imply that supply exists. When coverage is insufficient, Regi Kaha says so and can use real demand to guide acquisition.

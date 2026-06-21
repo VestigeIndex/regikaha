@@ -2,7 +2,7 @@
   "name": "regikaha",
   "version": "0.1.0",
   "private": true,
-  "description": "RegiKaha — Marketplace español de profesionales verificados para reformas, construcción y servicios técnicos.",
+  "description": "Regi Kaha — Marketplace europeo de profesionales verificados para reformas, construcción y servicios técnicos en 10 países.",
   "engines": {
     "node": ">=20",
     "npm": ">=10"
@@ -14,6 +14,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "node scripts/analyze-cost.mjs",
+    "test:e2e": "playwright test",
     "cf:deploy:regikaha": "node scripts/deploy-regikaha.mjs",
     "cf:deploy:regikaha:worker": "wrangler pages functions build functions --outdir .wrangler/functions-build",
     "cf:deploy:regikaha:pages": "wrangler pages deploy out --project-name regikaha --branch main",
@@ -41,6 +42,7 @@
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.0",
     "@types/node": "^22.0.0",
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19.0.0",
@@ -50,8 +52,8 @@
     "eslint-config-next": "^15.1.0",
     "postcss": "^8.5.10",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.0"
-    ,"wrangler": "^4.103.0"
+    "typescript": "^5.7.0",
+    "wrangler": "^4.103.0"
   },
   "overrides": {
     "postcss": "$postcss"

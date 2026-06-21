@@ -12,7 +12,7 @@
 - Connect plan choice to the existing Stripe subscription flow.
 - Country-specific invoice requirements, VAT validation and tax advice review.
 - Supplier feeds with timestamp, currency, stock and source attribution.
-- RegiKaha lead ingestion with consent, assignment and notification preferences.
+- Regi Kaha lead ingestion with consent, assignment and notification preferences.
 
 ## Native application
 

@@ -9,7 +9,7 @@ export function LoginPageHeader() {
     <PageHeader
       eyebrow={translate("Acceso")}
       title={translate("Iniciar sesión")}
-      description={translate("Entra con tu email y contraseña. RegiKaha recordará tu tipo de cuenta y te llevará al panel correcto.")}
+      description={translate("Entra con tu email y contraseña. Regi Kaha recordará tu tipo de cuenta y te llevará al panel correcto.")}
       breadcrumbs={[
         { name: translate("Inicio"), path: "/" },
         { name: translate("Iniciar sesión") },

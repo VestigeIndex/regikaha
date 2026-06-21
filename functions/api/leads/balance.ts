@@ -76,7 +76,7 @@ export async function onRequestPost(context: any) {
       mode: "payment",
       "line_items[0][price_data][currency]": currency.toLowerCase(),
       "line_items[0][price_data][unit_amount]": amount,
-      "line_items[0][price_data][product_data][name]": "RegiKaha contact balance",
+      "line_items[0][price_data][product_data][name]": "Regi Kaha contact balance",
       "line_items[0][quantity]": 1,
       success_url: `${origin}/panel/saldo?topup=success`,
       cancel_url: `${origin}/panel/saldo?topup=cancelled`,

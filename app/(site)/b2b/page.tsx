@@ -6,7 +6,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "B2B constructoras y subcontratas",
-  description: "RegiKaha B2B conecta constructoras, empresas y administradores con subcontratas verificables en mercados europeos seleccionados.",
+  description: "Regi Kaha B2B conecta constructoras, empresas y administradores con subcontratas verificables en mercados europeos seleccionados.",
   path: "/b2b",
 });
 

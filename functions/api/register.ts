@@ -141,7 +141,7 @@ export async function onRequestPost(context: any) {
     ingenieria: "Ingeniería / peritación",
     multiservicio: "Empresa multiservicio",
   };
-  const seoTitle = `${publicName} - profesional en ${city || country} | RegiKaha`;
+  const seoTitle = `${publicName} - profesional en ${city || country} | Regi Kaha`;
   const seoDescription = String(b.tagline || b.description || "").trim().slice(0, 160);
 
   const stmts = [];

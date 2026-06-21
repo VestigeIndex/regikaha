@@ -9,7 +9,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = buildMetadata({
   title: "Contacto",
   description:
-    "¿Tienes una duda sobre RegiKaha? Escríbenos. Atendemos a clientes y profesionales del marketplace de reformas y servicios técnicos.",
+    "¿Tienes una duda sobre Regi Kaha? Escríbenos. Atendemos a clientes y profesionales del marketplace de reformas y servicios técnicos.",
   path: "/contacto",
 });
 

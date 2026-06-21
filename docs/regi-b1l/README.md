@@ -1,6 +1,6 @@
 # Regi Works
 
-Regi Works is the professional operations workspace integrated at `/regi-works`. It is built inside the existing Next.js application and does not replace the RegiKaha marketplace. The legacy `/regi-b1l` route remains available for compatibility.
+Regi Works is the professional operations workspace integrated at `/regi-works`. It is built inside the existing Next.js application and does not replace the Regi Kaha marketplace. The legacy `/regi-b1l` route remains available for compatibility.
 
 ## Included
 

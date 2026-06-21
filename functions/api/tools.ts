@@ -1,7 +1,7 @@
 import { bad, privateJson, requireRole } from "../../apilib/http";
 import { newId } from "../../apilib/auth";
 
-const offeringRoles = ["professional", "company", "subcontractor", "admin"];
+const offeringRoles = ["professional", "company", "subcontractor", "admin", "superadmin"];
 const priorities = new Set(["low", "normal", "high"]);
 const taskStatuses = new Set(["open", "done"]);
 

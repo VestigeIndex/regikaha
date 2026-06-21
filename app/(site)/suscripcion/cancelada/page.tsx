@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SubscriptionResultCard } from "@/components/billing/SubscriptionResultCard";
 
-export const metadata: Metadata = { title: "Suscripción no completada | RegiKaha", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Suscripción no completada | Regi Kaha", robots: { index: false, follow: false } };
 
 export default function SubscriptionCancelledPage() {
   return (
