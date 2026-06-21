@@ -19,6 +19,13 @@ const navItems = [
   { key: "pricing", href: "/precios" },
 ] as const;
 
+const roleLabels: Record<string, string> = {
+  client: "Panel cliente",
+  professional: "Panel profesional",
+  company: "Panel empresa",
+  subcontractor: "Panel subcontrata",
+};
+
 export function Header() {
   const { t, locale } = useI18n();
   const headerCopy = headerDictionaries[locale];
@@ -61,8 +68,20 @@ export function Header() {
     window.location.href = "/";
   }
 
+  async function switchRole(role: string) {
+    const res = await fetch("/api/session/active-role", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ role }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) window.location.href = data.panelPath || panelPathForRole(role);
+  }
+
   const authenticated = !!me?.authenticated;
-  const panelHref = panelPathForRole(me?.user?.role);
+  const panelHref = me?.panelPath || panelPathForRole(me?.user?.activeRole || me?.user?.role);
+  const availableRoles: string[] = me?.user?.availableRoles || [];
 
   return (
     <header
@@ -102,9 +121,18 @@ export function Header() {
                 {headerCopy.account}
               </button>
               {accountOpen && (
-                <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white p-2 shadow-elevated ring-1 ring-forest-600/10">
+                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white p-2 shadow-elevated ring-1 ring-forest-600/10">
                   <p className="px-3 py-2 text-xs text-muted truncate">{me.user?.email}</p>
                   <Link href={panelHref} className="block rounded-lg px-3 py-2 text-sm text-ink hover:bg-forest-500/6">{headerCopy.myPanel}</Link>
+                  {availableRoles.length > 1 && (
+                    <div className="my-1 border-t border-forest-600/10 pt-1">
+                      {availableRoles.map((role) => (
+                        <button key={role} type="button" onClick={() => switchRole(role)} className="block w-full rounded-lg px-3 py-2 text-left text-sm text-ink hover:bg-forest-500/6">
+                          {roleLabels[role] || role}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   <button type="button" onClick={logout} className="block w-full rounded-lg px-3 py-2 text-left text-sm text-ink hover:bg-forest-500/6">
                     {headerCopy.logout}
                   </button>
