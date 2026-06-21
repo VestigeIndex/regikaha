@@ -28,6 +28,10 @@ export async function onRequestPost(context: any) {
   let b: any;
   try { b = await request.json(); } catch { return bad("JSON inválido"); }
 
+  const user = await getSessionUser(env, request);
+  if (!user) return bad("Debes iniciar sesión para publicar una subcontrata", 401);
+  if (Number(user.email_verified || 0) !== 1) return bad("Verifica tu email antes de publicar", 403);
+
   const email = clean(b.email, 160).toLowerCase();
   const country = clean(b.country, 4).toUpperCase();
   const city = clean(b.city, 120);
@@ -45,7 +49,6 @@ export async function onRequestPost(context: any) {
   if (description.length < 20) return bad("Describe un poco más la necesidad de subcontrata");
 
   const requestId = newId("b2b_");
-  const user = await getSessionUser(env, request);
   const companyProfile = user
     ? await env.DB.prepare("SELECT id FROM profiles WHERE user_id = ? AND role = 'company'").bind(user.id).first()
     : null;

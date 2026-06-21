@@ -137,6 +137,10 @@ export async function onRequestPost(context: any) {
     dimensions = parsed.dimensions;
   } catch { return bad("Solicitud no válida"); }
 
+  const sessionUser = await getSessionUser(env, request);
+  if (!sessionUser) return bad("Debes iniciar sesión para publicar un proyecto", 401);
+  if (Number(sessionUser.email_verified || 0) !== 1) return bad("Verifica tu email antes de publicar tu proyecto", 403);
+
   const email = clean(b.email, 160).toLowerCase();
   const description = clean(b.description, 2000);
   const country = clean(b.country, 4).toUpperCase();
@@ -171,7 +175,6 @@ export async function onRequestPost(context: any) {
   }
 
   const projectId = newId("prj_");
-  const sessionUser = await getSessionUser(env, request);
   if (sessionUser?.role === "client") {
     const monthly = await env.DB.prepare(
       "SELECT COUNT(*) AS total FROM project_requests WHERE client_id = ? AND created_at >= date('now','start of month')",
