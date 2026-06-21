@@ -29,6 +29,7 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
   const [images, setImages] = useState<Array<{ image: OptimizedImage; thumbnail: OptimizedImage }>>([]);
   const [optimizing, setOptimizing] = useState(false);
   const [challengeKey, setChallengeKey] = useState(0);
+  const [authenticated, setAuthenticated] = useState(false);
   const countryTouched = useRef(false);
 
   useEffect(() => {
@@ -38,6 +39,15 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
     });
     return () => { cancelled = true; };
   }, [locale]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/me", { credentials: "same-origin", cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => { if (!cancelled) setAuthenticated(Boolean(data.authenticated)); })
+      .catch(() => undefined);
+    return () => { cancelled = true; };
+  }, []);
 
   function selectCountry(value: string) {
     countryTouched.current = true;
@@ -70,7 +80,7 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
       const res = await fetch(mode === "client" ? "/api/projects" : "/api/b2b-projects", {
         method: "POST", headers, credentials: "same-origin", body,
       });
-      const data = await res.json().catch(() => ({}));
+      await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(t.ui.projectForm.unableToPublish);
       setSent(true);
       setImages([]);
@@ -85,6 +95,12 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
   }
 
   if (sent) {
+    const primaryHref = mode === "client"
+      ? authenticated ? "/panel/cliente/proyectos" : "/registro/cliente"
+      : "/panel/empresa";
+    const primaryLabel = mode === "client"
+      ? authenticated ? "Ver mis proyectos" : "Crear cuenta cliente para seguir mi solicitud"
+      : t.ui.actions.searchMap;
     return (
       <div className="card p-8 text-center">
         <CheckCircle2 size={38} className="mx-auto text-forest-600" />
@@ -93,8 +109,9 @@ export function ProjectRequestForm({ mode = "client" }: { mode?: Mode }) {
           {mode === "client" ? t.ui.projectForm.sentClient : t.ui.projectForm.sentB2b}
         </p>
         <div className="mt-5 flex justify-center gap-2 flex-wrap">
-          <Link href="/mapa" className="btn btn-primary">{t.ui.actions.searchMap}</Link>
-          <Link href="/registro/profesional" className="btn btn-secondary">{t.ui.register.createProfile}</Link>
+          <Link href={primaryHref} className="btn btn-primary">{primaryLabel}</Link>
+          {mode === "client" && !authenticated && <Link href="/login?role=client&next=/panel/cliente/proyectos" className="btn btn-secondary">Entrar como cliente</Link>}
+          <Link href="/mapa" className="btn btn-secondary">{t.ui.actions.searchMap}</Link>
           <button onClick={() => setSent(false)} className="btn btn-secondary">{t.ui.actions.publishAnother}</button>
         </div>
       </div>
@@ -282,54 +299,22 @@ function Input({
   );
 }
 
-function Select({
-  name,
-  label,
-  children,
-  value,
-  onChange,
-}: {
-  name: string;
-  label: string;
-  children: React.ReactNode;
-  value?: string;
-  onChange?: (value: string) => void;
-}) {
+function Select({ name, label, children, value, onChange }: { name: string; label: string; children: React.ReactNode; value?: string; onChange?: (value: string) => void }) {
   return (
     <label className="block">
       <span className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</span>
-      <select name={name} value={value} onChange={(event) => onChange?.(event.target.value)} className="reg-input mt-1.5">{children}</select>
+      <select name={name} value={value} onChange={onChange ? (event) => onChange(event.target.value) : undefined} className="reg-input mt-1.5">
+        {children}
+      </select>
     </label>
   );
 }
 
-function Textarea({
-  name,
-  label,
-  placeholder,
-  required,
-  minLength,
-  maxLength,
-}: {
-  name: string;
-  label: string;
-  placeholder?: string;
-  required?: boolean;
-  minLength?: number;
-  maxLength?: number;
-}) {
+function Textarea({ name, label, placeholder, required, minLength, maxLength }: { name: string; label: string; placeholder?: string; required?: boolean; minLength?: number; maxLength?: number }) {
   return (
     <label className="block">
       <span className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</span>
-      <textarea
-        name={name}
-        placeholder={placeholder}
-        required={required}
-        minLength={minLength}
-        maxLength={maxLength}
-        rows={5}
-        className="reg-input mt-1.5 resize-none"
-      />
+      <textarea name={name} placeholder={placeholder} required={required} minLength={minLength} maxLength={maxLength} rows={6} className="reg-input mt-1.5 resize-none" />
     </label>
   );
 }
