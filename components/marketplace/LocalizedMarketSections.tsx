@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { BadgeCheck, BriefcaseBusiness, Building2, CalendarClock, ClipboardList, FileCheck2, Map, ShieldCheck } from "lucide-react";
 import { ProjectRequestForm } from "@/components/marketplace/ProjectRequestForm";
+import { PublishGate } from "@/components/marketplace/PublishGate";
 import { useT } from "@/lib/i18n/context";
 
 export function SearchFallback({ kind }: { kind: "search" | "map" }) {
@@ -14,7 +15,9 @@ export function PublishProjectBody() {
   const t = useT();
   return (
     <section className="container-x py-10 grid lg:grid-cols-[1fr_360px] gap-8 items-start">
-      <ProjectRequestForm />
+      <PublishGate next="/publicar-proyecto">
+        <ProjectRequestForm />
+      </PublishGate>
       <aside className="card p-6 lg:sticky lg:top-24">
         <h2 className="font-bold text-ink">{t.ui.pages.publishProjectHelpTitle}</h2>
         <ol className="mt-4 space-y-3 text-sm text-muted">
@@ -34,7 +37,9 @@ export function PublishSubcontractBody() {
   const t = useT();
   return (
     <section className="container-x py-10 grid lg:grid-cols-[1fr_360px] gap-8 items-start">
-      <ProjectRequestForm mode="b2b" />
+      <PublishGate next="/publicar-subcontrata">
+        <ProjectRequestForm mode="b2b" />
+      </PublishGate>
       <aside className="card p-6 lg:sticky lg:top-24">
         <h2 className="font-bold text-ink">{t.ui.pages.publishSubcontractHelpTitle}</h2>
         <ul className="mt-4 space-y-3 text-sm text-muted">
