@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { LogIn, Menu, Search, UserRound, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
-import { GuideLink } from "@/components/site/GuideLink";
 import { initialsFromUser, panelPathForRole } from "@/lib/accounts";
 import { useI18n } from "@/lib/i18n/context";
 import { headerDictionaries } from "@/lib/i18n/header";
@@ -19,6 +18,8 @@ const navItems = [
   { key: "forPros", href: "/para-profesionales" },
   { key: "pricing", href: "/precios" },
 ] as const;
+
+const navLinkClass = "whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-semibold leading-none text-ink/75 transition hover:bg-forest-500/7 hover:text-forest-800 2xl:px-4";
 
 const roleLabels: Record<string, string> = {
   client: "Panel cliente",
@@ -92,19 +93,17 @@ export function Header() {
       )}
     >
       <div className="container-x flex h-[72px] items-center gap-4">
-        <div className="flex shrink-0 items-center"><Logo /></div>
+        <div className="flex shrink-0 items-center">
+          <Logo />
+        </div>
 
-        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex">
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex" aria-label={t.ui.nav.openMenu}>
           {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-semibold leading-none text-ink/75 transition hover:bg-forest-500/7 hover:text-forest-800 2xl:px-4"
-            >
+            <Link key={item.href} href={item.href} className={navLinkClass}>
               {t.ui.nav[item.key]}
             </Link>
           ))}
-          <GuideLink className="px-3 py-2 text-[0.925rem] font-medium text-ink/80 hover:text-forest-700 rounded-lg hover:bg-forest-500/5 transition-colors" />
+          <Link href="/ayuda" className={navLinkClass}>{headerCopy.help}</Link>
         </nav>
 
         <div className="ml-auto hidden shrink-0 items-center gap-2 xl:flex">
@@ -178,6 +177,7 @@ export function Header() {
                 {t.ui.nav[item.key]}
               </Link>
             ))}
+            <Link href="/ayuda" onClick={() => setOpen(false)} className="px-3 py-3 text-base font-medium text-ink hover:bg-forest-500/6 rounded-xl">{headerCopy.help}</Link>
             <div className="h-px bg-[var(--hairline)] my-3" />
             {authenticated ? (
               <>
@@ -196,7 +196,6 @@ export function Header() {
             <Link href="/buscar" onClick={() => setOpen(false)} className="btn btn-secondary w-full">
               <Search size={16} /> {t.actions.search}
             </Link>
-            <Link href="/ayuda" onClick={() => setOpen(false)} className="btn btn-secondary w-full mt-2">{headerCopy.help}</Link>
             <Link href="/publicar-proyecto" onClick={() => setOpen(false)} className="btn btn-primary w-full mt-2">
               {t.ui.nav.publishProjectFree}
             </Link>
