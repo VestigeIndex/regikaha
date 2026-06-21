@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { BriefcaseBusiness, Calculator, Coins, ExternalLink, Inbox, LayoutDashboard, LogOut, Menu, Radar, Receipt, SlidersHorizontal, Star, User, Wrench, X } from "lucide-react";
+import { BriefcaseBusiness, Calculator, Coins, ExternalLink, Inbox, LayoutDashboard, LogOut, Menu, Radar, Receipt, Search, SlidersHorizontal, Star, User, Wrench, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import {
   isPanelPathAllowed,
@@ -23,14 +23,30 @@ export interface NavItem {
 }
 
 interface SessionState {
-  user: { email: string; name?: string | null; role: AccountRole };
+  user: { email: string; name?: string | null; role: AccountRole; activeRole?: AccountRole; availableRoles?: AccountRole[] };
+  panelPath?: string;
 }
+
+const roleModeLabels: Record<string, string> = {
+  client: "Modo cliente",
+  professional: "Modo profesional",
+  company: "Modo empresa",
+  subcontractor: "Modo subcontrata",
+};
 
 function navForRole(role: AccountRole, copy: DashboardCopy): NavItem[] {
   if (role === "admin" || role === "superadmin") return [];
   const nav: NavItem[] = [
     { label: copy.nav.overview, href: panelPathForRole(role), icon: <LayoutDashboard size={18} /> },
   ];
+  if (role === "client") {
+    nav.push(
+      { label: "Mis proyectos", href: "/panel/cliente/proyectos", icon: <Inbox size={18} /> },
+      { label: "Buscar profesionales", href: "/buscar", icon: <Search size={18} /> },
+      { label: "Reseñas", href: "/panel/cliente/resenas", icon: <Star size={18} /> },
+    );
+    return nav;
+  }
   if (role === "professional") {
     nav.push(
       { label: copy.nav.opportunities, href: "/panel/oportunidades", icon: <Radar size={18} /> },
@@ -67,16 +83,16 @@ export function DashboardShell({ children, nav: providedNav, badge }: { children
           router.replace(`/conectar?next=${encodeURIComponent(pathname)}`);
           return;
         }
-        const role = normalizeRole(data.user?.role);
+        const role = normalizeRole(data.user?.activeRole || data.user?.role);
         if ((role === "admin" || role === "superadmin") && !pathname.startsWith("/admin")) {
           router.replace("/admin");
           return;
         }
         if (role !== "admin" && role !== "superadmin" && !isPanelPathAllowed(role, pathname)) {
-          router.replace(panelPathForRole(role));
+          router.replace(data.panelPath || panelPathForRole(role));
           return;
         }
-        setSession({ user: { ...data.user, role } });
+        setSession({ user: { ...data.user, role }, panelPath: data.panelPath });
       })
       .catch(() => router.replace(`/conectar?next=${encodeURIComponent(pathname)}`));
     return () => {
@@ -94,6 +110,17 @@ export function DashboardShell({ children, nav: providedNav, badge }: { children
     window.location.assign("/");
   }
 
+  async function switchRole(role: AccountRole) {
+    const res = await fetch("/api/session/active-role", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ role }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) window.location.assign(data.panelPath || panelPathForRole(role));
+  }
+
   if (!session) {
     return (
       <div className="min-h-screen bg-canvas grid place-items-center px-4" aria-busy="true">
@@ -108,6 +135,7 @@ export function DashboardShell({ children, nav: providedNav, badge }: { children
 
   const role = session.user.role;
   const roleLabel = badge || (role === "admin" ? "Admin" : role === "superadmin" ? "Superadmin" : copy.roles[role]);
+  const availableRoles = (session.user.availableRoles || []).filter((item) => item !== "admin" && item !== "superadmin");
   const sidebar = (
     <div className="flex h-full flex-col">
       <div className="border-b hairline px-5 py-5">
@@ -116,6 +144,26 @@ export function DashboardShell({ children, nav: providedNav, badge }: { children
           <span className="chip bg-mint text-forest-800">Regi Kaha · {roleLabel}</span>
         </div>
       </div>
+      {availableRoles.length > 1 && (
+        <div className="border-b hairline p-3">
+          <p className="px-3.5 pb-2 text-xs font-semibold uppercase tracking-wide text-muted">Cambiar modo</p>
+          <div className="space-y-1">
+            {availableRoles.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => switchRole(item)}
+                className={cn(
+                  "flex w-full items-center justify-between rounded-lg px-3.5 py-2 text-sm font-medium",
+                  item === role ? "bg-forest-600 text-white" : "text-ink/75 hover:bg-forest-500/8 hover:text-forest-800",
+                )}
+              >
+                {roleModeLabels[item] || item}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       <nav className="flex-1 space-y-1 overflow-y-auto p-3" aria-label={copy.navigation}>
         {nav.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
