@@ -12,10 +12,9 @@ async function availableRolesForUser(env: any, user: any): Promise<AccountRole[]
   const roles = new Set<AccountRole>();
   const legacyRole = normalizeRole(user.role, "client");
   if (isPublicRole(legacyRole)) roles.add(legacyRole);
-  roles.add("client");
 
   const pro = await env.DB.prepare("SELECT id FROM professionals WHERE user_id = ? LIMIT 1").bind(user.id).first();
-  if (pro) roles.add("professional");
+  if (pro && legacyRole !== "professional") roles.add("professional");
 
   try {
     const profiles = await env.DB.prepare("SELECT role FROM profiles WHERE user_id = ? AND status != 'suspended'").bind(user.id).all();

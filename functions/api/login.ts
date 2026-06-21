@@ -10,7 +10,6 @@ function isPublicRole(role: AccountRole) {
 }
 
 async function hasProfileRole(env: any, userId: string, role: AccountRole) {
-  if (role === "client") return true;
   if (role === "professional") {
     const pro = await env.DB.prepare("SELECT id FROM professionals WHERE user_id = ? LIMIT 1").bind(userId).first();
     return Boolean(pro);
@@ -30,10 +29,9 @@ async function availableRolesForUser(env: any, user: any): Promise<AccountRole[]
   const roles = new Set<AccountRole>();
   const legacyRole = normalizeRole(user.role, "client");
   if (isPublicRole(legacyRole)) roles.add(legacyRole);
-  roles.add("client");
 
   const pro = await env.DB.prepare("SELECT id FROM professionals WHERE user_id = ? LIMIT 1").bind(user.id).first();
-  if (pro) roles.add("professional");
+  if (pro && legacyRole !== "professional") roles.add("professional");
 
   try {
     const profiles = await env.DB.prepare("SELECT role FROM profiles WHERE user_id = ? AND status != 'suspended'").bind(user.id).all();
@@ -77,7 +75,7 @@ export async function onRequestPost(context: any) {
   } else if (availableRoles.includes(activeRole)) {
     activeRole = activeRole;
   } else {
-    activeRole = "client";
+    activeRole = normalizeRole(user.role, "client");
   }
 
   const fallbackPath = panelPathForRole(activeRole);
