@@ -34,9 +34,10 @@ export async function onRequestPost(context: any) {
     region: b.region, city: b.city, phone: b.phone, description: b.description,
     latitude: coordinate(b.latitude), longitude: coordinate(b.longitude),
     short_tagline: b.tagline, years_experience: b.yearsExperience, service_radius_km: b.serviceRadiusKm,
-    price_from: b.priceFrom,
+    service_area_note: b.serviceArea, price_from: b.priceFrom,
     insurance_declared: b.insuranceDeclared !== undefined ? (b.insuranceDeclared ? 1 : 0) : undefined,
     invoice_declared: b.invoiceDeclared !== undefined ? (b.invoiceDeclared ? 1 : 0) : undefined,
+    docs_declared: b.docsDeclared !== undefined ? (b.docsDeclared ? 1 : 0) : undefined,
     offers_urgent: b.offersUrgent !== undefined ? (b.offersUrgent ? 1 : 0) : undefined,
   };
   if (b.publicName || b.tagline || b.city || b.country) {

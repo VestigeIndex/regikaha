@@ -154,14 +154,14 @@ export async function onRequestPost(context: any) {
     env.DB.prepare(
       `INSERT INTO professionals
         (id,user_id,slug,type,type_label,public_name,legal_name,nif_cif,country,region,city,latitude,longitude,phone,years_experience,languages,
-         description,short_tagline,insurance_declared,invoice_declared,offers_urgent,seo_title,seo_description,verification_status,active_status)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',0)`,
+         description,short_tagline,service_area_note,insurance_declared,invoice_declared,docs_declared,offers_urgent,seo_title,seo_description,verification_status,active_status)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',0)`,
     ).bind(
       proId, userId, slug, type, typeLabel[type] || "Profesional", publicName, String(b.legalName || ""), String(b.nifCif || ""),
       country, region, city, coordinate(b.latitude ?? b.placeLatitude), coordinate(b.longitude ?? b.placeLongitude),
       String(b.phone || ""), Number(b.yearsExperience) || 0, langs,
-      String(b.description || ""), String(b.tagline || ""), b.insuranceDeclared ? 1 : 0,
-      b.invoiceDeclared ? 1 : 0, b.offersUrgent ? 1 : 0, seoTitle, seoDescription,
+      String(b.description || ""), String(b.tagline || ""), String(b.serviceArea || ""), b.insuranceDeclared ? 1 : 0,
+      b.invoiceDeclared ? 1 : 0, b.docsDeclared ? 1 : 0, b.offersUrgent ? 1 : 0, seoTitle, seoDescription,
     ),
   );
   for (const c of categories) {

@@ -23,10 +23,12 @@ type ProfileForm = {
   longitude: string;
   yearsExperience: string;
   serviceRadiusKm: string;
+  serviceArea: string;
   priceFrom: string;
   languages: string;
   insuranceDeclared: boolean;
   invoiceDeclared: boolean;
+  docsDeclared: boolean;
   offersUrgent: boolean;
 };
 
@@ -45,10 +47,12 @@ const initialForm: ProfileForm = {
   longitude: "",
   yearsExperience: "0",
   serviceRadiusKm: "30",
+  serviceArea: "",
   priceFrom: "0",
   languages: "Español",
   insuranceDeclared: false,
   invoiceDeclared: false,
+  docsDeclared: false,
   offersUrgent: false,
 };
 
@@ -90,10 +94,12 @@ export function ProfileManager() {
           longitude: p.longitude == null ? "" : String(p.longitude),
           yearsExperience: String(p.years_experience || 0),
           serviceRadiusKm: String(p.service_radius_km || 30),
+          serviceArea: p.service_area_note || "",
           priceFrom: String(p.price_from || 0),
           languages: languages.length ? languages.join(", ") : "Español",
           insuranceDeclared: !!p.insurance_declared,
           invoiceDeclared: !!p.invoice_declared,
+          docsDeclared: !!p.docs_declared,
           offersUrgent: !!p.offers_urgent,
         });
         setSelectedCategories(me.categories || []);
@@ -272,10 +278,12 @@ export function ProfileManager() {
               onChange={setAreasText}
               placeholder={"Madrid, Comunidad de Madrid, ES\nLisboa, Lisboa, PT"}
             />
+            <Input label="Nota de cobertura" value={form.serviceArea} onChange={(v) => update("serviceArea", v)} />
             <Input label="Idiomas" value={form.languages} onChange={(v) => update("languages", v)} />
-            <div className="grid sm:grid-cols-3 gap-3">
+            <div className="grid sm:grid-cols-2 gap-3">
               <Check label="Seguro R. C." checked={form.insuranceDeclared} onChange={(v) => update("insuranceDeclared", v)} />
               <Check label="Trabaja con factura" checked={form.invoiceDeclared} onChange={(v) => update("invoiceDeclared", v)} />
+              <Check label="Documentación al día" checked={form.docsDeclared} onChange={(v) => update("docsDeclared", v)} />
               <Check label="Atiende urgencias" checked={form.offersUrgent} onChange={(v) => update("offersUrgent", v)} />
             </div>
           </section>
@@ -445,7 +453,7 @@ function PortfolioUpload({ disabled, onUpload }: { disabled: boolean; onUpload: 
       </label>
       {disabled && (
         <p className="text-xs text-muted inline-flex items-center gap-1">
-          <CheckCircle2 size={13} /> Límite de 5 fotos alcanzado.
+          <CheckCircle2 size={13} /> Límite de fotos alcanzado.
         </p>
       )}
     </div>

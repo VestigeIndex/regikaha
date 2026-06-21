@@ -33,8 +33,10 @@ CREATE TABLE IF NOT EXISTS professionals (
   description TEXT,
   short_tagline TEXT,
   service_radius_km INTEGER DEFAULT 30,
+  service_area_note TEXT,                 -- nota libre de cobertura
   insurance_declared INTEGER DEFAULT 0,
   invoice_declared INTEGER DEFAULT 0,
+  docs_declared INTEGER DEFAULT 0,        -- declara documentación profesional al día
   offers_urgent INTEGER DEFAULT 0,
   verification_status TEXT NOT NULL DEFAULT 'pending', -- pending|verified|limited|suspended
   average_rating REAL DEFAULT 0,

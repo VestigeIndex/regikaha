@@ -32,10 +32,12 @@ type RegisterForm = {
   placeSlug: string;
   latitude: string;
   longitude: string;
+  serviceArea: string;
   tagline: string;
   description: string;
   insuranceDeclared: boolean;
   invoiceDeclared: boolean;
+  docsDeclared: boolean;
   offersUrgent: boolean;
 };
 
@@ -55,10 +57,12 @@ const initialForm: RegisterForm = {
   placeSlug: "",
   latitude: "",
   longitude: "",
+  serviceArea: "",
   tagline: "",
   description: "",
   insuranceDeclared: false,
   invoiceDeclared: false,
+  docsDeclared: false,
   offersUrgent: false,
 };
 
@@ -271,6 +275,7 @@ export function RegistroForm() {
                   }}
                 />
               </div>
+              <Field label={t.ui.register.serviceArea}><input className="reg-input" value={form.serviceArea} onChange={(e) => update("serviceArea", e.target.value)} /></Field>
             </div>
             <Field label={t.ui.register.seoTagline}><input className="reg-input" value={form.tagline} onChange={(e) => update("tagline", e.target.value)} required /></Field>
             <Field label={t.ui.register.publicDescription}>
@@ -285,6 +290,7 @@ export function RegistroForm() {
             <div className="space-y-3">
               <Toggle label={t.ui.register.insurance} on={form.insuranceDeclared} onChange={(v) => update("insuranceDeclared", v)} />
               <Toggle label={t.ui.register.invoice} on={form.invoiceDeclared} onChange={(v) => update("invoiceDeclared", v)} />
+              <Toggle label={t.ui.register.professionalDocs} on={form.docsDeclared} onChange={(v) => update("docsDeclared", v)} />
               <Toggle label={t.ui.register.urgent} on={form.offersUrgent} onChange={(v) => update("offersUrgent", v)} />
             </div>
             <label className="flex items-start gap-3 rounded-xl bg-canvas p-4 cursor-pointer">

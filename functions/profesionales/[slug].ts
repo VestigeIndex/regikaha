@@ -103,7 +103,14 @@ export async function onRequestGet(context: any) {
             <h1 class="h1">${esc(publicName)}</h1>
             <p class="muted">${esc(p.short_tagline || "")}</p>
             <p>📍 ${esc(area || "mercados activos")} · responde en ${esc(p.response_time_hours || 24)} h</p>
-            <div class="chips">${categories.map((c: string) => `<span class="chip">${esc(c)}</span>`).join("")}</div>
+            ${p.service_area_note ? `<p class="muted">🗺️ ${esc(p.service_area_note)}</p>` : ""}
+            <div class="chips">${[
+              ...categories.map((c: string) => `<span class="chip">${esc(c)}</span>`),
+              p.insurance_declared ? `<span class="chip">Seguro de R. C.</span>` : "",
+              p.invoice_declared ? `<span class="chip">Trabaja con factura</span>` : "",
+              p.docs_declared ? `<span class="chip">Documentación al día</span>` : "",
+              p.offers_urgent ? `<span class="chip">Atiende urgencias</span>` : "",
+            ].filter(Boolean).join("")}</div>
           </div>
         </div>
         <div class="grid">
