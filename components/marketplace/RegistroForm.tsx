@@ -32,12 +32,10 @@ type RegisterForm = {
   placeSlug: string;
   latitude: string;
   longitude: string;
-  serviceArea: string;
   tagline: string;
   description: string;
   insuranceDeclared: boolean;
   invoiceDeclared: boolean;
-  docsDeclared: boolean;
   offersUrgent: boolean;
 };
 
@@ -57,12 +55,10 @@ const initialForm: RegisterForm = {
   placeSlug: "",
   latitude: "",
   longitude: "",
-  serviceArea: "",
   tagline: "",
   description: "",
   insuranceDeclared: false,
   invoiceDeclared: false,
-  docsDeclared: false,
   offersUrgent: false,
 };
 
@@ -136,7 +132,12 @@ export function RegistroForm() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (step === 0 && !selectedCats.length) {
+      setError(t.ui.register.selectCategoryError);
+      return;
+    }
     if (step < steps.length - 1) {
+      setError(null);
       setStep((s) => s + 1);
       return;
     }
@@ -244,7 +245,7 @@ export function RegistroForm() {
               <Field label={t.ui.register.nifCifVat}><input className="reg-input" value={form.nifCif} onChange={(e) => update("nifCif", e.target.value)} required /></Field>
               <Field label={t.ui.common.phone}><input type="tel" className="reg-input" value={form.phone} onChange={(e) => update("phone", e.target.value)} required /></Field>
               <Field label={t.ui.common.email}><input type="email" className="reg-input" value={form.email} onChange={(e) => update("email", e.target.value)} required /></Field>
-              <Field label={t.ui.register.password}><input type="password" className="reg-input" value={form.password} onChange={(e) => update("password", e.target.value)} /></Field>
+              <Field label={t.ui.register.password}><input type="password" className="reg-input" value={form.password} onChange={(e) => update("password", e.target.value)} minLength={8} autoComplete="new-password" /></Field>
               <Field label={t.ui.common.country}>
                 <select className="reg-input" value={form.country} onChange={(e) => update("country", e.target.value)} required>
                   {europeanCountryOptions.map((country) => (
@@ -270,7 +271,6 @@ export function RegistroForm() {
                   }}
                 />
               </div>
-              <Field label={t.ui.register.serviceArea}><input className="reg-input" value={form.serviceArea} onChange={(e) => update("serviceArea", e.target.value)} required /></Field>
             </div>
             <Field label={t.ui.register.seoTagline}><input className="reg-input" value={form.tagline} onChange={(e) => update("tagline", e.target.value)} required /></Field>
             <Field label={t.ui.register.publicDescription}>
@@ -285,7 +285,6 @@ export function RegistroForm() {
             <div className="space-y-3">
               <Toggle label={t.ui.register.insurance} on={form.insuranceDeclared} onChange={(v) => update("insuranceDeclared", v)} />
               <Toggle label={t.ui.register.invoice} on={form.invoiceDeclared} onChange={(v) => update("invoiceDeclared", v)} />
-              <Toggle label={t.ui.register.professionalDocs} on={form.docsDeclared} onChange={(v) => update("docsDeclared", v)} />
               <Toggle label={t.ui.register.urgent} on={form.offersUrgent} onChange={(v) => update("offersUrgent", v)} />
             </div>
             <label className="flex items-start gap-3 rounded-xl bg-canvas p-4 cursor-pointer">
