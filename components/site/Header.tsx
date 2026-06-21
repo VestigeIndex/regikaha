@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Home, LogIn, Menu, Search, UserRound, X } from "lucide-react";
+import { LogIn, Menu, Search, UserRound, X } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 import { initialsFromUser, panelPathForRole } from "@/lib/accounts";
 import { useI18n } from "@/lib/i18n/context";
@@ -26,19 +27,6 @@ const roleLabels: Record<string, string> = {
   company: "Panel empresa",
   subcontractor: "Panel subcontrata",
 };
-
-function HeaderBrand() {
-  return (
-    <Link href="/" className="inline-flex w-[160px] shrink-0 items-center gap-2 overflow-hidden whitespace-nowrap" aria-label="RegiKaha inicio">
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-forest-700 text-white shadow-soft transition group-hover:bg-forest-800">
-        <Home size={21} strokeWidth={2.2} />
-      </span>
-      <span className="min-w-0 whitespace-nowrap text-[1.18rem] font-extrabold leading-none tracking-tight text-ink">
-        Regi<span className="text-forest-600">Kaha</span>
-      </span>
-    </Link>
-  );
-}
 
 export function Header() {
   const { t, locale } = useI18n();
@@ -104,13 +92,10 @@ export function Header() {
         scrolled ? "bg-white/95 shadow-soft backdrop-blur-xl" : "bg-white/90 backdrop-blur-xl",
       )}
     >
-      <div
-        className="container-x grid h-[72px] items-center gap-4"
-        style={{ gridTemplateColumns: "160px minmax(0, 1fr) auto" }}
-      >
-        <HeaderBrand />
+      <div className="container-x flex h-[72px] items-center gap-5">
+        <Logo className="w-[160px]" />
 
-        <nav className="hidden min-w-0 items-center justify-center gap-1 2xl:flex" aria-label={t.ui.nav.openMenu}>
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 2xl:flex" aria-label={t.ui.nav.openMenu}>
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} className={navLinkClass}>
               {t.ui.nav[item.key]}
@@ -119,7 +104,7 @@ export function Header() {
           <Link href="/ayuda" className={navLinkClass}>{headerCopy.help}</Link>
         </nav>
 
-        <div className="hidden shrink-0 items-center justify-end gap-2 2xl:flex">
+        <div className="ml-auto hidden shrink-0 items-center justify-end gap-2 2xl:flex">
           <LanguageSwitcher />
           {authenticated ? (
             <div className="relative">
