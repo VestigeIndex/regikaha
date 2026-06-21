@@ -19,7 +19,7 @@ export function PanelRouter() {
         router.replace("/login");
         return;
       }
-      router.replace(panelPathForRole(data.user?.role));
+      router.replace(panelPathForRole(data.user?.activeRole || data.user?.role));
     }
     load().catch(() => router.replace("/login"));
     return () => {

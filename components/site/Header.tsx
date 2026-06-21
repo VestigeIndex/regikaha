@@ -81,7 +81,7 @@ export function Header() {
 
   const authenticated = !!me?.authenticated;
   const panelHref = me?.panelPath || panelPathForRole(me?.user?.activeRole || me?.user?.role);
-  const availableRoles: string[] = me?.user?.availableRoles || [];
+  const availableRoles: string[] = (me?.user?.availableRoles || []).filter((r: string) => r !== "admin" && r !== "superadmin");
 
   return (
     <header

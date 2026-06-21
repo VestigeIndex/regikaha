@@ -59,7 +59,7 @@ function navForRole(role: AccountRole, copy: DashboardCopy): NavItem[] {
       { label: copy.nav.reviews, href: "/panel/resenas", icon: <Star size={18} /> },
     );
   }
-  if (role !== "client") nav.push({ label: copy.nav.tools, href: "/panel/herramientas", icon: <Calculator size={18} /> });
+  nav.push({ label: copy.nav.tools, href: "/panel/herramientas", icon: <Calculator size={18} /> });
   const billingPath = roleBillingPaths[role];
   if (billingPath) nav.push({ label: copy.nav.subscription, href: billingPath, icon: <Receipt size={18} /> });
   return nav;
