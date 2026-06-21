@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { BriefcaseBusiness, Calculator, Coins, ExternalLink, Inbox, LayoutDashboard, LogOut, Menu, Radar, Receipt, Search, SlidersHorizontal, Star, User, Wrench, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { OnboardingChecklist } from "@/components/dashboard/OnboardingChecklist";
 import {
   isPanelPathAllowed,
   normalizeRole,
@@ -224,7 +225,12 @@ export function DashboardShell({ children, nav: providedNav, badge }: { children
         )}
 
         <main className="min-w-0 pb-24 lg:pb-0">
-          <div className="container-x py-6 sm:py-8 lg:py-10">{children}</div>
+          <div className="container-x py-6 sm:py-8 lg:py-10">
+            {role !== "admin" && role !== "superadmin" && (
+              <OnboardingChecklist role={role} />
+            )}
+            {children}
+          </div>
         </main>
       </div>
 

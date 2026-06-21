@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { LogIn, Menu, Search, UserRound, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
+import { GuideLink } from "@/components/site/GuideLink";
 import { initialsFromUser, panelPathForRole } from "@/lib/accounts";
 import { useI18n } from "@/lib/i18n/context";
 import { headerDictionaries } from "@/lib/i18n/header";
@@ -103,6 +104,7 @@ export function Header() {
               {t.ui.nav[item.key]}
             </Link>
           ))}
+          <GuideLink className="px-3 py-2 text-[0.925rem] font-medium text-ink/80 hover:text-forest-700 rounded-lg hover:bg-forest-500/5 transition-colors" />
         </nav>
 
         <div className="ml-auto hidden shrink-0 items-center gap-2 xl:flex">
@@ -194,6 +196,7 @@ export function Header() {
             <Link href="/buscar" onClick={() => setOpen(false)} className="btn btn-secondary w-full">
               <Search size={16} /> {t.actions.search}
             </Link>
+            <Link href="/ayuda" onClick={() => setOpen(false)} className="btn btn-secondary w-full mt-2">{headerCopy.help}</Link>
             <Link href="/publicar-proyecto" onClick={() => setOpen(false)} className="btn btn-primary w-full mt-2">
               {t.ui.nav.publishProjectFree}
             </Link>
