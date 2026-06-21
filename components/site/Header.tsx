@@ -86,39 +86,39 @@ export function Header() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 transition-all",
-        scrolled ? "glass shadow-soft" : "bg-white/70 backdrop-blur-md border-b border-transparent",
+        "sticky top-0 z-50 border-b border-forest-600/10 transition-all",
+        scrolled ? "bg-white/95 shadow-soft backdrop-blur-xl" : "bg-white/90 backdrop-blur-xl",
       )}
     >
-      <div className="container-x flex h-16 items-center justify-between gap-4">
-        <Logo />
+      <div className="container-x flex h-[72px] items-center gap-4">
+        <div className="flex shrink-0 items-center"><Logo /></div>
 
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="px-3 py-2 text-[0.925rem] font-medium text-ink/80 hover:text-forest-700 rounded-lg hover:bg-forest-500/5 transition-colors"
+              className="whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-semibold leading-none text-ink/75 transition hover:bg-forest-500/7 hover:text-forest-800 2xl:px-4"
             >
               {t.ui.nav[item.key]}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden lg:flex items-center gap-1.5">
+        <div className="ml-auto hidden shrink-0 items-center gap-2 xl:flex">
           <LanguageSwitcher />
           {authenticated ? (
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setAccountOpen((value) => !value)}
-                className="inline-flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-medium text-ink/80 hover:bg-forest-500/6"
+                className="inline-flex h-11 items-center gap-2 rounded-full px-2.5 pr-4 text-sm font-semibold text-ink/80 transition hover:bg-forest-500/7"
                 aria-expanded={accountOpen}
               >
-                <span className="grid h-8 w-8 place-items-center rounded-full bg-forest-600 text-xs font-bold text-white">
+                <span className="grid h-9 w-9 place-items-center rounded-full bg-forest-600 text-xs font-bold text-white">
                   {initialsFromUser(me.user || {})}
                 </span>
-                {headerCopy.account}
+                <span className="whitespace-nowrap">{headerCopy.account}</span>
               </button>
               {accountOpen && (
                 <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white p-2 shadow-elevated ring-1 ring-forest-600/10">
@@ -140,21 +140,21 @@ export function Header() {
               )}
             </div>
           ) : (
-            <Link href="/conectar" className="btn btn-ghost">
+            <Link href="/conectar" className="btn btn-ghost h-11 whitespace-nowrap px-4">
               <LogIn size={16} /> {headerCopy.signIn}
             </Link>
           )}
-          <Link href="/publicar-proyecto" className="btn btn-primary">
+          <Link href="/publicar-proyecto" className="btn btn-primary h-11 whitespace-nowrap px-5 shadow-sm">
             {t.ui.nav.publishProjectFree}
           </Link>
         </div>
 
-        <div className="flex items-center gap-1 lg:hidden">
+        <div className="ml-auto flex items-center gap-2 xl:hidden">
           <LanguageSwitcher compact />
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="grid place-items-center h-10 w-10 rounded-lg text-ink hover:bg-forest-500/8"
+            className="grid h-11 w-11 place-items-center rounded-xl text-ink hover:bg-forest-500/8"
             aria-label={open ? t.ui.nav.closeMenu : t.ui.nav.openMenu}
             aria-expanded={open}
           >
@@ -164,7 +164,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="lg:hidden absolute inset-x-0 top-16 z-40 h-[calc(100dvh-4rem)] bg-white border-t hairline overflow-y-auto animate-fade-in">
+        <div className="xl:hidden absolute inset-x-0 top-[72px] z-40 h-[calc(100dvh-72px)] bg-white border-t hairline overflow-y-auto animate-fade-in">
           <div className="container-x py-5 flex flex-col gap-1">
             {navItems.map((item) => (
               <Link
