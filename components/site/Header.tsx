@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { LogIn, Menu, Search, UserRound, X } from "lucide-react";
-import { Logo } from "@/components/ui/Logo";
+import { Home, LogIn, Menu, Search, UserRound, X } from "lucide-react";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 import { initialsFromUser, panelPathForRole } from "@/lib/accounts";
 import { useI18n } from "@/lib/i18n/context";
@@ -27,6 +26,14 @@ const roleLabels: Record<string, string> = {
   company: "Panel empresa",
   subcontractor: "Panel subcontrata",
 };
+
+function HeaderBrand() {
+  return (
+    <Link href="/" className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-forest-700 text-white shadow-soft transition hover:bg-forest-800" aria-label="RegiKaha inicio">
+      <Home size={21} strokeWidth={2.2} />
+    </Link>
+  );
+}
 
 export function Header() {
   const { t, locale } = useI18n();
@@ -92,12 +99,10 @@ export function Header() {
         scrolled ? "bg-white/95 shadow-soft backdrop-blur-xl" : "bg-white/90 backdrop-blur-xl",
       )}
     >
-      <div className="container-x grid h-[72px] grid-cols-[minmax(0,1fr)_auto] items-center gap-3 xl:grid-cols-[190px_minmax(0,1fr)_auto] xl:gap-4">
-        <div className="flex min-w-0 items-center xl:w-[190px]">
-          <Logo className="max-w-[180px]" />
-        </div>
+      <div className="container-x grid h-[72px] grid-cols-[44px_minmax(0,1fr)_auto] items-center gap-4">
+        <HeaderBrand />
 
-        <nav className="hidden min-w-0 items-center justify-center gap-0.5 xl:flex" aria-label={t.ui.nav.openMenu}>
+        <nav className="hidden min-w-0 items-center justify-start gap-1 xl:flex" aria-label={t.ui.nav.openMenu}>
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} className={navLinkClass}>
               {t.ui.nav[item.key]}
