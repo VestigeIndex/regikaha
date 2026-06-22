@@ -2,66 +2,47 @@
 
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n/context";
-import { useDirectTranslation } from "@/lib/i18n/useDirectTranslation";
+import { detectMarketCountry } from "@/lib/market-country";
 
-type FounderStatus = {
-  limit: number;
-  claimed: number;
-  remaining: number;
-  available: boolean;
-  trialMonths: number;
-};
+type FounderStatus = { available: boolean };
 
+// Público: solo indica si HAY plazas por país, nunca el conteo real (eso es admin).
 export function FounderAvailability({ compact = false }: { compact?: boolean }) {
   const { locale } = useI18n();
-  const { translate } = useDirectTranslation();
   const [status, setStatus] = useState<FounderStatus | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/billing/founder-status")
+    detectMarketCountry(locale)
+      .then((country) => fetch(`/api/billing/founder-status?country=${encodeURIComponent(country)}`))
       .then((response) => response.json())
       .then((data) => { if (!cancelled) setStatus(data); })
       .catch(() => null);
     return () => { cancelled = true; };
-  }, []);
+  }, [locale]);
 
-  if (!status) return <span className="text-sm text-muted">{translate("Consultando plazas reales...")}</span>;
-  const percent = Math.min(100, Math.round((status.claimed / status.limit) * 100));
+  const available = status?.available !== false;
   const availableLabel = ({
-    es: `${status.remaining} de ${status.limit} plazas disponibles`, fr: `${status.remaining} places disponibles sur ${status.limit}`,
-    it: `${status.remaining} posti disponibili su ${status.limit}`, pt: `${status.remaining} de ${status.limit} vagas disponíveis`,
-    de: `${status.remaining} von ${status.limit} Plätzen verfügbar`, nl: `${status.remaining} van ${status.limit} plaatsen beschikbaar`,
-    en: `${status.remaining} of ${status.limit} places available`,
+    es: "Plazas fundadoras disponibles por país", fr: "Places fondatrices disponibles par pays",
+    it: "Posti fondatori disponibili per Paese", pt: "Vagas fundadoras disponíveis por país",
+    de: "Gründerplätze pro Land verfügbar", nl: "Oprichtersplaatsen per land beschikbaar",
+    en: "Founder slots available per country",
   } as const)[locale];
-  const claimedLabel = ({
-    es: `${status.claimed} plazas activadas o reservadas`, fr: `${status.claimed} places activées ou réservées`,
-    it: `${status.claimed} posti attivati o prenotati`, pt: `${status.claimed} vagas ativadas ou reservadas`,
-    de: `${status.claimed} Plätze aktiviert oder reserviert`, nl: `${status.claimed} plaatsen geactiveerd of gereserveerd`,
-    en: `${status.claimed} places activated or reserved`,
+  const soldOutLabel = ({
+    es: "Plazas fundadoras agotadas en tu país por ahora", fr: "Places fondatrices épuisées dans votre pays pour l'instant",
+    it: "Posti fondatori esauriti nel tuo Paese per ora", pt: "Vagas fundadoras esgotadas no teu país por agora",
+    de: "Gründerplätze in deinem Land derzeit ausgeschöpft", nl: "Oprichtersplaatsen in jouw land voorlopig vol",
+    en: "Founder slots in your country are full for now",
   } as const)[locale];
-  const occupiedLabel = ({
-    es: `${percent}% de plazas ocupadas`, fr: `${percent} % des places occupées`,
-    it: `${percent}% dei posti occupati`, pt: `${percent}% das vagas ocupadas`,
-    de: `${percent} % der Plätze belegt`, nl: `${percent}% van de plaatsen bezet`,
-    en: `${percent}% of places occupied`,
-  } as const)[locale];
+  const label = available ? availableLabel : soldOutLabel;
+
   if (compact) {
-    return (
-      <span className="text-sm font-semibold text-forest-800">
-        {status.available ? availableLabel : translate("Plazas fundador agotadas")}
-      </span>
-    );
+    return <span className="text-sm font-semibold text-forest-800">{label}</span>;
   }
   return (
-    <div className="max-w-md">
-      <div className="flex items-center justify-between gap-4 text-sm">
-        <span className="text-muted">{claimedLabel}</span>
-        <span className="font-semibold text-forest-800">{availableLabel}</span>
-      </div>
-      <div className="mt-2 h-2 overflow-hidden rounded-full bg-canvas-alt" aria-label={occupiedLabel}>
-        <div className="h-full rounded-full bg-forest-600 transition-[width]" style={{ width: `${percent}%` }} />
-      </div>
-    </div>
+    <span className="inline-flex items-center gap-2 text-sm font-semibold text-forest-800">
+      <span className={`h-2 w-2 rounded-full ${available ? "bg-forest-600" : "bg-amber-500"}`} />
+      {label}
+    </span>
   );
 }

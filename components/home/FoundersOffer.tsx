@@ -3,14 +3,11 @@
 import Link from "next/link";
 import { Sparkles, Check } from "lucide-react";
 import { site } from "@/lib/site";
-import { getPlatformStats } from "@/lib/data";
 import { useT } from "@/lib/i18n/context";
+import { FounderAvailability } from "@/components/billing/FounderAvailability";
 
 export function FoundersOffer() {
   const t = useT();
-  const stats = getPlatformStats();
-  const claimed = site.founderSlots - stats.foundersRemaining;
-  const pct = Math.min(100, Math.round((claimed / site.founderSlots) * 100));
 
   return (
     <section className="container-x py-16 lg:py-20">
@@ -33,14 +30,10 @@ export function FoundersOffer() {
               {t.ui.homeSections.founders.textAfterYearly}
             </p>
 
-            <div className="mt-6 max-w-md">
-              <div className="flex justify-between text-sm text-white/70 mb-2">
-                <span>{claimed} {t.ui.homeSections.founders.reserved}</span>
-                <span>{stats.foundersRemaining} {t.ui.homeSections.founders.available}</span>
-              </div>
-              <div className="h-2.5 rounded-full bg-white/15 overflow-hidden">
-                <div className="h-full rounded-full bg-gradient-to-r from-forest-500 to-mint" style={{ width: `${pct}%` }} />
-              </div>
+            <div className="mt-6">
+              <span className="inline-flex items-center rounded-full bg-white px-3.5 py-1.5">
+                <FounderAvailability compact />
+              </span>
             </div>
 
             <div className="mt-7 flex flex-wrap gap-3">

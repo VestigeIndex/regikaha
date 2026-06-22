@@ -26,12 +26,10 @@ export async function onRequestGet(context: any) {
       )
   ).first();
   const claimed = Math.min(limit, Number(row?.claimed || 0));
+  // El conteo real es privado (solo admin). Público: solo disponibilidad sí/no.
   return json({
     country: country || null,
     perCountry: true,
-    limit,
-    claimed,
-    remaining: Math.max(0, limit - claimed),
     available: claimed < limit,
     trialMonths: founderMonths(env),
     reservationHours: founderReservationHours(env),

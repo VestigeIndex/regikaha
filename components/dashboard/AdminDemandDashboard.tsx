@@ -20,7 +20,7 @@ export function AdminDemandDashboard() {
       ]);
       const [body, overview] = await Promise.all([res.json().catch(() => ({})), overviewRes.json().catch(() => ({}))]);
       if (res.ok && overviewRes.ok) {
-        setData({ ...body, overview: overview.metrics || {} });
+        setData({ ...body, overview: overview.metrics || {}, founders: overview.founders || null });
         setError(null);
       } else {
         setError(body.error || "No tienes permisos para ver el panel interno.");
@@ -62,6 +62,38 @@ export function AdminDemandDashboard() {
         <StatCard icon={<MapPin size={19} />} label="Zonas monitorizadas" value={coverage.length} loading={loading} />
         <StatCard icon={<Users size={19} />} label="Tareas captación" value={tasks.length} loading={loading} />
       </div>
+
+      <section className="card p-6 mt-6">
+        <h2 className="font-bold text-ink">Plazas fundadoras por país <span className="text-sm font-normal text-muted">({data.founders?.limitPerCountry || 300} por país)</span></h2>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-muted">
+                <th className="py-2 pr-4">País</th>
+                <th className="py-2 pr-4">Reservadas</th>
+                <th className="py-2 pr-4">Activadas</th>
+                <th className="py-2 pr-4">Ocupadas</th>
+                <th className="py-2 pr-4">Disponibles</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(data.founders?.byCountry || []).length === 0 ? (
+                <tr><td colSpan={5} className="py-3 text-muted">Aún no hay plazas reservadas.</td></tr>
+              ) : (
+                (data.founders?.byCountry || []).map((row: any) => (
+                  <tr key={row.country} className="border-t border-[var(--hairline)]">
+                    <td className="py-2 pr-4 font-semibold text-ink">{row.country}</td>
+                    <td className="py-2 pr-4">{row.reserved}</td>
+                    <td className="py-2 pr-4">{row.activated}</td>
+                    <td className="py-2 pr-4">{row.claimed}/{row.limit}</td>
+                    <td className="py-2 pr-4 font-semibold text-forest-700">{row.available}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <div className="mt-6 grid xl:grid-cols-[1.2fr_1fr] gap-6">
         <section className="card p-6">
