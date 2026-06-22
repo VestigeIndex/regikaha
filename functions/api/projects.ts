@@ -11,6 +11,7 @@ import {
 } from "../../packages/cost-guards";
 import { uploadOptimizedImageToR2 } from "../../packages/image-optimizer";
 import { logError } from "../../lib/observability";
+import { screenFields } from "../../lib/moderation/text";
 
 async function parseInput(request: Request) {
   if (!String(request.headers.get("Content-Type") || "").includes("multipart/form-data")) {
@@ -156,6 +157,9 @@ export async function onRequestPost(context: any) {
   if (challenge) return challenge;
   if (!isEmail(email)) return bad("Email no válido");
   if (description.length < 20) return bad("Describe un poco más el proyecto");
+  if (!screenFields(description, b.title, b.subcategory).ok) {
+    return bad("La descripción contiene contenido no permitido. Revísala y vuelve a intentarlo.", 400);
+  }
   if (!country || !city || !categoryId) return bad("Faltan país, ciudad o categoría");
   if (!isActiveCountryCode(country)) return bad("País no disponible todavía en Regi Kaha");
   if (String(b.acceptsPreEstimate) !== "true" && b.acceptsPreEstimate !== true) {

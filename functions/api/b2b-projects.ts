@@ -2,6 +2,7 @@ import { json, bad, getSessionUser, isEmail } from "../../apilib/http";
 import { newId } from "../../apilib/auth";
 import { isActiveCountryCode } from "../../lib/market";
 import { requireTurnstile } from "../../packages/cost-guards";
+import { screenFields } from "../../lib/moderation/text";
 
 function clean(value: unknown, max = 600): string {
   return String(value || "").trim().slice(0, max);
@@ -47,6 +48,9 @@ export async function onRequestPost(context: any) {
   if (!country || !city || !requiredSpecialty) return bad("Faltan país, ciudad o especialidad");
   if (!isActiveCountryCode(country)) return bad("País no disponible todavía en Regi Kaha");
   if (description.length < 20) return bad("Describe un poco más la necesidad de subcontrata");
+  if (!screenFields(description, b.companyType, b.projectType).ok) {
+    return bad("La descripción contiene contenido no permitido. Revísala y vuelve a intentarlo.", 400);
+  }
 
   const requestId = newId("b2b_");
   const companyProfile = user

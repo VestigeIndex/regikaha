@@ -1,5 +1,6 @@
 import { bad, privateJson, requireUser } from "../../apilib/http";
 import { newId } from "../../apilib/auth";
+import { screenFields } from "../../lib/moderation/text";
 
 export async function onRequestGet(context: any) {
   const { request, env } = context;
@@ -35,6 +36,7 @@ export async function onRequestPost(context: any) {
   const rating = Number(body.rating);
   const comment = String(body.comment || "").trim().slice(0, 2000);
   if (!projectId || !professionalId || !Number.isInteger(rating) || rating < 1 || rating > 5 || comment.length < 20) return bad("Reseña incompleta");
+  if (!screenFields(comment).ok) return bad("La reseña contiene contenido no permitido. Revísala y vuelve a intentarlo.", 400);
   const project = await env.DB.prepare("SELECT id FROM project_requests WHERE id = ? AND client_id = ?").bind(projectId, user.id).first();
   const interaction = await env.DB.prepare("SELECT id FROM project_interests WHERE project_id = ? AND professional_id = ?").bind(projectId, professionalId).first();
   if (!project || !interaction) return bad("No existe una interacción verificable para esta reseña", 403);

@@ -3,6 +3,7 @@ import { newId } from "../../apilib/auth";
 import { getCurrentProfessional, getSubscriptionAccess } from "../../apilib/professional";
 import { enforcePlanLimits, enforceUploadLimits, rateLimitByUser } from "../../packages/cost-guards";
 import { uploadOptimizedImageToR2 } from "../../packages/image-optimizer";
+import { screenFields } from "../../lib/moderation/text";
 
 function mapItem(row: any) {
   return {
@@ -108,6 +109,9 @@ export async function onRequestPost(context: any) {
   const category = String(form.get("category") || "").trim().slice(0, 80);
   const description = String(form.get("description") || "").trim().slice(0, 600);
   const location = String(form.get("location") || current.professional.city || current.professional.region || "").trim().slice(0, 120);
+  if (!screenFields(title, description, location).ok) {
+    return bad("El texto del trabajo contiene contenido no permitido. Revísalo y vuelve a intentarlo.", 400);
+  }
   const completionDate = String(form.get("completionDate") || "").trim().slice(0, 20) || null;
   const width = Math.max(1, Math.min(limits.maxWidth, Number(form.get("width") || 0) || 1));
   const height = Math.max(1, Math.min(10000, Number(form.get("height") || 0) || 1));

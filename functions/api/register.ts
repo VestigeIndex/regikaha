@@ -6,6 +6,7 @@ import { sendEmail, verificationEmailMessage } from "../../lib/notifications/ema
 import { requireTurnstile } from "../../packages/cost-guards";
 import { logError } from "../../lib/observability";
 import { logAudit } from "../../apilib/audit";
+import { screenFields } from "../../lib/moderation/text";
 
 function clean(value: unknown, max = 600): string {
   return String(value || "").trim().slice(0, max);
@@ -69,6 +70,9 @@ export async function onRequestPost(context: any) {
     if (!String(b.acceptsTerms || "").trim() && b.acceptsTerms !== true) return bad("Debes aceptar las condiciones");
     const name = String(b.name || b.displayName || "").trim();
     if (!name) return bad("Falta el nombre");
+    if (!screenFields(name, b.displayName, b.description).ok) {
+      return bad("El texto contiene contenido no permitido. Revísalo y vuelve a intentarlo.", 400);
+    }
     const userId = sessionUser?.id || newId("usr_");
     const exists = await env.DB.prepare("SELECT id FROM users WHERE email = ?").bind(email).first();
     if (exists && (!sessionUser || exists.id !== sessionUser.id)) return bad("Ya existe una cuenta con ese email", 409);
@@ -121,6 +125,9 @@ export async function onRequestPost(context: any) {
   }
   if (!publicName) return bad("Falta el nombre comercial");
   if (!country) return bad("Falta el país de actividad");
+  if (!screenFields(publicName, b.legalName, b.description, b.tagline).ok) {
+    return bad("El texto del perfil contiene contenido no permitido. Revísalo y vuelve a intentarlo.", 400);
+  }
 
   const exists = await env.DB.prepare("SELECT id FROM users WHERE email = ?").bind(email).first();
   if (exists && (!sessionUser || exists.id !== sessionUser.id)) return bad("Ya existe una cuenta con ese email", 409);
