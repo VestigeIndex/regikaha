@@ -1,5 +1,6 @@
 import { privateJson, bad, isEmail, sessionCookieHeadersWithRole } from "../../apilib/http";
 import { verifyPassword, createSession } from "../../apilib/auth";
+import { logAudit } from "../../apilib/audit";
 import { normalizeRole, panelPathForRole, safeInternalPath, type AccountRole } from "../../lib/accounts";
 import { rateLimitByIP } from "../../packages/cost-guards";
 
@@ -82,6 +83,7 @@ export async function onRequestPost(context: any) {
   const redirectTo = safeInternalPath(b.redirectTo, fallbackPath);
   const safeRedirect = redirectTo.startsWith(fallbackPath) || redirectTo === "/panel" ? redirectTo : fallbackPath;
   const { token, maxAge } = await createSession(env, user.id);
+  await logAudit(env, { userId: user.id, action: "login", meta: { role: activeRole }, request });
   return privateJson(
     {
       ok: true,

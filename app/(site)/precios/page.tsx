@@ -26,6 +26,16 @@ const clientFeatures = [
   "Leer y dejar valoraciones verificadas",
 ];
 
+const professionalFreeFeatures = [
+  "Perfil profesional básico",
+  "1 zona principal de trabajo",
+  "Fotos limitadas",
+  "Recibe solicitudes limitadas",
+  "RegiWorks Free con límites",
+  "Presupuestos limitados",
+  "Sin badge Pro ni prioridad en el mapa",
+];
+
 const neverCharged = [
   "Ranking comprado",
   "Pago por aparecer primero",
@@ -46,7 +56,7 @@ export default function PreciosPage() {
       />
 
       <section className="container-x py-14">
-        <div className="grid lg:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
+        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6 max-w-7xl mx-auto items-stretch">
           <div className="card p-7 flex flex-col">
             <h2 className="font-bold text-ink text-lg">Clientes</h2>
             <p className="text-sm text-muted mt-1">Busca, compara y pide presupuesto.</p>
@@ -61,6 +71,24 @@ export default function PreciosPage() {
               ))}
             </ul>
             <Link href="/buscar" className="btn btn-secondary w-full mt-6">Buscar profesionales</Link>
+          </div>
+
+          <div className="card p-7 flex flex-col">
+            <p className="text-xs font-semibold uppercase tracking-wide text-forest-700">Para empezar</p>
+            <h2 className="mt-2 font-bold text-ink text-lg">Profesional Free</h2>
+            <p className="text-sm text-muted mt-1">Crea tu perfil y prueba RegiWorks.</p>
+            <div className="mt-5 flex items-baseline gap-1">
+              <span className="text-4xl font-bold text-ink">0 €</span>
+              <span className="text-muted">/mes</span>
+            </div>
+            <ul className="mt-5 space-y-2.5 flex-1">
+              {professionalFreeFeatures.map((feature) => (
+                <li key={feature} className="flex items-start gap-2 text-sm text-ink/80">
+                  <Check size={16} className="text-forest-600 mt-0.5 shrink-0" /> {feature}
+                </li>
+              ))}
+            </ul>
+            <Link href="/registro/profesional" className="btn btn-secondary w-full mt-6">Crear perfil gratis</Link>
           </div>
 
           {professionalPlans.map((plan, index) => (

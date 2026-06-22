@@ -1,4 +1,5 @@
 import { bad, json } from "../../../apilib/http";
+import { logAudit } from "../../../apilib/audit";
 import { commercialAccessStatus } from "../../../lib/billing/subscription";
 import { newId } from "../../../apilib/auth";
 import { leadCurrency } from "../../../lib/leads";
@@ -117,6 +118,10 @@ async function upsertSubscription(env: any, data: {
       data.paymentMethodStatus || null,
     )
     .run();
+
+  if (data.userId) {
+    await logAudit(env, { userId: data.userId, action: "plan_changed", resourceType: "subscription", resourceId: data.stripeSubscriptionId, meta: { plan: data.plan || null, status: data.status || null, interval: data.interval || null } });
+  }
 
   if (data.userId && data.role && ["professional", "company", "subcontractor"].includes(data.role)) {
     const access = commercialAccessStatus(data.status);

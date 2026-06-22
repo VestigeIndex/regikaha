@@ -5,6 +5,7 @@ import { hashContractSnapshot } from "../../lib/legal/hashContract";
 import { sendEmail, verificationEmailMessage } from "../../lib/notifications/email";
 import { requireTurnstile } from "../../packages/cost-guards";
 import { logError } from "../../lib/observability";
+import { logAudit } from "../../apilib/audit";
 
 function clean(value: unknown, max = 600): string {
   return String(value || "").trim().slice(0, max);
@@ -106,6 +107,7 @@ export async function onRequestPost(context: any) {
       logError("register.profileInsert", error, { userId, role });
     }
     const { token, maxAge } = await createSession(env, userId);
+    if (!sessionUser) await logAudit(env, { userId, action: "register", meta: { role }, request });
     return privateJson(
       {
         ok: true,
@@ -186,6 +188,7 @@ export async function onRequestPost(context: any) {
   await env.DB.batch(stmts);
   if (verification) await sendVerification(env, request, { email, name: publicName, rawToken: verification.rawToken });
   const { token, maxAge } = await createSession(env, userId);
+  if (!sessionUser) await logAudit(env, { userId, action: "register", resourceType: "professional", resourceId: proId, meta: { role: "professional" }, request });
   return privateJson(
     {
       ok: true,
