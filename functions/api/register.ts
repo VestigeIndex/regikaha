@@ -4,6 +4,7 @@ import { normalizeRole, panelPathForRole } from "../../lib/accounts";
 import { hashContractSnapshot } from "../../lib/legal/hashContract";
 import { sendEmail, verificationEmailMessage } from "../../lib/notifications/email";
 import { requireTurnstile } from "../../packages/cost-guards";
+import { logError } from "../../lib/observability";
 
 function clean(value: unknown, max = 600): string {
   return String(value || "").trim().slice(0, max);
@@ -100,8 +101,9 @@ export async function onRequestPost(context: any) {
           0,
           0,
       ).run();
-    } catch {
+    } catch (error) {
       // En entornos sin migración de profiles aplicada, la cuenta de usuario sigue siendo válida.
+      logError("register.profileInsert", error, { userId, role });
     }
     const { token, maxAge } = await createSession(env, userId);
     return privateJson(

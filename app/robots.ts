@@ -12,7 +12,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/panel", "/admin", "/api/", "/conectar", "/login", "/registro", "/suscripcion/confirmar", "/suscripcion/exito", "/suscripcion/cancelada"],
       },
     ],
-    sitemap: `${site.url}/sitemap.xml`,
+    sitemap: [`${site.url}/sitemap.xml`, `${site.url}/sitemap-professionals.xml`],
     host: site.url,
   };
 }

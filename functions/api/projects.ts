@@ -10,6 +10,7 @@ import {
   requireTurnstile,
 } from "../../packages/cost-guards";
 import { uploadOptimizedImageToR2 } from "../../packages/image-optimizer";
+import { logError } from "../../lib/observability";
 
 async function parseInput(request: Request) {
   if (!String(request.headers.get("Content-Type") || "").includes("multipart/form-data")) {
@@ -254,6 +255,7 @@ export async function onRequestPost(context: any) {
     ).run();
   } catch (error) {
     if (env.MEDIA && uploadedKeys.length) await Promise.all(uploadedKeys.map((key) => env.MEDIA.delete(key)));
+    logError("projects.publish", error, { projectId, country, categoryId });
     throw error;
   }
 
