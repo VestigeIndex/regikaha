@@ -83,6 +83,7 @@ export function Header() {
   const authenticated = !!me?.authenticated;
   const panelHref = me?.panelPath || panelPathForRole(me?.user?.activeRole || me?.user?.role);
   const availableRoles: string[] = (me?.user?.availableRoles || []).filter((r: string) => r !== "admin" && r !== "superadmin");
+  const isAdmin = ["admin", "superadmin"].includes(String(me?.user?.defaultRole || "")) || ["admin", "superadmin"].includes(String(me?.user?.role || ""));
 
   return (
     <header
@@ -112,7 +113,12 @@ export function Header() {
             <Search size={18} />
           </Link>
           <LanguageSwitcher />
-          {authenticated ? (
+          {authenticated && isAdmin ? (
+            <div className="flex items-center gap-2">
+              <Link href="/admin" className="btn btn-secondary h-11 whitespace-nowrap px-4">Admin</Link>
+              <button type="button" onClick={logout} className="btn btn-ghost h-11 whitespace-nowrap px-3.5">{headerCopy.logout}</button>
+            </div>
+          ) : authenticated ? (
             <div className="relative">
               <button
                 type="button"

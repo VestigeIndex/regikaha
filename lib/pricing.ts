@@ -23,8 +23,8 @@ export interface ProfessionalPlan {
 export const professionalPlans: ProfessionalPlan[] = [
   {
     id: "autonomo_nacional",
-    name: "Autónomo Nacional",
-    shortName: "Autónomo",
+    name: "Profesional Pro",
+    shortName: "Pro",
     badge: "Para operar dentro de un país",
     audience: "Autónomos y equipos pequeños",
     description:
@@ -47,8 +47,8 @@ export const professionalPlans: ProfessionalPlan[] = [
   },
   {
     id: "europa_pro",
-    name: "Multi-mercado Pro",
-    shortName: "Multi-mercado",
+    name: "Business · Multi-zona",
+    shortName: "Business",
     badge: "Para crecer por regiones y países",
     audience: "Empresas, estudios y profesionales multi-región",
     description:
@@ -60,7 +60,7 @@ export const professionalPlans: ProfessionalPlan[] = [
     monthlySecretName: "STRIPE_PRICE_EUROPA_MONTHLY",
     yearlySecretName: "STRIPE_PRICE_EUROPA_YEARLY",
     features: [
-      "Todo lo incluido en Autónomo Nacional",
+      "Todo lo incluido en Profesional Pro",
       "Cobertura multi-región y multi-mercado",
       "Más zonas de servicio activas",
       "Perfil preparado para búsquedas transfronterizas",

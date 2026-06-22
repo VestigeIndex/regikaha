@@ -37,7 +37,11 @@ export interface Client {
 export interface ProjectPhoto {
   id: string;
   name: string;
+  /** Base64 local (modo offline). Se elimina del sync cloud; nunca llega a D1. */
   dataUrl: string;
+  /** Referencia en R2 cuando la imagen se subió comprimida a la nube. */
+  url?: string;
+  mediaId?: string;
   createdAt: string;
 }
 

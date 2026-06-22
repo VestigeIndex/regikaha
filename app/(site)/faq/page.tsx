@@ -23,7 +23,7 @@ const clientesFaq = [
 ];
 
 const proFaq = [
-  { q: "¿Cuánto cuesta para profesionales?", a: `El plan Autónomo Nacional cuesta ${formatIntervalPrice(professionalPlans[0], "monthly")} o ${formatIntervalPrice(professionalPlans[0], "yearly")}. El plan Multi-mercado Pro cuesta ${formatIntervalPrice(professionalPlans[1], "monthly")} o ${formatIntervalPrice(professionalPlans[1], "yearly")}. La tarifa anual tiene un 10% de descuento. Cada contacto muestra su precio antes de desbloquearlo y no hay comisión sobre el valor del proyecto.` },
+  { q: "¿Cuánto cuesta para profesionales?", a: `El plan Profesional Pro cuesta ${formatIntervalPrice(professionalPlans[0], "monthly")} o ${formatIntervalPrice(professionalPlans[0], "yearly")}. El plan Business · Multi-zona cuesta ${formatIntervalPrice(professionalPlans[1], "monthly")} o ${formatIntervalPrice(professionalPlans[1], "yearly")}. La tarifa anual tiene un 10% de descuento. Cada contacto muestra su precio antes de desbloquearlo y no hay comisión sobre el valor del proyecto.` },
   { q: "¿Pagáis por cada contacto o lead?", a: "El profesional mantiene una cuota de acceso y cada contacto muestra su precio antes de desbloquearse. No se venden posiciones, no se cobra por aparecer primero y no hay comisión sobre el valor final del proyecto." },
   { q: "¿Cómo consigo mejor posición?", a: "Mejorando tu trabajo real: consigue buenas valoraciones verificadas, responde rápido, completa tu portfolio y mantén tu verificación al día." },
   { q: "¿Qué necesito para verificarme?", a: "Identidad, NIF/CIF, email y teléfono. Si aplica, colegiación, seguros o certificados. Cuanta más información aportes, más confianza generas." },

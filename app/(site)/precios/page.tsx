@@ -15,7 +15,7 @@ import {
 export const metadata: Metadata = buildMetadata({
   title: "Precios",
   description:
-    "Regi Kaha es gratis para clientes. Los profesionales eligen Autónomo Nacional por 19,95 €/mes o Multi-mercado Pro por 49,95 €/mes. Los contactos se desbloquean con saldo y precio visible, sin rankings comprados ni comisión sobre el proyecto.",
+    "Regi Kaha es gratis para clientes. RegiKaha no cobra por contactos basura: te da RegiWorks para gestionar tu trabajo y presencia profesional para conseguir oportunidades reales. Los profesionales eligen Profesional Pro por 19,95 €/mes o Business · Multi-zona por 49,95 €/mes, IVA/VAT aparte. Sin rankings comprados ni comisión sobre el proyecto.",
   path: "/precios",
 });
 
