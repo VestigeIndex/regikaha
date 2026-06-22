@@ -56,6 +56,14 @@ export default function PreciosPage() {
       />
 
       <section className="container-x py-14">
+        <div className="mx-auto mb-8 max-w-3xl rounded-2xl bg-mint/70 p-5 text-center ring-1 ring-forest-600/15">
+          <p className="text-sm font-semibold text-forest-800">
+            Oferta fundadora: los primeros 300 profesionales verificados de cada país tienen 5 meses gratis de RegiKaha Pro + acceso a RegiWorks.
+          </p>
+          <p className="mt-1.5 text-xs text-forest-800/80">
+            Después del periodo gratuito se aplica el precio vigente (19,95 €/mes + IVA/VAT) solo si decides continuar; no hay obligación de seguir pagando. Plazas activadas progresivamente por país y ciudad, sujetas a verificación profesional y disponibilidad por zona.
+          </p>
+        </div>
         <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6 max-w-7xl mx-auto items-stretch">
           <div className="card p-7 flex flex-col">
             <h2 className="font-bold text-ink text-lg">Clientes</h2>

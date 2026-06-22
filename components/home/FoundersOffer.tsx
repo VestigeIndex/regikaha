@@ -24,8 +24,8 @@ export function FoundersOffer() {
             </span>
             <h2 className="mt-4 text-3xl lg:text-[2.3rem] font-bold tracking-tight text-balance">
               {t.ui.homeSections.founders.titleBefore} {site.founderSlots} {t.ui.cards.categoryCountPlural}{" "}
-              {t.ui.badges.verified.toLowerCase()}:{" "}
-              <span className="text-mint">{site.founderFreeMonths} {t.ui.homeSections.founders.titleHighlight}</span>
+              {t.ui.badges.verified.toLowerCase()}{" "}
+              <span className="text-mint">{t.ui.homeSections.founders.titleHighlight}</span>
             </h2>
             <p className="mt-4 text-white/80 leading-relaxed max-w-xl">
               {t.ui.homeSections.founders.textBeforeMonthly} {site.founderPrice.monthly}{" "}
