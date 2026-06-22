@@ -53,7 +53,7 @@ async function reserveFounderSlot(env: any, params: {
     `INSERT INTO founder_slots
       (id,user_id,profile_id,email,role,country_code,place_id,city,selected_plan,trial_months,status,reserved_at,trial_ends_at)
      SELECT ?,?,?,?,?,?,?,?,?,?,'reserved',datetime('now'),?
-     WHERE (SELECT COUNT(*) FROM founder_slots WHERE status IN ('reserved','active','converted')) < ?
+     WHERE (SELECT COUNT(*) FROM founder_slots WHERE status IN ('reserved','active','converted') AND country_code = ?) < ?
      ON CONFLICT(user_id) DO UPDATE SET
        profile_id = excluded.profile_id,
        email = excluded.email,
@@ -78,6 +78,7 @@ async function reserveFounderSlot(env: any, params: {
     params.selectedPlan,
     params.trialMonths,
     params.trialEndsAt,
+    params.profile?.country || null,
     limit,
   ).run();
 

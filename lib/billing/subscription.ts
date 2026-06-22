@@ -32,7 +32,7 @@ export type SubscriptionStatus =
   | "expired";
 
 export const DEFAULT_FOUNDER_MONTHS = 5;
-export const DEFAULT_FOUNDER_SLOTS = 300;
+export const DEFAULT_FOUNDER_SLOTS = 300; // plazas fundadoras POR PAÍS
 export const DEFAULT_FOUNDER_RESERVATION_HOURS = 24;
 
 export function isProfessionalPlan(value: string): value is ProfessionalPlanId {
