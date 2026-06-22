@@ -81,7 +81,7 @@ function mapRemoteProfessional(row: any, locale: Locale, professionalLabel: stri
     priceFrom: Number(row.price_from || 0),
     description: row.description || "",
     shortTagline: row.short_tagline || row.description || "",
-    logoColor: row.logo_color || "#198C68",
+    logoColor: row.logo_color || "#1F6FE0",
     logoImage: row.logo_image || null,
     coverImage: row.cover_image || "/images/photos/ventanas.webp",
     founderMember: false,

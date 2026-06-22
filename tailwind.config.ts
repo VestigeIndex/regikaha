@@ -12,24 +12,24 @@ const config: Config = {
         sans: ["Inter", "SF Pro Display", "system-ui", "-apple-system", "sans-serif"],
       },
       colors: {
-        // Identidad verde Regi Kaha
+        // Identidad azul celeste metálico Regi Kaha (las clases siguen llamándose forest-*)
         forest: {
-          50: "#eafaf2",
-          100: "#DDF4EA",
-          200: "#bce9d4",
-          300: "#8fd9b6",
-          400: "#54c794",
-          500: "#2AB673", // verde vivo / accent
-          600: "#198C68", // verde principal
-          700: "#157355",
-          800: "#0F5C4A", // verde profundo
-          900: "#0c4a3c",
-          950: "#062b22",
+          50: "#eff5ff",
+          100: "#d9edff",
+          200: "#bfdcfe",
+          300: "#93c2fd",
+          400: "#3fb0f5", // celeste metálico
+          500: "#2e9bf0", // azul celeste vivo / accent
+          600: "#1f6fe0", // azul principal
+          700: "#1857c4",
+          800: "#11357e", // azul profundo
+          900: "#0e2a63",
+          950: "#081a40",
         },
-        mint: "#DDF4EA",
-        ink: "#122019",
-        canvas: "#F7FAF8",
-        "canvas-alt": "#E9F2ED",
+        mint: "#d9edff",
+        ink: "#0e1a2b",
+        canvas: "#f5f9ff",
+        "canvas-alt": "#e6f0fb",
       },
       borderRadius: {
         xl: "0.875rem",
@@ -37,17 +37,17 @@ const config: Config = {
         "3xl": "1.5rem",
       },
       boxShadow: {
-        soft: "0 2px 10px rgba(15, 92, 74, 0.06), 0 0 0 1px rgba(15, 92, 74, 0.05)",
-        card: "0 8px 30px -12px rgba(15, 92, 74, 0.18), 0 0 0 1px rgba(15, 92, 74, 0.06)",
-        elevated: "0 24px 60px -20px rgba(15, 92, 74, 0.22), 0 0 0 1px rgba(15, 92, 74, 0.05)",
-        glow: "0 0 0 1px rgba(42, 182, 115, 0.25), 0 18px 50px -20px rgba(25, 140, 104, 0.45)",
+        soft: "0 2px 10px rgba(17, 53, 126, 0.07), 0 0 0 1px rgba(17, 53, 126, 0.05)",
+        card: "0 8px 30px -12px rgba(17, 53, 126, 0.20), 0 0 0 1px rgba(17, 53, 126, 0.06)",
+        elevated: "0 24px 60px -20px rgba(17, 53, 126, 0.26), 0 0 0 1px rgba(17, 53, 126, 0.05)",
+        glow: "0 0 0 1px rgba(63, 176, 245, 0.30), 0 18px 50px -20px rgba(31, 111, 224, 0.50)",
       },
       backgroundImage: {
-        "gradient-brand": "linear-gradient(135deg, #0F5C4A 0%, #198C68 52%, #2AB673 100%)",
+        "gradient-brand": "linear-gradient(135deg, #0e2f6e 0%, #1f6fe0 45%, #3fb0f5 82%, #bfe6ff 100%)",
         "gradient-hero":
-          "radial-gradient(ellipse 110% 80% at 78% -8%, rgba(42,182,115,0.18), transparent 58%), radial-gradient(ellipse 80% 60% at 0% 8%, rgba(25,140,104,0.12), transparent 55%)",
+          "radial-gradient(ellipse 110% 80% at 78% -8%, rgba(63,176,245,0.22), transparent 58%), radial-gradient(ellipse 80% 60% at 0% 8%, rgba(31,111,224,0.14), transparent 55%)",
         "grid-soft":
-          "linear-gradient(rgba(15,92,74,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(15,92,74,0.05) 1px, transparent 1px)",
+          "linear-gradient(rgba(17,53,126,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(17,53,126,0.05) 1px, transparent 1px)",
       },
       backgroundSize: {
         grid: "56px 56px",

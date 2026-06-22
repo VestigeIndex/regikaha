@@ -14,7 +14,7 @@ const featured = publishedReviews
   .slice(0, 7)
   .map((r) => {
     const pro = getProfessionalById(r.professionalId);
-    return { ...r, proName: pro?.publicName, proColor: pro?.logoColor ?? "#198C68" };
+    return { ...r, proName: pro?.publicName, proColor: pro?.logoColor ?? "#1F6FE0" };
   });
 
 export function Testimonials() {

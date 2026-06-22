@@ -60,7 +60,7 @@ export function RegiKahaMap({
       const searchCircle = searchCenter && radiusKm
         ? L.circle([searchCenter.lat, searchCenter.lng], {
             radius: radiusKm * 1000,
-            color: "#198C68",
+            color: "#1F6FE0",
             weight: 2,
             fillColor: "#7ad9b7",
             fillOpacity: 0.12,
