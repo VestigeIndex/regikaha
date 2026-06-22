@@ -2,6 +2,32 @@ import type { B1LData } from "./types";
 
 const now = "2026-06-20T08:30:00.000Z";
 
+// Workspace en blanco para usuarios con sesión sin datos en la nube.
+// La demo (b1lSeed) solo se muestra a visitantes anónimos como escaparate.
+export const b1lEmpty: B1LData = {
+  version: 1,
+  settings: {
+    companyName: "",
+    taxId: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    country: "ES",
+    currency: "EUR",
+    defaultTaxRate: 21,
+    locale: "es",
+    plan: "local",
+  },
+  clients: [],
+  projects: [],
+  quotes: [],
+  leads: [],
+  documents: [],
+  team: [],
+  providers: [],
+};
+
 export const b1lSeed: B1LData = {
   version: 1,
   settings: {

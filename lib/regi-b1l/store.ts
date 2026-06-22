@@ -1,14 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { b1lSeed } from "./seed";
+import { b1lSeed, b1lEmpty } from "./seed";
 import type { B1LData } from "./types";
 import { readLocal, writeLocal } from "@/lib/regiworks/storage/localAdapter";
 import { pullSnapshot } from "@/lib/regiworks/storage/cloudAdapter";
 import { createSyncQueue, type SyncStatus } from "@/lib/regiworks/storage/syncQueue";
 
+const SEED_JSON = JSON.stringify(b1lSeed);
+
 function cloneSeed(): B1LData {
   return JSON.parse(JSON.stringify(b1lSeed)) as B1LData;
+}
+
+function cloneEmpty(): B1LData {
+  return JSON.parse(JSON.stringify(b1lEmpty)) as B1LData;
 }
 
 function isData(value: unknown): value is B1LData {
@@ -27,6 +33,7 @@ export function useB1LStore() {
   const [cloudStatus, setCloudStatus] = useState<SyncStatus>("idle");
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hadLocalRef = useRef(false);
+  const localIsDemoRef = useRef(true);
   const authedRef = useRef(false);
   const dirtyRef = useRef(false);
   const queueRef = useRef<ReturnType<typeof createSyncQueue> | null>(null);
@@ -41,7 +48,12 @@ export function useB1LStore() {
   useEffect(() => {
     const { data: local, hadLocal } = readLocal();
     hadLocalRef.current = hadLocal;
-    if (local && isData(local)) setData(local);
+    if (local && isData(local)) {
+      setData(local);
+      localIsDemoRef.current = JSON.stringify(local) === SEED_JSON;
+    } else {
+      localIsDemoRef.current = true; // arranca con la demo (escaparate anónimo)
+    }
     setHydrated(true);
   }, []);
 
@@ -53,12 +65,23 @@ export function useB1LStore() {
       if (cancelled) return;
       authedRef.current = authed;
       if (!authed) { setCloudStatus("offline"); return; }
-      // Dispositivo nuevo sin datos locales: adopta el estado de la nube.
-      if (snapshot?.data && isData(snapshot.data) && !hadLocalRef.current) {
-        setData(snapshot.data);
-        writeLocal(snapshot.data);
+      if (dirtyRef.current) { setCloudStatus("idle"); return; } // el usuario ya empezó a trabajar
+      const hasCloud = !!(snapshot?.data && isData(snapshot.data));
+      if (hasCloud && localIsDemoRef.current) {
+        // Con sesión y datos en la nube: carga su workspace real (descarta la demo).
+        setData(snapshot!.data as B1LData);
+        writeLocal(snapshot!.data as B1LData);
+        localIsDemoRef.current = false;
+        setCloudStatus("synced");
+      } else if (!hasCloud && localIsDemoRef.current) {
+        // Con sesión y sin datos en la nube: empieza en blanco, nunca la demo.
+        const empty = cloneEmpty();
+        setData(empty);
+        writeLocal(empty);
+        localIsDemoRef.current = false;
         setCloudStatus("synced");
       } else {
+        // Hay trabajo local real sin sincronizar: se conserva y se subirá.
         setCloudStatus("idle");
       }
     });
