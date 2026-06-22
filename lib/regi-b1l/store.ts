@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { b1lSeed } from "./seed";
 import type { B1LData } from "./types";
-
-const STORAGE_KEY = "regikaha:b1l:v1";
+import { readLocal, writeLocal } from "@/lib/regiworks/storage/localAdapter";
+import { pullSnapshot } from "@/lib/regiworks/storage/cloudAdapter";
+import { createSyncQueue, type SyncStatus } from "@/lib/regiworks/storage/syncQueue";
 
 function cloneSeed(): B1LData {
   return JSON.parse(JSON.stringify(b1lSeed)) as B1LData;
@@ -17,48 +18,80 @@ function isData(value: unknown): value is B1LData {
 }
 
 export type SaveState = "local" | "saving" | "saved";
+export type CloudStatus = SyncStatus;
 
 export function useB1LStore() {
   const [data, setData] = useState<B1LData>(cloneSeed);
   const [hydrated, setHydrated] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>("local");
+  const [cloudStatus, setCloudStatus] = useState<SyncStatus>("idle");
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hadLocalRef = useRef(false);
+  const authedRef = useRef(false);
+  const dirtyRef = useRef(false);
+  const queueRef = useRef<ReturnType<typeof createSyncQueue> | null>(null);
 
+  // Cola de sincronización cloud (debounce + last-write-wins).
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed: unknown = JSON.parse(raw);
-        if (isData(parsed)) setData(parsed);
-      }
-    } catch {
-      setSaveState("local");
-    } finally {
-      setHydrated(true);
-    }
+    queueRef.current = createSyncQueue(setCloudStatus);
+    return () => queueRef.current?.stop();
   }, []);
 
+  // Hidratación local (local-first).
+  useEffect(() => {
+    const { data: local, hadLocal } = readLocal();
+    hadLocalRef.current = hadLocal;
+    if (local && isData(local)) setData(local);
+    setHydrated(true);
+  }, []);
+
+  // Una sola lectura del estado cloud tras hidratar.
+  useEffect(() => {
+    if (!hydrated) return;
+    let cancelled = false;
+    pullSnapshot().then(({ authed, snapshot }) => {
+      if (cancelled) return;
+      authedRef.current = authed;
+      if (!authed) { setCloudStatus("offline"); return; }
+      // Dispositivo nuevo sin datos locales: adopta el estado de la nube.
+      if (snapshot?.data && isData(snapshot.data) && !hadLocalRef.current) {
+        setData(snapshot.data);
+        writeLocal(snapshot.data);
+        setCloudStatus("synced");
+      } else {
+        setCloudStatus("idle");
+      }
+    });
+    return () => { cancelled = true; };
+  }, [hydrated]);
+
+  // Guardado local (debounce) + encolado cloud solo en cambios reales.
   useEffect(() => {
     if (!hydrated) return;
     setSaveState("saving");
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
-      try {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        setSaveState("saved");
-      } catch {
-        setSaveState("local");
-      }
+      setSaveState(writeLocal(data) ? "saved" : "local");
+      if (authedRef.current && dirtyRef.current) queueRef.current?.enqueue(data);
     }, 250);
     return () => {
       if (saveTimer.current) clearTimeout(saveTimer.current);
     };
   }, [data, hydrated]);
 
-  const update = useCallback((recipe: (current: B1LData) => B1LData) => setData((current) => recipe(current)), []);
-  const reset = useCallback(() => setData(cloneSeed()), []);
+  const update = useCallback((recipe: (current: B1LData) => B1LData) => {
+    dirtyRef.current = true;
+    setData((current) => recipe(current));
+  }, []);
+  const reset = useCallback(() => {
+    dirtyRef.current = true;
+    setData(cloneSeed());
+  }, []);
 
-  return useMemo(() => ({ data, update, reset, hydrated, saveState }), [data, update, reset, hydrated, saveState]);
+  return useMemo(
+    () => ({ data, update, reset, hydrated, saveState, cloudStatus }),
+    [data, update, reset, hydrated, saveState, cloudStatus],
+  );
 }
 
 export function newId(prefix: string): string {

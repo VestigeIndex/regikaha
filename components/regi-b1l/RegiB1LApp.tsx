@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 import {
   ArrowLeft, Bell, BriefcaseBusiness, Building2, Calculator, CalendarClock, Check, ChevronRight,
-  CircleGauge, ClipboardList, CloudOff, Download, ExternalLink, FileCheck2, FileText, FolderKanban,
+  CircleGauge, ClipboardList, Cloud, CloudOff, RefreshCw, Download, ExternalLink, FileCheck2, FileText, FolderKanban,
   HardHat, Images, Info, Languages, MapPin, MapPinned, Menu, MessageSquareText, PackageSearch, Phone, Plus, ReceiptText,
   Search, Settings, ShieldCheck, Trash2, UserPlus, Users, UsersRound, WalletCards, X,
 } from "lucide-react";
@@ -63,6 +63,24 @@ function SearchBox({ value, onChange, label }: { value: string; onChange: (value
   return <div className={styles.search}><Search size={16} /><input className={styles.field} value={value} onChange={(event) => onChange(event.target.value)} placeholder={label} aria-label={label} /></div>;
 }
 
+const CLOUD_LABELS: Record<B1LLocale, { syncing: string; synced: string; error: string }> = {
+  es: { syncing: "Sincronizando…", synced: "Guardado en la nube", error: "Sin sincronizar" },
+  fr: { syncing: "Synchronisation…", synced: "Enregistré dans le cloud", error: "Non synchronisé" },
+  it: { syncing: "Sincronizzazione…", synced: "Salvato nel cloud", error: "Non sincronizzato" },
+  pt: { syncing: "A sincronizar…", synced: "Guardado na nuvem", error: "Não sincronizado" },
+  de: { syncing: "Synchronisiert…", synced: "In der Cloud gespeichert", error: "Nicht synchronisiert" },
+  nl: { syncing: "Synchroniseren…", synced: "Opgeslagen in de cloud", error: "Niet gesynchroniseerd" },
+  en: { syncing: "Syncing…", synced: "Saved to the cloud", error: "Not synced" },
+};
+
+function CloudIndicator({ status, locale }: { status: string; locale: B1LLocale }) {
+  if (status === "idle" || status === "offline") return null;
+  const labels = CLOUD_LABELS[locale] || CLOUD_LABELS.en;
+  if (status === "syncing") return <span className={styles.saveState}><RefreshCw size={14} />{labels.syncing}</span>;
+  if (status === "synced") return <span className={styles.saveState}><Cloud size={14} />{labels.synced}</span>;
+  return <span className={styles.saveState}><CloudOff size={14} />{labels.error}</span>;
+}
+
 function CountrySelect({ name, locale, defaultValue = "ES" }: { name: string; locale: B1LLocale; defaultValue?: CountryCode }) {
   const names = new Intl.DisplayNames([locale], { type: "region" });
   return <select className={styles.select} name={name} defaultValue={defaultValue}>{countries.map((country) => <option key={country} value={country}>{names.of(country)}</option>)}</select>;
@@ -117,7 +135,7 @@ function SignatureDialog({ t, quote, close, onSave }: { t: B1LDictionary; quote:
 }
 
 export function RegiB1LApp() {
-  const { data, update, reset, hydrated, saveState } = useB1LStore();
+  const { data, update, reset, hydrated, saveState, cloudStatus } = useB1LStore();
   const [tab, setTab] = useState<B1LTab>("dashboard"); const [locale, setLocale] = useState<B1LLocale>("es"); const [localeReady, setLocaleReady] = useState(false); const [modal, setModal] = useState<"client" | "project" | "quote" | "menu" | null>(null); const [signQuote, setSignQuote] = useState<Quote | null>(null); const [search, setSearch] = useState(""); const [material, setMaterial] = useState(""); const [materialResult, setMaterialResult] = useState<MaterialResult | null>(null); const [resetArmed, setResetArmed] = useState(false); const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const t = b1lDictionaries[locale]; const money = useMemo(() => new Intl.NumberFormat(locale, { style: "currency", currency: data.settings.currency }), [locale, data.settings.currency]); const regionNames = useMemo(() => new Intl.DisplayNames([locale], { type: "region" }), [locale]);
 
@@ -283,7 +301,7 @@ export function RegiB1LApp() {
 
   const views: Record<B1LTab, () => React.ReactNode> = { dashboard: renderDashboard, leads: renderLeads, clients: renderClients, projects: renderProjects, quotes: renderQuotes, documents: renderDocuments, materials: renderMaterials, providers: renderProviders, team: renderTeam, plans: renderPlans, settings: renderSettings };
   if (!hydrated) return <div className={styles.app} />;
-  return <div className={styles.app}><PwaRegister /><div className={styles.shell}><aside className={styles.sidebar}><Link href="/" className={styles.brand}><span className={styles.brandMark}>W</span><span><strong>Regi Works</strong><span>by Regi Kaha</span></span></Link><nav className={styles.nav}>{navItems.map(({ id, icon: Icon }) => <button key={id} className={`${styles.navButton} ${tab === id ? styles.navActive : ""}`} onClick={() => openTab(id)}><Icon size={17} />{t[navKey(id)]}</button>)}</nav><div className={styles.sidebarFoot}><Link className={styles.backLink} href="/"><ArrowLeft size={15} />{t["app.back"]}</Link></div></aside><main className={styles.main}><header className={styles.mobileTop}><button className={styles.mobileBrand} onClick={() => setModal("menu")} aria-label={t["app.subtitle"]}><span className={styles.mobileWordmark}>REGI <b>WORKS</b></span><Menu size={19} /></button><LocaleSelect locale={locale} onChange={saveLocale} /></header><header className={styles.topbar}><div className={styles.topTitle}><strong>REGI WORKS</strong><span>{t[navKey(tab)]}</span></div><div className={styles.topActions}><span className={styles.saveState}>{saveState === "saving" ? <CloudOff size={14} /> : <Check size={14} />}{saveState === "saving" ? t["app.saving"] : saveState === "saved" ? t["app.saved"] : t["app.local"]}</span><LocaleSelect locale={locale} onChange={saveLocale} /></div></header><div className={styles.content}>{views[tab]()}</div></main></div>
+  return <div className={styles.app}><PwaRegister /><div className={styles.shell}><aside className={styles.sidebar}><Link href="/" className={styles.brand}><span className={styles.brandMark}>W</span><span><strong>Regi Works</strong><span>by Regi Kaha</span></span></Link><nav className={styles.nav}>{navItems.map(({ id, icon: Icon }) => <button key={id} className={`${styles.navButton} ${tab === id ? styles.navActive : ""}`} onClick={() => openTab(id)}><Icon size={17} />{t[navKey(id)]}</button>)}</nav><div className={styles.sidebarFoot}><Link className={styles.backLink} href="/"><ArrowLeft size={15} />{t["app.back"]}</Link></div></aside><main className={styles.main}><header className={styles.mobileTop}><button className={styles.mobileBrand} onClick={() => setModal("menu")} aria-label={t["app.subtitle"]}><span className={styles.mobileWordmark}>REGI <b>WORKS</b></span><Menu size={19} /></button><LocaleSelect locale={locale} onChange={saveLocale} /></header><header className={styles.topbar}><div className={styles.topTitle}><strong>REGI WORKS</strong><span>{t[navKey(tab)]}</span></div><div className={styles.topActions}><span className={styles.saveState}>{saveState === "saving" ? <CloudOff size={14} /> : <Check size={14} />}{saveState === "saving" ? t["app.saving"] : saveState === "saved" ? t["app.saved"] : t["app.local"]}</span><CloudIndicator status={cloudStatus} locale={locale} /><LocaleSelect locale={locale} onChange={saveLocale} /></div></header><div className={styles.content}>{views[tab]()}</div></main></div>
   <nav className={styles.bottomNav}>{(["dashboard","projects","quotes","materials","settings"] as B1LTab[]).map((id) => { const Item = navItems.find((item) => item.id === id)!; return <button key={id} className={tab === id ? styles.bottomActive : ""} onClick={() => openTab(id)}><Item.icon />{t[navKey(id)]}</button>; })}</nav>
   {modal === "client" && <ClientDialog t={t} locale={locale} close={() => setModal(null)} onCreate={(client) => { update((current) => ({ ...current, clients: [client, ...current.clients] })); setModal(null); }} />}
   {modal === "project" && <ProjectDialog t={t} locale={locale} clients={data.clients} close={() => setModal(null)} onCreate={(project) => { update((current) => ({ ...current, projects: [project, ...current.projects] })); setModal(null); }} />}

@@ -59,8 +59,10 @@ export async function onRequest(context: any) {
   }
 
   const url = new URL(request.url);
-  const isUpload = url.pathname === "/api/portfolio" || url.pathname === "/api/projects";
-  const sizeError = validateRequestSize(request, isUpload ? 10 * 1024 * 1024 : 96 * 1024);
+  const isUpload = url.pathname === "/api/portfolio" || url.pathname === "/api/projects" || url.pathname === "/api/regiworks/media";
+  const isWorkspaceSync = url.pathname === "/api/regiworks/sync" || url.pathname === "/api/regiworks/import";
+  const maxBytes = isUpload ? 10 * 1024 * 1024 : isWorkspaceSync ? 800 * 1024 : 96 * 1024;
+  const sizeError = validateRequestSize(request, maxBytes);
   if (sizeError) return sizeError;
 
   const limited = await rateLimitByIP(env, request, `${request.method}:${url.pathname}`);
