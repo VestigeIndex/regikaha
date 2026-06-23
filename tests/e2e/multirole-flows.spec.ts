@@ -40,11 +40,11 @@ test.describe("Multirole flows", () => {
     await expect(page.locator("header")).toBeVisible();
   });
 
-  test("publicar-proyecto form renders and shows correct CTA for anonymous users", async ({ page }) => {
+  test("publicar-proyecto shows a sign-in gate for anonymous users", async ({ page }) => {
     await page.goto("/publicar-proyecto");
     await page.waitForLoadState("networkidle");
-    // Should show the publish form
-    await expect(page.getByRole("button", { name: /publicar proyecto gratis/i })).toBeVisible();
+    // Anonymous users now see the sign-in / create-account gate, not the form
+    await expect(page.getByRole("link", { name: /conectar|crear cuenta|sign in/i }).first()).toBeVisible();
   });
 
   test("/panel/cliente/proyectos page loads without crashing", async ({ page }) => {

@@ -7,11 +7,11 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test("home uses the spaced brand and has no visible release placeholders", async ({ page }) => {
+test("home uses the RegiKaha brand and has no visible release placeholders", async ({ page }) => {
   const errors: string[] = [];
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
   await page.goto("/");
-  await expect(page.getByRole("link", { name: /Regi Kaha.*inicio/i }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: /RegiKaha.*inicio/i }).first()).toBeVisible();
   await expect(page.locator("h1")).toBeVisible();
   await expect(page.getByRole("dialog")).toBeVisible();
   await expect(page.locator("body")).not.toContainText(/Cargando|Preparando|Coming soon/i);
