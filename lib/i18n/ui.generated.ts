@@ -454,7 +454,7 @@ export const generatedUiDictionaries = {
         "Verificación"
       ],
       "welcomeTitle": "¡Bienvenido a Regi Kaha!",
-      "welcomeText": "Tu perfil profesional está listo. Desde el panel podrás completar servicios, logotipo, fotos de trabajo, mapa de funcionamiento y presupuestos iniciales.",
+      "welcomeText": "¡Solicitud recibida! Revisaremos tu verificación y, si tu país aún tiene plazas fundadoras disponibles, activaremos tu acceso. Mientras, completa tu perfil desde el panel.",
       "goPanel": "Ir a mi panel",
       "createServices": "Crear servicios",
       "legendActivityTitle": "¿Qué haces?",
@@ -1281,7 +1281,7 @@ export const generatedUiDictionaries = {
         "Vérification"
       ],
       "welcomeTitle": "Bienvenue sur Regi Kaha !",
-      "welcomeText": "Votre profil professionnel est prêt. Depuis le panneau, vous pouvez compléter les services, le logo, les photos de travail, le plan d'exploitation et les estimations initiales.",
+      "welcomeText": "Demande reçue ! Nous vérifierons votre profil et, s'il reste des places fondatrices dans votre pays, nous activerons votre accès. En attendant, complétez votre profil.",
       "goPanel": "Accédez à mon panneau",
       "createServices": "Créer des services",
       "legendActivityTitle": "Que fais-tu ?",
@@ -2108,7 +2108,7 @@ export const generatedUiDictionaries = {
         "Verifica"
       ],
       "welcomeTitle": "Benvenuti a Regi Kaha!",
-      "welcomeText": "Il tuo profilo professionale è pronto. Dal pannello è possibile completare servizi, logo, foto lavori, mappa operativa e preventivi iniziali.",
+      "welcomeText": "Richiesta ricevuta! Verificheremo il tuo profilo e, se nel tuo Paese ci sono ancora posti fondatori, attiveremo il tuo accesso. Intanto completa il profilo dal pannello.",
       "goPanel": "Vai al mio pannello",
       "createServices": "Creare servizi",
       "legendActivityTitle": "Cosa fai?",
@@ -2935,7 +2935,7 @@ export const generatedUiDictionaries = {
         "Verificação"
       ],
       "welcomeTitle": "Bem-vindo ao Regi Kaha!",
-      "welcomeText": "Seu perfil profissional está pronto. No painel você pode preencher serviços, logotipo, fotos de trabalho, mapa operacional e orçamentos iniciais.",
+      "welcomeText": "Pedido recebido! Vamos rever a sua verificação e, se o seu país ainda tiver vagas fundadoras, ativaremos o seu acesso. Entretanto, complete o seu perfil no painel.",
       "goPanel": "Vá para o meu painel",
       "createServices": "Criar serviços",
       "legendActivityTitle": "O que você faz?",
@@ -3762,7 +3762,7 @@ export const generatedUiDictionaries = {
         "Überprüfung"
       ],
       "welcomeTitle": "Willkommen bei Regi Kaha!",
-      "welcomeText": "Ihr Berufsprofil ist fertig. Über das Panel können Sie Dienstleistungen, Logos, Arbeitsfotos, Betriebspläne und erste Kostenvoranschläge vervollständigen.",
+      "welcomeText": "Anfrage erhalten! Wir prüfen Ihre Verifizierung und aktivieren Ihren Zugang, wenn in Ihrem Land noch Gründerplätze frei sind. Vervollständigen Sie währenddessen Ihr Profil.",
       "goPanel": "Gehen Sie zu meinem Panel",
       "createServices": "Dienste erstellen",
       "legendActivityTitle": "Was machst du?",
@@ -4589,7 +4589,7 @@ export const generatedUiDictionaries = {
         "Verificatie"
       ],
       "welcomeTitle": "Welkom bij Regi Kaha!",
-      "welcomeText": "Je beroepsprofiel is klaar. Vanuit het paneel kunt u services, logo, werkfoto's, operatiekaart en initiële budgetten invullen.",
+      "welcomeText": "Aanvraag ontvangen! We controleren je verificatie en activeren je toegang als er in jouw land nog oprichtersplaatsen zijn. Vul ondertussen je profiel aan.",
       "goPanel": "Ga naar mijn dashboard",
       "createServices": "Diensten creëren",
       "legendActivityTitle": "Wat ben je aan het doen?",
@@ -5416,7 +5416,7 @@ export const generatedUiDictionaries = {
         "Verification"
       ],
       "welcomeTitle": "Welcome to Regi Kaha!",
-      "welcomeText": "Your professional profile is ready. From the panel you can complete services, logo, work photos, operation map and initial budgets.",
+      "welcomeText": "Request received! We'll review your verification and, if your country still has founder slots available, we'll activate your access. Meanwhile, complete your profile.",
       "goPanel": "Go to my dashboard",
       "createServices": "Create services",
       "legendActivityTitle": "What are you doing?",

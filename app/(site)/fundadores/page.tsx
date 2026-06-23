@@ -12,7 +12,7 @@ import { formatIntervalPrice, professionalPlans } from "@/lib/pricing";
 
 export const metadata: Metadata = buildMetadata({
   title: "Oferta fundadores",
-  description: "Los primeros 300 profesionales reciben 5 meses a 0 € mediante una suscripción real con contrato digital y plan futuro elegido.",
+  description: "Los primeros 300 profesionales verificados por país reciben 5 meses gratis de RegiKaha Pro + acceso a RegiWorks. Plazas activadas progresivamente por país y ciudad, sujetas a verificación profesional.",
   path: "/fundadores",
 });
 
@@ -29,8 +29,8 @@ export default function FundadoresPage() {
     <>
       <PageHeader
         eyebrow="Programa fundador"
-        title={`Primeros ${site.founderSlots} profesionales: ${site.founderFreeMonths} meses a 0 €`}
-        description="Reserva una plaza real, elige tu plan futuro y acepta el contrato digital. Al finalizar el periodo gratuito, la suscripción se renueva al precio elegido o el acceso comercial queda limitado."
+        title={`Primeros ${site.founderSlots} profesionales verificados por país: ${site.founderFreeMonths} meses gratis Pro + RegiWorks`}
+        description="Reserva tu plaza fundadora en tu país, elige tu plan futuro y acepta el contrato digital. Al finalizar el periodo gratuito, la suscripción se renueva al precio elegido o el acceso comercial queda limitado. Plazas activadas progresivamente por país y ciudad, sujetas a verificación profesional."
         breadcrumbs={[{ name: "Inicio", path: "/" }, { name: "Fundadores" }]}
       >
         <div className="space-y-5">
@@ -71,7 +71,7 @@ export default function FundadoresPage() {
         </div>
       </section>
 
-      <CtaBand title="Reserva tu plaza de fundador" text="Crea tu cuenta, verifica el email y revisa el contrato antes de activar Stripe." primary={{ label: "Empezar alta profesional", href: "/registro/profesional?founder=true&plan=autonomo_nacional&interval=monthly" }} />
+      <CtaBand title="Reserva tu plaza fundadora en tu país" text="Los primeros 300 profesionales verificados por país: 5 meses gratis de RegiKaha Pro + acceso a RegiWorks. Plazas activadas progresivamente por país y ciudad, sujetas a verificación profesional y disponibilidad por zona." primary={{ label: "Empezar alta profesional", href: "/registro/profesional?founder=true&plan=autonomo_nacional&interval=monthly" }} />
     </>
   );
 }
