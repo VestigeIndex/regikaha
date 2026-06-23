@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { BadgeCheck, Star, ShieldCheck, ArrowRight } from "lucide-react";
+import { BadgeCheck, Star, Sparkles, ArrowRight } from "lucide-react";
 import { SearchBar } from "@/components/marketplace/SearchBar";
 import { getPlatformStats } from "@/lib/data";
+import { site } from "@/lib/site";
 import { HeroSlideshow } from "@/components/home/HeroSlideshow";
 import { useT } from "@/lib/i18n/context";
 
@@ -67,16 +68,16 @@ export function Hero() {
               </div>
             </div>
 
-            <div className="absolute -right-5 bottom-12 card shadow-elevated p-3.5 w-56 animate-fade-up" style={{ animationDelay: "0.15s" }}>
-              <div className="flex items-center gap-2">
-                <span className="grid place-items-center h-9 w-9 rounded-xl bg-forest-500/12 text-forest-600">
-                  <ShieldCheck size={18} />
-                </span>
-                <div>
-                  <p className="text-sm font-bold text-ink leading-tight">{t.trust.noPaidRanking}</p>
-                  <p className="text-xs text-muted mt-0.5">{t.heroExtra.meritDesc}</p>
-                </div>
-              </div>
+            <div className="absolute -right-5 -bottom-7 left-10 rounded-2xl bg-forest-900 text-white p-5 shadow-elevated ring-1 ring-white/10 animate-fade-up" style={{ animationDelay: "0.15s" }}>
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-forest-200">
+                <Sparkles size={13} /> {t.ui.homeSections.founders.eyebrow}
+              </span>
+              <p className="mt-1.5 text-sm font-bold leading-snug">
+                {t.ui.homeSections.founders.titleBefore} {site.founderSlots} {t.ui.cards.categoryCountPlural} {t.ui.badges.verified.toLowerCase()} {t.ui.homeSections.founders.titleHighlight}
+              </p>
+              <Link href="/registro/profesional" className="btn btn-white mt-3 w-full text-sm">
+                {t.ui.homeSections.founders.join} <ArrowRight size={15} />
+              </Link>
             </div>
           </div>
         </div>

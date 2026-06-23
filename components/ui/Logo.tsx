@@ -9,11 +9,9 @@ export function Logo({ className, mono = false, compact = false }: { className?:
       <span className="relative grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-2xl bg-forest-700 shadow-soft ring-1 ring-white/30">
         <span className="absolute -right-2 -top-2 h-7 w-7 rounded-full bg-mint/40" />
         <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true" className="relative">
-          <path d="M6.5 15.2 16 7l9.5 8.2" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M9.2 14.4v9.2h13.6v-9.2" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M16 23.6v-5.2" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
-          <path d="M20.6 10.5c3.7.5 5.2 3.1 4.7 5.9-.5 2.9-3.2 4.8-6.6 4.6 1.8-1.3 2.7-3.1 2.7-5.1 0-1.9-.7-3.7-2.1-5.2.4-.1.8-.2 1.3-.2Z" fill="#BDF6D2" />
-          <path d="M12.2 15.8c1.4-1.1 3.4-.9 4.5.5 1.1 1.4.9 3.4-.5 4.5" stroke="#BDF6D2" strokeWidth="1.9" strokeLinecap="round" />
+          <path d="M6 14.6 16 6.4l10 8.2" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M8.6 13.4v10.2h14.8V13.4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="m11.8 18.4 2.7 2.7 5.7-5.9" stroke="#8CE6B0" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </span>
       {!compact && (
