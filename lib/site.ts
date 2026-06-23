@@ -3,7 +3,7 @@
 import { formatIntervalPrice, professionalPlans } from "./pricing";
 
 export const site = {
-  name: "Regi Kaha",
+  name: "RegiKaha",
   legalName: "Regi Kaha",
   url: "https://regikaha.com",
   email: "help@regikaha.com",

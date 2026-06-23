@@ -177,10 +177,10 @@ export const generatedUiDictionaries = {
           ]
         },
         {
-          "title": "Regi Kaha",
+          "title": "RegiKaha",
           "links": [
             {
-              "label": "Acerca de Regi Kaha",
+              "label": "Acerca de RegiKaha",
               "href": "/sobre"
             },
             {
@@ -222,7 +222,7 @@ export const generatedUiDictionaries = {
       ]
     },
     "cookie": {
-      "textBeforeLink": "Utilizamos las cookies necesarias para que Regi Kaha funcione y, con tu permiso, cookies para mejorar la experiencia. Vea nuestro ",
+      "textBeforeLink": "Utilizamos las cookies necesarias para que RegiKaha funcione y, con tu permiso, cookies para mejorar la experiencia. Vea nuestro ",
       "link": "política de cookies",
       "textAfterLink": "."
     },
@@ -345,19 +345,19 @@ export const generatedUiDictionaries = {
       "publishProject": {
         "eyebrow": "Gratis para clientes",
         "title": "Publica tu proyecto y recibe presupuestos iniciales",
-        "description": "Cuéntanos qué necesitas, ciudad, categoría, urgencia y rango orientativo. Regi Kaha detecta cobertura y activa profesionales o adquisición local.",
+        "description": "Cuéntanos qué necesitas, ciudad, categoría, urgencia y rango orientativo. RegiKaha detecta cobertura y activa profesionales o adquisición local.",
         "breadcrumb": "Publicar proyecto"
       },
       "publishSubcontract": {
         "eyebrow": "B2B y constructores",
         "title": "Publicar una necesidad de subcontratación",
-        "description": "Especificar especialidad, ciudad de trabajo, fechas, equipo requerido y documentación. Regi Kaha activa la adquisición y comparación de subcontratistas verificables.",
+        "description": "Especificar especialidad, ciudad de trabajo, fechas, equipo requerido y documentación. RegiKaha activa la adquisición y comparación de subcontratistas verificables.",
         "breadcrumb": "Publicar necesidad de subcontratación"
       },
       "builders": {
         "eyebrow": "Constructores y empresas",
         "title": "Encuentre subcontratistas verificables para sus obras",
-        "description": "Publicar paquetes de trabajo, especialidades y ubicaciones. Regi Kaha ayuda a activar el suministro local y comparar proveedores por documentación, experiencia y disponibilidad.",
+        "description": "Publicar paquetes de trabajo, especialidades y ubicaciones. RegiKaha ayuda a activar el suministro local y comparar proveedores por documentación, experiencia y disponibilidad.",
         "breadcrumb": "constructores"
       },
       "subcontractors": {
@@ -453,7 +453,7 @@ export const generatedUiDictionaries = {
         "Datos y área",
         "Verificación"
       ],
-      "welcomeTitle": "¡Bienvenido a Regi Kaha!",
+      "welcomeTitle": "¡Bienvenido a RegiKaha!",
       "welcomeText": "¡Solicitud recibida! Revisaremos tu verificación y, si tu país aún tiene plazas fundadoras disponibles, activaremos tu acceso. Mientras, completa tu perfil desde el panel.",
       "goPanel": "Ir a mi panel",
       "createServices": "Crear servicios",
@@ -483,7 +483,7 @@ export const generatedUiDictionaries = {
       "termsText": "Acepto el ",
       "proTerms": "términos profesionales",
       "verificationPolicy": "política de verificación",
-      "fairRanking": "Clasificación justa Regi Kaha (sin puestos remunerados).",
+      "fairRanking": "Clasificación justa RegiKaha (sin puestos remunerados).",
       "creating": "Creando...",
       "createProfile": "crear mi perfil",
       "unableToCreate": "No se pudo crear el perfil",
@@ -498,7 +498,7 @@ export const generatedUiDictionaries = {
     },
     "dashboard": {
       "backToSite": "Volver al sitio",
-      "panelBadge": "Regi Kaha Pro",
+      "panelBadge": "RegiKaha Pro",
       "adminBadge": "administración",
       "nav": {
         "overview": "Descripción general",
@@ -653,13 +653,13 @@ export const generatedUiDictionaries = {
       "portfolio": {
         "eyebrow": "Trabajos realizados",
         "title": "Resultados reales, antes y despues",
-        "description": "Proyectos completados por profesionales verificados de Regi Kaha. Pasa el cursor para ver el antes.",
+        "description": "Proyectos completados por profesionales verificados de RegiKaha. Pasa el cursor para ver el antes.",
         "viewPortfolio": "Ver portfolio",
         "hoverBefore": "Pasa el cursor: antes"
       },
       "testimonials": {
         "eyebrow": "Testimonios",
-        "title": "Lo que dicen los clientes de Regi Kaha",
+        "title": "Lo que dicen los clientes de RegiKaha",
         "description": "Resenas verificadas de clientes con un servicio realizado. Sin valoraciones compradas.",
         "previous": "Testimonio anterior",
         "next": "Siguiente testimonio",
@@ -667,7 +667,7 @@ export const generatedUiDictionaries = {
       },
       "fairRanking": {
         "eyebrow": "Ranking justo",
-        "title": "En Regi Kaha nadie paga por aparecer primero",
+        "title": "En RegiKaha nadie paga por aparecer primero",
         "paragraphs": [
           "Los profesionales destacan por su reputacion, calidad, precio justo, trabajos reales y valoraciones verificadas. Todos compiten por merito, con las mismas reglas.",
           "Las valoraciones son verificadas. Ningun profesional puede pagar para mejorar su puntuacion, ocultar opiniones legitimas o comprar posiciones."
@@ -691,7 +691,7 @@ export const generatedUiDictionaries = {
         "eyebrow": "Oferta fundadores",
         "titleBefore": "Los primeros",
         "titleHighlight": "por país · 5 meses gratis de RegiKaha Pro + RegiWorks",
-        "textBeforeMonthly": "Únete como miembro fundador de Regi Kaha Pro. Después:",
+        "textBeforeMonthly": "Únete como miembro fundador de RegiKaha Pro. Después:",
         "textBetweenPrices": "o",
         "textAfterYearly": "Plazas fundadoras activadas progresivamente por país y ciudad, sujetas a verificación profesional y disponibilidad por zona.",
         "reserved": "plazas reservadas",
@@ -747,7 +747,7 @@ export const generatedUiDictionaries = {
       "popularServices": "Servicios populares",
       "trustTitlePrefix": "Contrata",
       "trustTitleSuffix": "con confianza",
-      "trustText": "En Regi Kaha todos los profesionales compiten por merito. Compara antes de contratar y decide con informacion real.",
+      "trustText": "En RegiKaha todos los profesionales compiten por merito. Compara antes de contratar y decide con informacion real.",
       "trustBullets": [
         "Profesionales verificados",
         "Valoraciones reales",
@@ -756,7 +756,7 @@ export const generatedUiDictionaries = {
       ],
       "related": "Otras categorias",
       "proJoinPrefix": "Eres profesional de",
-      "proJoinSuffix": "Unete a Regi Kaha",
+      "proJoinSuffix": "Unete a RegiKaha",
       "joinAndGetClients": "y consigue clientes."
     },
     "profilePage": {
@@ -1004,10 +1004,10 @@ export const generatedUiDictionaries = {
           ]
         },
         {
-          "title": "Regi Kaha",
+          "title": "RegiKaha",
           "links": [
             {
-              "label": "À propos de Regi Kaha",
+              "label": "À propos de RegiKaha",
               "href": "/sobre"
             },
             {
@@ -1049,7 +1049,7 @@ export const generatedUiDictionaries = {
       ]
     },
     "cookie": {
-      "textBeforeLink": "Nous utilisons des cookies nécessaires au fonctionnement de Regi Kaha et, avec votre permission, des cookies pour améliorer l'expérience. Voir notre ",
+      "textBeforeLink": "Nous utilisons des cookies nécessaires au fonctionnement de RegiKaha et, avec votre permission, des cookies pour améliorer l'expérience. Voir notre ",
       "link": "politique de cookies",
       "textAfterLink": "."
     },
@@ -1172,19 +1172,19 @@ export const generatedUiDictionaries = {
       "publishProject": {
         "eyebrow": "Gratuit pour les clients",
         "title": "Publiez votre projet et recevez de premières estimations",
-        "description": "Dites-nous ce dont vous avez besoin, ville, catégorie, urgence et fourchette indicative. Regi Kaha détecte la couverture et active les professionnels ou l'acquisition locale.",
+        "description": "Dites-nous ce dont vous avez besoin, ville, catégorie, urgence et fourchette indicative. RegiKaha détecte la couverture et active les professionnels ou l'acquisition locale.",
         "breadcrumb": "Publier le projet"
       },
       "publishSubcontract": {
         "eyebrow": "B2B et constructeurs",
         "title": "Publier un besoin de sous-traitance",
-        "description": "Précisez la spécialité, la ville de travail, les dates, l'équipe requise et la documentation. Regi Kaha active l'acquisition et la comparaison de sous-traitants vérifiables.",
+        "description": "Précisez la spécialité, la ville de travail, les dates, l'équipe requise et la documentation. RegiKaha active l'acquisition et la comparaison de sous-traitants vérifiables.",
         "breadcrumb": "Publier le besoin de sous-traitance"
       },
       "builders": {
         "eyebrow": "Constructeurs et entreprises",
         "title": "Trouvez des sous-traitants vérifiables pour vos travaux",
-        "description": "Publier des lots de travaux, des spécialités et des emplacements. Regi Kaha permet d'activer l'approvisionnement local et de comparer les fournisseurs en fonction de la documentation, de l'expérience et de la disponibilité.",
+        "description": "Publier des lots de travaux, des spécialités et des emplacements. RegiKaha permet d'activer l'approvisionnement local et de comparer les fournisseurs en fonction de la documentation, de l'expérience et de la disponibilité.",
         "breadcrumb": "Constructeurs"
       },
       "subcontractors": {
@@ -1280,7 +1280,7 @@ export const generatedUiDictionaries = {
         "Données et superficie",
         "Vérification"
       ],
-      "welcomeTitle": "Bienvenue sur Regi Kaha !",
+      "welcomeTitle": "Bienvenue sur RegiKaha !",
       "welcomeText": "Demande reçue ! Nous vérifierons votre profil et, s'il reste des places fondatrices dans votre pays, nous activerons votre accès. En attendant, complétez votre profil.",
       "goPanel": "Accédez à mon panneau",
       "createServices": "Créer des services",
@@ -1310,7 +1310,7 @@ export const generatedUiDictionaries = {
       "termsText": "J'accepte le ",
       "proTerms": "conditions professionnelles",
       "verificationPolicy": "politique de vérification",
-      "fairRanking": "Classement équitable Regi Kaha (pas de postes rémunérés).",
+      "fairRanking": "Classement équitable RegiKaha (pas de postes rémunérés).",
       "creating": "Création...",
       "createProfile": "Créer mon profil",
       "unableToCreate": "Impossible de créer le profil",
@@ -1325,7 +1325,7 @@ export const generatedUiDictionaries = {
     },
     "dashboard": {
       "backToSite": "Retour au site",
-      "panelBadge": "Regi Kaha Pro",
+      "panelBadge": "RegiKaha Pro",
       "adminBadge": "Administration",
       "nav": {
         "overview": "Aperçu",
@@ -1480,13 +1480,13 @@ export const generatedUiDictionaries = {
       "portfolio": {
         "eyebrow": "Travail effectué",
         "title": "De vrais résultats, avant et après",
-        "description": "Projets réalisés par des professionnels Regi Kaha vérifiés. Passez la souris pour voir l'avant.",
+        "description": "Projets réalisés par des professionnels RegiKaha vérifiés. Passez la souris pour voir l'avant.",
         "viewPortfolio": "Voir le portfolio",
         "hoverBefore": "Survol : avant"
       },
       "testimonials": {
         "eyebrow": "Témoignages",
-        "title": "Ce que disent les clients de Regi Kaha",
+        "title": "Ce que disent les clients de RegiKaha",
         "description": "Avis clients vérifiés avec une prestation réalisée. Aucune note achetée.",
         "previous": "Témoignage précédent",
         "next": "Prochain témoignage",
@@ -1494,7 +1494,7 @@ export const generatedUiDictionaries = {
       },
       "fairRanking": {
         "eyebrow": "Classement équitable",
-        "title": "Chez Regi Kaha, personne ne paie pour apparaître en premier",
+        "title": "Chez RegiKaha, personne ne paie pour apparaître en premier",
         "paragraphs": [
           "Les professionnels se démarquent par leur réputation, leur qualité, leur juste prix, leur travail réel et leurs évaluations vérifiées. Tout le monde concourt au mérite, avec les mêmes règles.",
           "Les notes sont vérifiées. Aucun professionnel ne peut payer pour améliorer son score, cacher des opinions légitimes ou acheter des postes."
@@ -1518,7 +1518,7 @@ export const generatedUiDictionaries = {
         "eyebrow": "Offre des fondateurs",
         "titleBefore": "Le premier",
         "titleHighlight": "par pays · 5 mois gratuits de RegiKaha Pro + RegiWorks",
-        "textBeforeMonthly": "Rejoignez-nous en tant que membre fondateur de Regi Kaha Pro. Après :",
+        "textBeforeMonthly": "Rejoignez-nous en tant que membre fondateur de RegiKaha Pro. Après :",
         "textBetweenPrices": "ou",
         "textAfterYearly": "Places fondatrices activées progressivement par pays et ville, soumises à vérification professionnelle et disponibilité par zone.",
         "reserved": "places réservées",
@@ -1574,7 +1574,7 @@ export const generatedUiDictionaries = {
       "popularServices": "Services populaires",
       "trustTitlePrefix": "Embaucher",
       "trustTitleSuffix": "en toute confiance",
-      "trustText": "Chez Regi Kaha, tous les professionnels concourent sur la base du mérite. Comparez avant d’embaucher et décidez avec des informations réelles.",
+      "trustText": "Chez RegiKaha, tous les professionnels concourent sur la base du mérite. Comparez avant d’embaucher et décidez avec des informations réelles.",
       "trustBullets": [
         "Des professionnels vérifiés",
         "De vrais avis",
@@ -1583,7 +1583,7 @@ export const generatedUiDictionaries = {
       ],
       "related": "Autres catégories",
       "proJoinPrefix": "Vous êtes un professionnel",
-      "proJoinSuffix": "Rejoignez Regi Kaha",
+      "proJoinSuffix": "Rejoignez RegiKaha",
       "joinAndGetClients": "et obtenir des clients."
     },
     "profilePage": {
@@ -1831,10 +1831,10 @@ export const generatedUiDictionaries = {
           ]
         },
         {
-          "title": "Regi Kaha",
+          "title": "RegiKaha",
           "links": [
             {
-              "label": "Informazioni su Regi Kaha",
+              "label": "Informazioni su RegiKaha",
               "href": "/sobre"
             },
             {
@@ -1876,7 +1876,7 @@ export const generatedUiDictionaries = {
       ]
     },
     "cookie": {
-      "textBeforeLink": "Utilizziamo i cookie necessari affinché Regi Kaha funzioni e, con il tuo permesso, i cookie per migliorare l'esperienza. Vedi il nostro ",
+      "textBeforeLink": "Utilizziamo i cookie necessari affinché RegiKaha funzioni e, con il tuo permesso, i cookie per migliorare l'esperienza. Vedi il nostro ",
       "link": "politica sui cookie",
       "textAfterLink": "."
     },
@@ -1999,19 +1999,19 @@ export const generatedUiDictionaries = {
       "publishProject": {
         "eyebrow": "Gratuito per i clienti",
         "title": "Pubblica il tuo progetto e ricevi i primi preventivi",
-        "description": "Raccontaci di cosa hai bisogno, città, categoria, urgenza e portata indicativa. Regi Kaha rileva la copertura e attiva i professionisti o l'acquisizione locale.",
+        "description": "Raccontaci di cosa hai bisogno, città, categoria, urgenza e portata indicativa. RegiKaha rileva la copertura e attiva i professionisti o l'acquisizione locale.",
         "breadcrumb": "Pubblica progetto"
       },
       "publishSubcontract": {
         "eyebrow": "B2B e costruttori",
         "title": "Pubblicare una necessità di subappalto",
-        "description": "Specificare la specialità, la città di lavoro, le date, la squadra richiesta e la documentazione. Regi Kaha attiva l'acquisizione e il confronto dei subappaltatori verificabili.",
+        "description": "Specificare la specialità, la città di lavoro, le date, la squadra richiesta e la documentazione. RegiKaha attiva l'acquisizione e il confronto dei subappaltatori verificabili.",
         "breadcrumb": "Pubblicare la necessità di subappalto"
       },
       "builders": {
         "eyebrow": "Costruttori e aziende",
         "title": "Trova subappaltatori verificabili per i tuoi lavori",
-        "description": "Pubblica pacchetti di lavoro, specialità e sedi. Regi Kaha aiuta ad attivare l'offerta locale e a confrontare i fornitori in base a documentazione, esperienza e disponibilità.",
+        "description": "Pubblica pacchetti di lavoro, specialità e sedi. RegiKaha aiuta ad attivare l'offerta locale e a confrontare i fornitori in base a documentazione, esperienza e disponibilità.",
         "breadcrumb": "Costruttori"
       },
       "subcontractors": {
@@ -2107,7 +2107,7 @@ export const generatedUiDictionaries = {
         "Dati e zona",
         "Verifica"
       ],
-      "welcomeTitle": "Benvenuti a Regi Kaha!",
+      "welcomeTitle": "Benvenuti a RegiKaha!",
       "welcomeText": "Richiesta ricevuta! Verificheremo il tuo profilo e, se nel tuo Paese ci sono ancora posti fondatori, attiveremo il tuo accesso. Intanto completa il profilo dal pannello.",
       "goPanel": "Vai al mio pannello",
       "createServices": "Creare servizi",
@@ -2137,7 +2137,7 @@ export const generatedUiDictionaries = {
       "termsText": "Accetto il ",
       "proTerms": "termini professionali",
       "verificationPolicy": "politica di verifica",
-      "fairRanking": "Classifica Regi Kaha equa (nessuna posizione retribuita).",
+      "fairRanking": "Classifica RegiKaha equa (nessuna posizione retribuita).",
       "creating": "Creazione...",
       "createProfile": "Crea il mio profilo",
       "unableToCreate": "Impossibile creare il profilo",
@@ -2152,7 +2152,7 @@ export const generatedUiDictionaries = {
     },
     "dashboard": {
       "backToSite": "Torna al sito",
-      "panelBadge": "Regi Kaha Pro",
+      "panelBadge": "RegiKaha Pro",
       "adminBadge": "Amministrazione",
       "nav": {
         "overview": "Panoramica",
@@ -2307,13 +2307,13 @@ export const generatedUiDictionaries = {
       "portfolio": {
         "eyebrow": "Lavoro finito",
         "title": "Real results, before and after",
-        "description": "Progetti completati da professionisti Regi Kaha verificati. Passa il mouse per vedere il prima.",
+        "description": "Progetti completati da professionisti RegiKaha verificati. Passa il mouse per vedere il prima.",
         "viewPortfolio": "Vedi portafoglio",
         "hoverBefore": "Passa il mouse: prima"
       },
       "testimonials": {
         "eyebrow": "Testimonianze",
-        "title": "What Regi Kaha customers say",
+        "title": "What RegiKaha customers say",
         "description": "Recensioni dei clienti verificate con un servizio eseguito. Nessuna valutazione acquistata.",
         "previous": "Testimonianza precedente",
         "next": "Prossima testimonianza",
@@ -2321,7 +2321,7 @@ export const generatedUiDictionaries = {
       },
       "fairRanking": {
         "eyebrow": "Classifica giusta",
-        "title": "At Regi Kaha no one pays to appear first",
+        "title": "At RegiKaha no one pays to appear first",
         "paragraphs": [
           "I professionisti si distinguono per reputazione, qualità, prezzo giusto, lavoro reale e valutazioni verificate. Everyone competes on merit, with the same rules.",
           "Le valutazioni sono verificate. Nessun professionista può pagare per migliorare il proprio punteggio, nascondere opinioni legittime o acquistare posizioni."
@@ -2345,7 +2345,7 @@ export const generatedUiDictionaries = {
         "eyebrow": "Offerta dei fondatori",
         "titleBefore": "Il primo",
         "titleHighlight": "per Paese · 5 mesi gratis di RegiKaha Pro + RegiWorks",
-        "textBeforeMonthly": "Unisciti come membro fondatore di Regi Kaha Pro. Dopo:",
+        "textBeforeMonthly": "Unisciti come membro fondatore di RegiKaha Pro. Dopo:",
         "textBetweenPrices": "o",
         "textAfterYearly": "Posti fondatori attivati progressivamente per Paese e città, soggetti a verifica professionale e disponibilità per zona.",
         "reserved": "posti riservati",
@@ -2401,7 +2401,7 @@ export const generatedUiDictionaries = {
       "popularServices": "Servizi popolari",
       "trustTitlePrefix": "Assumi",
       "trustTitleSuffix": "con fiducia",
-      "trustText": "A Regi Kaha tutti i professionisti competono in base al merito. Confronta prima di assumere e decidi con informazioni reali.",
+      "trustText": "A RegiKaha tutti i professionisti competono in base al merito. Confronta prima di assumere e decidi con informazioni reali.",
       "trustBullets": [
         "Professionisti verificati",
         "Recensioni reali",
@@ -2410,7 +2410,7 @@ export const generatedUiDictionaries = {
       ],
       "related": "Altre categorie",
       "proJoinPrefix": "Sei un professionista",
-      "proJoinSuffix": "Unisciti a Regi Kaha",
+      "proJoinSuffix": "Unisciti a RegiKaha",
       "joinAndGetClients": "e ottenere clienti."
     },
     "profilePage": {
@@ -2658,10 +2658,10 @@ export const generatedUiDictionaries = {
           ]
         },
         {
-          "title": "Regi Kaha",
+          "title": "RegiKaha",
           "links": [
             {
-              "label": "Sobre Regi Kaha",
+              "label": "Sobre RegiKaha",
               "href": "/sobre"
             },
             {
@@ -2703,7 +2703,7 @@ export const generatedUiDictionaries = {
       ]
     },
     "cookie": {
-      "textBeforeLink": "Utilizamos cookies necessários para o funcionamento do Regi Kaha e, com sua permissão, cookies para melhorar a experiência. Veja nosso ",
+      "textBeforeLink": "Utilizamos cookies necessários para o funcionamento do RegiKaha e, com sua permissão, cookies para melhorar a experiência. Veja nosso ",
       "link": "política de cookies",
       "textAfterLink": "."
     },
@@ -2826,19 +2826,19 @@ export const generatedUiDictionaries = {
       "publishProject": {
         "eyebrow": "Gratuito para clientes",
         "title": "Publique seu projeto e receba orçamentos iniciais",
-        "description": "Diga-nos o que necessita, cidade, categoria, urgência e faixa indicativa. Regi Kaha detecta cobertura e ativa aquisição profissional ou local.",
+        "description": "Diga-nos o que necessita, cidade, categoria, urgência e faixa indicativa. RegiKaha detecta cobertura e ativa aquisição profissional ou local.",
         "breadcrumb": "Publicar projeto"
       },
       "publishSubcontract": {
         "eyebrow": "B2B e construtores",
         "title": "Publicar uma necessidade de subcontrato",
-        "description": "Especifique especialidade, cidade de trabalho, datas, equipe necessária e documentação. Regi Kaha ativa a aquisição e comparação de subcontratados verificáveis.",
+        "description": "Especifique especialidade, cidade de trabalho, datas, equipe necessária e documentação. RegiKaha ativa a aquisição e comparação de subcontratados verificáveis.",
         "breadcrumb": "Publicar necessidade de subcontrato"
       },
       "builders": {
         "eyebrow": "Construtores e empresas",
         "title": "Encontre subcontratados verificáveis para suas obras",
-        "description": "Publique pacotes de trabalho, especialidades e locais. Regi Kaha ajuda a ativar o fornecimento local e comparar fornecedores por documentação, experiência e disponibilidade.",
+        "description": "Publique pacotes de trabalho, especialidades e locais. RegiKaha ajuda a ativar o fornecimento local e comparar fornecedores por documentação, experiência e disponibilidade.",
         "breadcrumb": "Construtores"
       },
       "subcontractors": {
@@ -2934,7 +2934,7 @@ export const generatedUiDictionaries = {
         "Dados e área",
         "Verificação"
       ],
-      "welcomeTitle": "Bem-vindo ao Regi Kaha!",
+      "welcomeTitle": "Bem-vindo ao RegiKaha!",
       "welcomeText": "Pedido recebido! Vamos rever a sua verificação e, se o seu país ainda tiver vagas fundadoras, ativaremos o seu acesso. Entretanto, complete o seu perfil no painel.",
       "goPanel": "Vá para o meu painel",
       "createServices": "Criar serviços",
@@ -2964,7 +2964,7 @@ export const generatedUiDictionaries = {
       "termsText": "eu aceito o ",
       "proTerms": "termos profissionais",
       "verificationPolicy": "política de verificação",
-      "fairRanking": "classificação Regi Kaha justa (sem posições remuneradas).",
+      "fairRanking": "classificação RegiKaha justa (sem posições remuneradas).",
       "creating": "Criando...",
       "createProfile": "Criar meu perfil",
       "unableToCreate": "Não foi possível criar o perfil",
@@ -2979,7 +2979,7 @@ export const generatedUiDictionaries = {
     },
     "dashboard": {
       "backToSite": "Voltar ao site",
-      "panelBadge": "Regi Kaha Pro",
+      "panelBadge": "RegiKaha Pro",
       "adminBadge": "Administração",
       "nav": {
         "overview": "Visão geral",
@@ -3134,13 +3134,13 @@ export const generatedUiDictionaries = {
       "portfolio": {
         "eyebrow": "Trabalho realizado",
         "title": "Resultados reais, antes e depois",
-        "description": "Projetos concluídos por profissionais verificados do Regi Kaha. Passe o mouse para ver o antes.",
+        "description": "Projetos concluídos por profissionais verificados do RegiKaha. Passe o mouse para ver o antes.",
         "viewPortfolio": "Ver portfólio",
         "hoverBefore": "Passe o mouse: antes"
       },
       "testimonials": {
         "eyebrow": "Depoimentos",
-        "title": "O que dizem os clientes Regi Kaha",
+        "title": "O que dizem os clientes RegiKaha",
         "description": "Avaliações de clientes verificadas com um serviço executado. Nenhuma classificação comprada.",
         "previous": "Testemunho anterior",
         "next": "Próximo depoimento",
@@ -3148,7 +3148,7 @@ export const generatedUiDictionaries = {
       },
       "fairRanking": {
         "eyebrow": "Classificação justa",
-        "title": "Na Regi Kaha ninguém paga para aparecer primeiro",
+        "title": "Na RegiKaha ninguém paga para aparecer primeiro",
         "paragraphs": [
           "Os profissionais se destacam pela reputação, qualidade, preço justo, trabalho real e avaliações verificadas. Todos competem por mérito, com as mesmas regras.",
           "As classificações são verificadas. Nenhum profissional pode pagar para melhorar seu score, ocultar opiniões legítimas ou comprar posições."
@@ -3172,7 +3172,7 @@ export const generatedUiDictionaries = {
         "eyebrow": "Oferta dos fundadores",
         "titleBefore": "O primeiro",
         "titleHighlight": "por país · 5 meses grátis de RegiKaha Pro + RegiWorks",
-        "textBeforeMonthly": "Junte-se como membro fundador do Regi Kaha Pro. Depois:",
+        "textBeforeMonthly": "Junte-se como membro fundador do RegiKaha Pro. Depois:",
         "textBetweenPrices": "ou",
         "textAfterYearly": "Vagas fundadoras ativadas progressivamente por país e cidade, sujeitas a verificação profissional e disponibilidade por zona.",
         "reserved": "lugares reservados",
@@ -3228,7 +3228,7 @@ export const generatedUiDictionaries = {
       "popularServices": "Serviços populares",
       "trustTitlePrefix": "Contratar",
       "trustTitleSuffix": "com confiança",
-      "trustText": "Na Regi Kaha todos os profissionais competem por mérito. Compare antes de contratar e decida com informações reais.",
+      "trustText": "Na RegiKaha todos os profissionais competem por mérito. Compare antes de contratar e decida com informações reais.",
       "trustBullets": [
         "Profissionais verificados",
         "Críticas reais",
@@ -3237,7 +3237,7 @@ export const generatedUiDictionaries = {
       ],
       "related": "Outras categorias",
       "proJoinPrefix": "Você é um profissional",
-      "proJoinSuffix": "Junte-se ao Regi Kaha",
+      "proJoinSuffix": "Junte-se ao RegiKaha",
       "joinAndGetClients": "e conseguir clientes."
     },
     "profilePage": {
@@ -3485,10 +3485,10 @@ export const generatedUiDictionaries = {
           ]
         },
         {
-          "title": "Regi Kaha",
+          "title": "RegiKaha",
           "links": [
             {
-              "label": "Über Regi Kaha",
+              "label": "Über RegiKaha",
               "href": "/sobre"
             },
             {
@@ -3530,7 +3530,7 @@ export const generatedUiDictionaries = {
       ]
     },
     "cookie": {
-      "textBeforeLink": "Wir verwenden notwendige Cookies, damit Regi Kaha funktioniert, und mit Ihrer Erlaubnis auch Cookies, um das Erlebnis zu verbessern. Sehen Sie sich unsere an ",
+      "textBeforeLink": "Wir verwenden notwendige Cookies, damit RegiKaha funktioniert, und mit Ihrer Erlaubnis auch Cookies, um das Erlebnis zu verbessern. Sehen Sie sich unsere an ",
       "link": "Cookie-Richtlinie",
       "textAfterLink": "."
     },
@@ -3653,19 +3653,19 @@ export const generatedUiDictionaries = {
       "publishProject": {
         "eyebrow": "Kostenlos für Kunden",
         "title": "Veröffentlichen Sie Ihr Projekt und erhalten Sie erste Kostenvoranschläge",
-        "description": "Sagen Sie uns, was Sie brauchen: Stadt, Kategorie, Dringlichkeit und ungefähre Reichweite. Regi Kaha erkennt die Abdeckung und aktiviert Fachleute oder die lokale Akquise.",
+        "description": "Sagen Sie uns, was Sie brauchen: Stadt, Kategorie, Dringlichkeit und ungefähre Reichweite. RegiKaha erkennt die Abdeckung und aktiviert Fachleute oder die lokale Akquise.",
         "breadcrumb": "Projekt veröffentlichen"
       },
       "publishSubcontract": {
         "eyebrow": "B2B und Bauherren",
         "title": "Veröffentlichen Sie einen Unterauftragsbedarf",
-        "description": "Geben Sie Fachgebiet, Arbeitsort, Termine, erforderliches Team und Dokumentation an. Regi Kaha aktiviert die Akquise und den Vergleich nachweisbarer Subunternehmer.",
+        "description": "Geben Sie Fachgebiet, Arbeitsort, Termine, erforderliches Team und Dokumentation an. RegiKaha aktiviert die Akquise und den Vergleich nachweisbarer Subunternehmer.",
         "breadcrumb": "Veröffentlichen Sie den Bedarf an Unteraufträgen"
       },
       "builders": {
         "eyebrow": "Bauherren und Unternehmen",
         "title": "Finden Sie nachweisbare Subunternehmer für Ihre Arbeiten",
-        "description": "Veröffentlichen Sie Arbeitspakete, Fachgebiete und Standorte. Regi Kaha hilft dabei, lokale Versorgung zu aktivieren und Anbieter anhand von Dokumentation, Erfahrung und Verfügbarkeit zu vergleichen.",
+        "description": "Veröffentlichen Sie Arbeitspakete, Fachgebiete und Standorte. RegiKaha hilft dabei, lokale Versorgung zu aktivieren und Anbieter anhand von Dokumentation, Erfahrung und Verfügbarkeit zu vergleichen.",
         "breadcrumb": "Bauherren"
       },
       "subcontractors": {
@@ -3761,7 +3761,7 @@ export const generatedUiDictionaries = {
         "Daten und Bereich",
         "Überprüfung"
       ],
-      "welcomeTitle": "Willkommen bei Regi Kaha!",
+      "welcomeTitle": "Willkommen bei RegiKaha!",
       "welcomeText": "Anfrage erhalten! Wir prüfen Ihre Verifizierung und aktivieren Ihren Zugang, wenn in Ihrem Land noch Gründerplätze frei sind. Vervollständigen Sie währenddessen Ihr Profil.",
       "goPanel": "Gehen Sie zu meinem Panel",
       "createServices": "Dienste erstellen",
@@ -3791,7 +3791,7 @@ export const generatedUiDictionaries = {
       "termsText": "Ich akzeptiere das ",
       "proTerms": "Fachbegriffe",
       "verificationPolicy": "Verifizierungsrichtlinie",
-      "fairRanking": "Faires Regi Kaha-Ranking (keine bezahlten Positionen).",
+      "fairRanking": "Faires RegiKaha-Ranking (keine bezahlten Positionen).",
       "creating": "Erstellen...",
       "createProfile": "Erstelle mein Profil",
       "unableToCreate": "Das Profil konnte nicht erstellt werden",
@@ -3806,7 +3806,7 @@ export const generatedUiDictionaries = {
     },
     "dashboard": {
       "backToSite": "Zurück zur Website",
-      "panelBadge": "Regi Kaha Pro",
+      "panelBadge": "RegiKaha Pro",
       "adminBadge": "Verwaltung",
       "nav": {
         "overview": "Übersicht",
@@ -3961,13 +3961,13 @@ export const generatedUiDictionaries = {
       "portfolio": {
         "eyebrow": "Arbeit erledigt",
         "title": "Echte Ergebnisse, vorher und nachher",
-        "description": "Von geprüften Regi Kaha-Profis durchgeführte Projekte. Bewegen Sie den Mauszeiger, um das Vorherige zu sehen.",
+        "description": "Von geprüften RegiKaha-Profis durchgeführte Projekte. Bewegen Sie den Mauszeiger, um das Vorherige zu sehen.",
         "viewPortfolio": "Siehe Portfolio",
         "hoverBefore": "Hover: vorher"
       },
       "testimonials": {
         "eyebrow": "Erfahrungsberichte",
-        "title": "Was Regi Kaha-Kunden sagen",
+        "title": "Was RegiKaha-Kunden sagen",
         "description": "Verifizierte Kundenbewertungen zu einer durchgeführten Dienstleistung. Keine gekauften Bewertungen.",
         "previous": "Vorheriges Zeugnis",
         "next": "Nächstes Zeugnis",
@@ -3975,7 +3975,7 @@ export const generatedUiDictionaries = {
       },
       "fairRanking": {
         "eyebrow": "Faires Ranking",
-        "title": "Bei Regi Kaha zahlt niemand dafür, zuerst zu erscheinen",
+        "title": "Bei RegiKaha zahlt niemand dafür, zuerst zu erscheinen",
         "paragraphs": [
           "Die Profis zeichnen sich durch Ruf, Qualität, faire Preise, echte Arbeit und verifizierte Bewertungen aus. Jeder konkurriert nach Leistung und nach den gleichen Regeln.",
           "Bewertungen werden überprüft. Kein Profi kann dafür bezahlen, seinen Score zu verbessern, legitime Meinungen zu verbergen oder Positionen zu kaufen."
@@ -3999,7 +3999,7 @@ export const generatedUiDictionaries = {
         "eyebrow": "Gründerangebot",
         "titleBefore": "Der Erste",
         "titleHighlight": "pro Land · 5 Gratismonate RegiKaha Pro + RegiWorks",
-        "textBeforeMonthly": "Werden Sie Gründungsmitglied von Regi Kaha Pro. Danach:",
+        "textBeforeMonthly": "Werden Sie Gründungsmitglied von RegiKaha Pro. Danach:",
         "textBetweenPrices": "oder",
         "textAfterYearly": "Gründerplätze werden schrittweise pro Land und Stadt aktiviert, vorbehaltlich beruflicher Verifizierung und Verfügbarkeit je Gebiet.",
         "reserved": "reservierte Plätze",
@@ -4055,7 +4055,7 @@ export const generatedUiDictionaries = {
       "popularServices": "Beliebte Dienste",
       "trustTitlePrefix": "Mieten",
       "trustTitleSuffix": "mit Zuversicht",
-      "trustText": "Bei Regi Kaha konkurrieren alle Profis nach Leistung. Vergleichen Sie vor der Einstellung und entscheiden Sie anhand realer Informationen.",
+      "trustText": "Bei RegiKaha konkurrieren alle Profis nach Leistung. Vergleichen Sie vor der Einstellung und entscheiden Sie anhand realer Informationen.",
       "trustBullets": [
         "Verifizierte Profis",
         "Echte Bewertungen",
@@ -4064,7 +4064,7 @@ export const generatedUiDictionaries = {
       ],
       "related": "Andere Kategorien",
       "proJoinPrefix": "Du bist ein Profi",
-      "proJoinSuffix": "Treten Sie Regi Kaha bei",
+      "proJoinSuffix": "Treten Sie RegiKaha bei",
       "joinAndGetClients": "und Kunden gewinnen."
     },
     "profilePage": {
@@ -4312,10 +4312,10 @@ export const generatedUiDictionaries = {
           ]
         },
         {
-          "title": "Regi Kaha",
+          "title": "RegiKaha",
           "links": [
             {
-              "label": "Over Regi Kaha",
+              "label": "Over RegiKaha",
               "href": "/sobre"
             },
             {
@@ -4357,7 +4357,7 @@ export const generatedUiDictionaries = {
       ]
     },
     "cookie": {
-      "textBeforeLink": "We gebruiken noodzakelijke cookies om Regi Kaha te laten functioneren en, met uw toestemming, cookies om de ervaring te verbeteren. Zie onze ",
+      "textBeforeLink": "We gebruiken noodzakelijke cookies om RegiKaha te laten functioneren en, met uw toestemming, cookies om de ervaring te verbeteren. Zie onze ",
       "link": "cookiebeleid",
       "textAfterLink": "."
     },
@@ -4480,19 +4480,19 @@ export const generatedUiDictionaries = {
       "publishProject": {
         "eyebrow": "Gratis voor klanten",
         "title": "Publiceer uw project en ontvang de eerste offertes",
-        "description": "Vertel ons wat u nodig heeft, plaats, categorie, urgentie en indicatief bereik. Regi Kaha detecteert dekking en activeert professionals of lokale acquisitie.",
+        "description": "Vertel ons wat u nodig heeft, plaats, categorie, urgentie en indicatief bereik. RegiKaha detecteert dekking en activeert professionals of lokale acquisitie.",
         "breadcrumb": "Project publiceren"
       },
       "publishSubcontract": {
         "eyebrow": "B2B en constructeurs",
         "title": "Een uitbestedingsbehoefte plaatsen",
-        "description": "Specificeer specialiteit, plaats van werken, data, vereiste apparatuur en documentatie. Regi Kaha activeert de acquisitie en vergelijking van verifieerbare onderaannemers.",
+        "description": "Specificeer specialiteit, plaats van werken, data, vereiste apparatuur en documentatie. RegiKaha activeert de acquisitie en vergelijking van verifieerbare onderaannemers.",
         "breadcrumb": "Uitbestedingsbehoefte publiceren"
       },
       "builders": {
         "eyebrow": "Bouwers en bedrijven",
         "title": "Vind verifieerbare onderaannemers voor uw werken",
-        "description": "Post kluspakketten, specialismen en locaties. Regi Kaha helpt bij het activeren van lokale inkoop en het vergelijken van leveranciers op basis van documentatie, ervaring en beschikbaarheid.",
+        "description": "Post kluspakketten, specialismen en locaties. RegiKaha helpt bij het activeren van lokale inkoop en het vergelijken van leveranciers op basis van documentatie, ervaring en beschikbaarheid.",
         "breadcrumb": "bouwers"
       },
       "subcontractors": {
@@ -4588,7 +4588,7 @@ export const generatedUiDictionaries = {
         "Gegevens en gebied",
         "Verificatie"
       ],
-      "welcomeTitle": "Welkom bij Regi Kaha!",
+      "welcomeTitle": "Welkom bij RegiKaha!",
       "welcomeText": "Aanvraag ontvangen! We controleren je verificatie en activeren je toegang als er in jouw land nog oprichtersplaatsen zijn. Vul ondertussen je profiel aan.",
       "goPanel": "Ga naar mijn dashboard",
       "createServices": "Diensten creëren",
@@ -4618,7 +4618,7 @@ export const generatedUiDictionaries = {
       "termsText": "Ik accepteer de ",
       "proTerms": "professionele termen",
       "verificationPolicy": "verificatiebeleid",
-      "fairRanking": "Eerlijke ranking Regi Kaha (geen betaalde posities).",
+      "fairRanking": "Eerlijke ranking RegiKaha (geen betaalde posities).",
       "creating": "Creëren...",
       "createProfile": "maak mijn profiel aan",
       "unableToCreate": "Kan profiel niet aanmaken",
@@ -4633,7 +4633,7 @@ export const generatedUiDictionaries = {
     },
     "dashboard": {
       "backToSite": "Keer terug naar de locatie",
-      "panelBadge": "Regi Kaha Pro",
+      "panelBadge": "RegiKaha Pro",
       "adminBadge": "administratie",
       "nav": {
         "overview": "Overzicht",
@@ -4788,13 +4788,13 @@ export const generatedUiDictionaries = {
       "portfolio": {
         "eyebrow": "Werk gedaan",
         "title": "Echte resultaten, voor en na",
-        "description": "Projecten voltooid door geverifieerde Regi Kaha-professionals. Beweeg de muis om het voorgaande te zien.",
+        "description": "Projecten voltooid door geverifieerde RegiKaha-professionals. Beweeg de muis om het voorgaande te zien.",
         "viewPortfolio": "Zie portefeuille",
         "hoverBefore": "Zweven: vóór"
       },
       "testimonials": {
         "eyebrow": "Getuigenissen",
-        "title": "Wat klanten van Regi Kaha zeggen",
+        "title": "Wat klanten van RegiKaha zeggen",
         "description": "Geverifieerde klantbeoordelingen waarbij een service is uitgevoerd. Geen gekochte beoordelingen.",
         "previous": "Vorige getuigenis",
         "next": "Volgende getuigenis",
@@ -4802,7 +4802,7 @@ export const generatedUiDictionaries = {
       },
       "fairRanking": {
         "eyebrow": "Eerlijke rangschikking",
-        "title": "Bij Regi Kaha betaalt niemand om als eerste te verschijnen",
+        "title": "Bij RegiKaha betaalt niemand om als eerste te verschijnen",
         "paragraphs": [
           "De professionals onderscheiden zich door hun reputatie, kwaliteit, eerlijke prijs, echt werk en geverifieerde beoordelingen. Iedereen concurreert op basis van verdienste, met dezelfde regels.",
           "Beoordelingen zijn geverifieerd. Geen enkele professional kan betalen om zijn score te verbeteren, legitieme meningen te verbergen of posities te kopen."
@@ -4826,7 +4826,7 @@ export const generatedUiDictionaries = {
         "eyebrow": "Oprichters bieden",
         "titleBefore": "De eerste",
         "titleHighlight": "per land · 5 gratis maanden RegiKaha Pro + RegiWorks",
-        "textBeforeMonthly": "Sluit u aan als stichtend lid van Regi Kaha Pro. Na:",
+        "textBeforeMonthly": "Sluit u aan als stichtend lid van RegiKaha Pro. Na:",
         "textBetweenPrices": "of",
         "textAfterYearly": "Oprichtersplaatsen worden geleidelijk per land en stad geactiveerd, onder voorbehoud van professionele verificatie en beschikbaarheid per gebied.",
         "reserved": "gereserveerde plaatsen",
@@ -4882,7 +4882,7 @@ export const generatedUiDictionaries = {
       "popularServices": "Populaire diensten",
       "trustTitlePrefix": "Huur",
       "trustTitleSuffix": "met vertrouwen",
-      "trustText": "Bij Regi Kaha concurreren alle professionals op basis van verdienste. Vergelijk voordat u iemand aanneemt en beslis op basis van echte informatie.",
+      "trustText": "Bij RegiKaha concurreren alle professionals op basis van verdienste. Vergelijk voordat u iemand aanneemt en beslis op basis van echte informatie.",
       "trustBullets": [
         "Geverifieerde professionals",
         "Echte recensies",
@@ -4891,7 +4891,7 @@ export const generatedUiDictionaries = {
       ],
       "related": "Andere categorieën",
       "proJoinPrefix": "Je bent een professional",
-      "proJoinSuffix": "Sluit je aan bij Regi Kaha",
+      "proJoinSuffix": "Sluit je aan bij RegiKaha",
       "joinAndGetClients": "en klanten krijgen."
     },
     "profilePage": {
@@ -5139,10 +5139,10 @@ export const generatedUiDictionaries = {
           ]
         },
         {
-          "title": "Regi Kaha",
+          "title": "RegiKaha",
           "links": [
             {
-              "label": "About Regi Kaha",
+              "label": "About RegiKaha",
               "href": "/sobre"
             },
             {
@@ -5184,7 +5184,7 @@ export const generatedUiDictionaries = {
       ]
     },
     "cookie": {
-      "textBeforeLink": "We use necessary cookies for Regi Kaha to function and, with your permission, cookies to improve the experience. See our ",
+      "textBeforeLink": "We use necessary cookies for RegiKaha to function and, with your permission, cookies to improve the experience. See our ",
       "link": "cookie policy",
       "textAfterLink": "."
     },
@@ -5307,19 +5307,19 @@ export const generatedUiDictionaries = {
       "publishProject": {
         "eyebrow": "Free for clients",
         "title": "Publish your project and receive initial quotes",
-        "description": "Tell us what you need, city, category, urgency and indicative range. Regi Kaha detects coverage and activates professionals or local acquisition.",
+        "description": "Tell us what you need, city, category, urgency and indicative range. RegiKaha detects coverage and activates professionals or local acquisition.",
         "breadcrumb": "Publish project"
       },
       "publishSubcontract": {
         "eyebrow": "B2B and constructors",
         "title": "Post a subcontracting need",
-        "description": "Specify specialty, city of work, dates, required equipment and documentation. Regi Kaha activates the acquisition and comparison of verifiable subcontractors.",
+        "description": "Specify specialty, city of work, dates, required equipment and documentation. RegiKaha activates the acquisition and comparison of verifiable subcontractors.",
         "breadcrumb": "Publish subcontracting need"
       },
       "builders": {
         "eyebrow": "Builders and companies",
         "title": "Find verifiable subcontractors for your works",
-        "description": "Post job packages, specialties and locations. Regi Kaha helps activate local sourcing and compare suppliers by documentation, experience and availability.",
+        "description": "Post job packages, specialties and locations. RegiKaha helps activate local sourcing and compare suppliers by documentation, experience and availability.",
         "breadcrumb": "builders"
       },
       "subcontractors": {
@@ -5415,7 +5415,7 @@ export const generatedUiDictionaries = {
         "Data and area",
         "Verification"
       ],
-      "welcomeTitle": "Welcome to Regi Kaha!",
+      "welcomeTitle": "Welcome to RegiKaha!",
       "welcomeText": "Request received! We'll review your verification and, if your country still has founder slots available, we'll activate your access. Meanwhile, complete your profile.",
       "goPanel": "Go to my dashboard",
       "createServices": "Create services",
@@ -5445,7 +5445,7 @@ export const generatedUiDictionaries = {
       "termsText": "I accept the ",
       "proTerms": "professional terms",
       "verificationPolicy": "verification policy",
-      "fairRanking": "Fair ranking Regi Kaha (no paid positions).",
+      "fairRanking": "Fair ranking RegiKaha (no paid positions).",
       "creating": "Creating...",
       "createProfile": "create my profile",
       "unableToCreate": "Could not create profile",
@@ -5460,7 +5460,7 @@ export const generatedUiDictionaries = {
     },
     "dashboard": {
       "backToSite": "Return to site",
-      "panelBadge": "Regi Kaha Pro",
+      "panelBadge": "RegiKaha Pro",
       "adminBadge": "administration",
       "nav": {
         "overview": "Overview",
@@ -5615,13 +5615,13 @@ export const generatedUiDictionaries = {
       "portfolio": {
         "eyebrow": "Work done",
         "title": "Real results, before and after",
-        "description": "Projects completed by verified Regi Kaha professionals. Hover to see the before.",
+        "description": "Projects completed by verified RegiKaha professionals. Hover to see the before.",
         "viewPortfolio": "See portfolio",
         "hoverBefore": "Hover: before"
       },
       "testimonials": {
         "eyebrow": "Testimonials",
-        "title": "What Regi Kaha customers say",
+        "title": "What RegiKaha customers say",
         "description": "Verified customer reviews with a service performed. No purchased ratings.",
         "previous": "Previous testimony",
         "next": "Next testimony",
@@ -5629,7 +5629,7 @@ export const generatedUiDictionaries = {
       },
       "fairRanking": {
         "eyebrow": "Fair ranking",
-        "title": "At Regi Kaha no one pays to appear first",
+        "title": "At RegiKaha no one pays to appear first",
         "paragraphs": [
           "The professionals stand out for their reputation, quality, fair price, real work and verified ratings. Everyone competes on merit, with the same rules.",
           "Ratings are verified. No professional can pay to improve their score, hide legitimate opinions or buy positions."
@@ -5653,7 +5653,7 @@ export const generatedUiDictionaries = {
         "eyebrow": "Founders offer",
         "titleBefore": "The first",
         "titleHighlight": "per country · 5 free months of RegiKaha Pro + RegiWorks",
-        "textBeforeMonthly": "Join as a founding member of Regi Kaha Pro. After:",
+        "textBeforeMonthly": "Join as a founding member of RegiKaha Pro. After:",
         "textBetweenPrices": "or",
         "textAfterYearly": "Founder slots are activated progressively per country and city, subject to professional verification and availability per area.",
         "reserved": "reserved places",
@@ -5709,7 +5709,7 @@ export const generatedUiDictionaries = {
       "popularServices": "Popular services",
       "trustTitlePrefix": "Hire",
       "trustTitleSuffix": "with confidence",
-      "trustText": "At Regi Kaha all professionals compete on merit. Compare before hiring and decide with real information.",
+      "trustText": "At RegiKaha all professionals compete on merit. Compare before hiring and decide with real information.",
       "trustBullets": [
         "Verified professionals",
         "Real reviews",
@@ -5718,7 +5718,7 @@ export const generatedUiDictionaries = {
       ],
       "related": "Other categories",
       "proJoinPrefix": "You are a professional",
-      "proJoinSuffix": "Join Regi Kaha",
+      "proJoinSuffix": "Join RegiKaha",
       "joinAndGetClients": "and get clients."
     },
     "profilePage": {

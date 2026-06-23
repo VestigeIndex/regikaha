@@ -62,7 +62,7 @@ export default function ParaProfesionalesPage() {
           <div>
             <span className="eyebrow">Oferta fundadores</span>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink text-balance">
-              Primeros {site.founderSlots} verificados: {site.founderFreeMonths} meses gratis
+              Primeros {site.founderSlots} verificados por país: {site.founderFreeMonths} meses gratis Pro + RegiWorks
             </h2>
             <p className="mt-4 text-muted leading-relaxed">
               Únete ahora como miembro fundador. Después puedes empezar con {formatIntervalPrice(professionalPlans[0], "monthly")} o ampliar con{" "}
