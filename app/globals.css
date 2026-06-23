@@ -8,18 +8,18 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #0e1a2b;
-  --canvas: #f5f9ff;
-  --canvas-alt: #e6f0fb;
+  --foreground: #111827;
+  --canvas: #f8faf7;
+  --canvas-alt: #eef3ee;
   --panel: #ffffff;
-  --primary: #1f6fe0;
-  --primary-deep: #11357e;
-  --primary-bright: #3fb0f5;
-  --mint: #d9edff;
+  --primary: #0f766e;
+  --primary-deep: #064e3b;
+  --primary-bright: #14b8a6;
+  --mint: #ecfdf5;
   --primary-foreground: #ffffff;
-  --muted-foreground: #4a5b73;
-  --hairline: rgba(17, 53, 126, 0.1);
-  --gradient-brand: linear-gradient(135deg, #0e2f6e 0%, #1f6fe0 45%, #3fb0f5 82%, #bfe6ff 100%);
+  --muted-foreground: #6b7280;
+  --hairline: rgba(6, 78, 59, 0.1);
+  --gradient-brand: linear-gradient(135deg, #064e3b 0%, #0f766e 60%, #115e59 100%);
 }
 
 *,
@@ -45,7 +45,7 @@ body {
 }
 
 ::selection {
-  background: rgba(63, 176, 245, 0.22);
+  background: rgba(20, 184, 166, 0.22);
   color: var(--primary-deep);
 }
 
@@ -108,11 +108,11 @@ body {
 .btn-primary {
   background: var(--gradient-brand);
   color: #fff;
-  box-shadow: 0 1px 2px rgba(17, 53, 126, 0.2), 0 0 0 1px rgba(17, 53, 126, 0.1);
+  box-shadow: 0 1px 2px rgba(6, 78, 59, 0.2), 0 0 0 1px rgba(6, 78, 59, 0.1);
 }
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 26px -10px rgba(31, 111, 224, 0.55), 0 0 0 1px rgba(17, 53, 126, 0.14);
+  box-shadow: 0 10px 26px -10px rgba(15, 118, 110, 0.55), 0 0 0 1px rgba(6, 78, 59, 0.14);
 }
 .btn-secondary {
   background: #fff;
@@ -121,7 +121,7 @@ body {
 }
 .btn-secondary:hover {
   background: var(--canvas);
-  border-color: rgba(31, 111, 224, 0.35);
+  border-color: rgba(15, 118, 110, 0.35);
 }
 .btn-ghost {
   background: transparent;
@@ -145,15 +145,15 @@ body {
   background: var(--panel);
   border: 1px solid var(--hairline);
   border-radius: 1.125rem;
-  box-shadow: 0 2px 10px rgba(17, 53, 126, 0.05);
+  box-shadow: 0 2px 10px rgba(6, 78, 59, 0.05);
 }
 .card-hover {
   transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
 .card-hover:hover {
   transform: translateY(-3px);
-  box-shadow: 0 18px 44px -18px rgba(17, 53, 126, 0.28);
-  border-color: rgba(63, 176, 245, 0.4);
+  box-shadow: 0 18px 44px -18px rgba(6, 78, 59, 0.28);
+  border-color: rgba(20, 184, 166, 0.4);
 }
 
 .chip {
@@ -166,7 +166,7 @@ body {
   font-weight: 500;
   background: var(--mint);
   color: var(--primary-deep);
-  border: 1px solid rgba(31, 111, 224, 0.14);
+  border: 1px solid rgba(15, 118, 110, 0.14);
 }
 
 .badge-verified {
@@ -177,9 +177,9 @@ body {
   border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 600;
-  background: rgba(63, 176, 245, 0.14);
-  color: #11357e;
-  border: 1px solid rgba(63, 176, 245, 0.3);
+  background: rgba(20, 184, 166, 0.14);
+  color: #064e3b;
+  border: 1px solid rgba(20, 184, 166, 0.3);
 }
 
 .leaflet-container {
@@ -193,16 +193,16 @@ body {
   width: 34px;
   height: 34px;
   border-radius: 999px;
-  background: #1f6fe0;
+  background: #0f766e;
   color: #fff;
   border: 3px solid #fff;
-  box-shadow: 0 10px 24px rgba(17, 53, 126, 0.28);
+  box-shadow: 0 10px 24px rgba(6, 78, 59, 0.28);
   font-size: 0.78rem;
   font-weight: 800;
 }
 
 .rk-map-marker[data-kind="company"] {
-  background: #11357e;
+  background: #064e3b;
 }
 
 .rk-map-marker[data-kind="technical"] {
@@ -220,7 +220,7 @@ body {
 .rk-map-marker.is-selected {
   width: 42px;
   height: 42px;
-  outline: 4px solid rgba(63, 176, 245, 0.22);
+  outline: 4px solid rgba(20, 184, 166, 0.22);
 }
 
 /* ---------- Misc ---------- */
@@ -244,7 +244,7 @@ body {
 }
 .reg-input:focus {
   border-color: var(--primary-bright);
-  box-shadow: 0 0 0 3px rgba(63, 176, 245, 0.16);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.16);
 }
 
 .glass {
@@ -262,7 +262,7 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(17, 53, 126, 0.18);
+  background: rgba(6, 78, 59, 0.18);
   border-radius: 4px;
 }
 
@@ -338,7 +338,7 @@ body {
   background: #fff;
   border: 1px solid var(--hairline);
   border-radius: 10px;
-  box-shadow: 0 24px 70px -36px rgba(17, 53, 126, 0.38);
+  box-shadow: 0 24px 70px -36px rgba(6, 78, 59, 0.38);
   overflow: hidden;
 }
 .contract-header {
@@ -354,7 +354,7 @@ body {
 .contract-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr) 320px; min-height: 680px; }
 .contract-tabs { padding: 1rem; border-right: 1px solid var(--hairline); background: var(--canvas); }
 .contract-tab { width: 100%; min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .65rem .75rem; border-radius: 7px; color: var(--muted-foreground); font-size: .82rem; font-weight: 600; text-align: left; }
-.contract-tab:hover, .contract-tab.is-active { background: #fff; color: var(--primary-deep); box-shadow: 0 1px 4px rgba(17,53,126,.08); }
+.contract-tab:hover, .contract-tab.is-active { background: #fff; color: var(--primary-deep); box-shadow: 0 1px 4px rgba(6,78,59,.08); }
 .contract-content { min-width: 0; padding: 1.75rem; overflow-y: auto; max-height: 78vh; }
 .contract-mobile-tabs { display: none; }
 .contract-copy h2, .contract-checks h2 { font-size: 1.1rem; line-height: 1.35; font-weight: 750; color: var(--foreground); }
@@ -362,8 +362,8 @@ body {
 .contract-checks { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--hairline); }
 .contract-check { display: grid; grid-template-columns: 1.25rem 1.35rem minmax(0,1fr); align-items: start; gap: .5rem; padding: .75rem; border: 1px solid var(--hairline); border-radius: 7px; color: #2a3a52; font-size: .86rem; line-height: 1.45; cursor: pointer; }
 .contract-check input { position: absolute; opacity: 0; pointer-events: none; }
-.contract-check-icon { display: grid; place-items: center; width: 1.25rem; height: 1.25rem; border-radius: 5px; border: 1px solid rgba(17,53,126,.25); background: #fff; color: #fff; }
-.contract-check.is-checked { border-color: rgba(31,111,224,.36); background: rgba(221,244,234,.35); }
+.contract-check-icon { display: grid; place-items: center; width: 1.25rem; height: 1.25rem; border-radius: 5px; border: 1px solid rgba(6,78,59,.25); background: #fff; color: #fff; }
+.contract-check.is-checked { border-color: rgba(15,118,110,.36); background: rgba(221,244,234,.35); }
 .contract-check.is-checked .contract-check-icon { border-color: var(--primary); background: var(--primary); }
 .contract-summary { padding: 1.5rem; border-left: 1px solid var(--hairline); background: #f7faff; }
 .contract-mobile-action { display: none; }
@@ -412,7 +412,7 @@ body {
   grid-template-columns: repeat(5, minmax(0, 1fr));
   min-height: 64px;
   padding: .35rem;
-  border: 1px solid rgba(17, 53, 126, .14);
+  border: 1px solid rgba(6, 78, 59, .14);
   border-radius: 14px;
   background: rgba(255, 255, 255, .94);
   box-shadow: 0 16px 40px rgba(18, 32, 25, .16);

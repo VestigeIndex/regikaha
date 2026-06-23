@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#11357E"/><stop offset="0.6" stop-color="#1F6FE0"/><stop offset="1" stop-color="#3FB0F5"/>
+      <stop offset="0" stop-color="#064E3B"/><stop offset="0.6" stop-color="#0F766E"/><stop offset="1" stop-color="#14B8A6"/>
     </linearGradient>
     <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
       <path d="M48 0H0V48" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
@@ -16,6 +16,6 @@
   </g>
   <text x="210" y="278" font-family="Inter, sans-serif" font-size="58" font-weight="800" fill="#fff">Regi Kaha</text>
   <text x="92" y="396" font-family="Inter, sans-serif" font-size="40" font-weight="700" fill="#fff">Profesionales verificados para</text>
-  <text x="92" y="448" font-family="Inter, sans-serif" font-size="40" font-weight="700" fill="#D9EDFF">reformas y servicios técnicos</text>
+  <text x="92" y="448" font-family="Inter, sans-serif" font-size="40" font-weight="700" fill="#ECFDF5">reformas y servicios técnicos</text>
   <text x="92" y="516" font-family="Inter, sans-serif" font-size="26" fill="rgba(255,255,255,0.85)">Compara por precio, calidad, portfolio y valoraciones reales · Gratis para clientes</text>
 </svg>

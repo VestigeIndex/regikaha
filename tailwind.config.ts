@@ -12,24 +12,25 @@ const config: Config = {
         sans: ["Inter", "SF Pro Display", "system-ui", "-apple-system", "sans-serif"],
       },
       colors: {
-        // Identidad azul celeste metálico Regi Kaha (las clases siguen llamándose forest-*)
+        // Identidad verde premium Regi Kaha (teal). Las clases siguen siendo forest-*
         forest: {
-          50: "#eff5ff",
-          100: "#d9edff",
-          200: "#bfdcfe",
-          300: "#93c2fd",
-          400: "#3fb0f5", // celeste metálico
-          500: "#2e9bf0", // azul celeste vivo / accent
-          600: "#1f6fe0", // azul principal
-          700: "#1857c4",
-          800: "#11357e", // azul profundo
-          900: "#0e2a63",
-          950: "#081a40",
+          50: "#f0fdf9",
+          100: "#d7f5ec",
+          200: "#ade9d8",
+          300: "#76d6bf",
+          400: "#38bda1",
+          500: "#14a08c", // teal vivo / accent
+          600: "#0f766e", // verde principal
+          700: "#115e59", // hover
+          800: "#064e3b", // verde oscuro premium
+          900: "#003b2f", // verde header
+          950: "#01281f",
         },
-        mint: "#d9edff",
-        ink: "#0e1a2b",
-        canvas: "#f5f9ff",
-        "canvas-alt": "#e6f0fb",
+        lime: "#84cc16", // acento lima controlado
+        mint: "#ecfdf5",
+        ink: "#111827",
+        canvas: "#f8faf7",
+        "canvas-alt": "#eef3ee",
       },
       borderRadius: {
         xl: "0.875rem",
@@ -37,17 +38,17 @@ const config: Config = {
         "3xl": "1.5rem",
       },
       boxShadow: {
-        soft: "0 2px 10px rgba(17, 53, 126, 0.07), 0 0 0 1px rgba(17, 53, 126, 0.05)",
-        card: "0 8px 30px -12px rgba(17, 53, 126, 0.20), 0 0 0 1px rgba(17, 53, 126, 0.06)",
-        elevated: "0 24px 60px -20px rgba(17, 53, 126, 0.26), 0 0 0 1px rgba(17, 53, 126, 0.05)",
-        glow: "0 0 0 1px rgba(63, 176, 245, 0.30), 0 18px 50px -20px rgba(31, 111, 224, 0.50)",
+        soft: "0 2px 10px rgba(6, 78, 59, 0.06), 0 0 0 1px rgba(6, 78, 59, 0.05)",
+        card: "0 8px 30px -12px rgba(6, 78, 59, 0.16), 0 0 0 1px rgba(6, 78, 59, 0.05)",
+        elevated: "0 24px 60px -20px rgba(6, 78, 59, 0.20), 0 0 0 1px rgba(6, 78, 59, 0.05)",
+        glow: "0 0 0 1px rgba(20, 184, 166, 0.25), 0 18px 50px -20px rgba(15, 118, 110, 0.45)",
       },
       backgroundImage: {
-        "gradient-brand": "linear-gradient(135deg, #0e2f6e 0%, #1f6fe0 45%, #3fb0f5 82%, #bfe6ff 100%)",
+        "gradient-brand": "linear-gradient(135deg, #064e3b 0%, #0f766e 60%, #115e59 100%)",
         "gradient-hero":
-          "radial-gradient(ellipse 110% 80% at 78% -8%, rgba(63,176,245,0.22), transparent 58%), radial-gradient(ellipse 80% 60% at 0% 8%, rgba(31,111,224,0.14), transparent 55%)",
+          "radial-gradient(ellipse 110% 80% at 78% -8%, rgba(20,184,166,0.16), transparent 58%), radial-gradient(ellipse 80% 60% at 0% 8%, rgba(15,118,110,0.12), transparent 55%)",
         "grid-soft":
-          "linear-gradient(rgba(17,53,126,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(17,53,126,0.05) 1px, transparent 1px)",
+          "linear-gradient(rgba(6,78,59,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(6,78,59,0.05) 1px, transparent 1px)",
       },
       backgroundSize: {
         grid: "56px 56px",
