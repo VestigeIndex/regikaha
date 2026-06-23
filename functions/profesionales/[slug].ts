@@ -45,7 +45,7 @@ export async function onRequestGet(context: any) {
   const [catRows, serviceRows, portfolioRows] = await Promise.all([
     context.env.DB.prepare("SELECT category_id FROM professional_categories WHERE professional_id = ?").bind(p.id).all(),
     context.env.DB.prepare("SELECT * FROM services WHERE professional_id = ? AND is_active = 1 ORDER BY title COLLATE NOCASE").bind(p.id).all(),
-    context.env.DB.prepare("SELECT * FROM portfolio_items WHERE professional_id = ? ORDER BY sort_order ASC, created_at DESC LIMIT 5").bind(p.id).all(),
+    context.env.DB.prepare("SELECT * FROM portfolio_items WHERE professional_id = ? AND moderation_status = 'approved' ORDER BY sort_order ASC, created_at DESC LIMIT 5").bind(p.id).all(),
   ]);
 
   const categories = (catRows.results || []).map((row: any) => row.category_id);

@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS portfolio_items (
   mime_type TEXT,
   sort_order INTEGER DEFAULT 0,
   completion_date TEXT,
+  moderation_status TEXT NOT NULL DEFAULT 'pending', -- pending|approved|rejected
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 

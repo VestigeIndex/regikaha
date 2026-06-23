@@ -40,7 +40,7 @@ export function AdminDemandDashboard() {
       <DashboardHeader
         title="Panel de demanda y cobertura"
         subtitle="Control interno de solicitudes, zonas sin oferta, captación y cobertura en mercados activos."
-        action={<Link href="/admin/profesionales" className="btn btn-secondary text-sm">Profesionales</Link>}
+        action={<div className="flex gap-2"><Link href="/admin/moderacion" className="btn btn-secondary text-sm">Moderación</Link><Link href="/admin/profesionales" className="btn btn-secondary text-sm">Profesionales</Link></div>}
       />
 
       {error && (

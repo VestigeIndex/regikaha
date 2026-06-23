@@ -22,6 +22,7 @@ function mapItem(row: any) {
     imageSize: Number(row.image_size || 0),
     width: Number(row.image_width || 0),
     height: Number(row.image_height || 0),
+    moderationStatus: row.moderation_status || "approved",
   };
 }
 
