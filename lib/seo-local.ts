@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
 import { categories } from "@/lib/data/categories";
 import { seedPlaces } from "@/lib/geo/places";
+import { prioritySeoPlaces } from "@/lib/geo/priority-places";
 import type { Place } from "@/lib/geo/types";
 import { contentDictionaries } from "@/lib/i18n/content";
 import { locales, type Locale } from "@/lib/i18n/config";
 import { site } from "@/lib/site";
 
-export const indexablePlaces = seedPlaces.filter((place) => place.isIndexable);
+function uniquePlaces(places: Place[]): Place[] {
+  const byRoute = new Map<string, Place>();
+  for (const place of places) {
+    if (!place.isIndexable) continue;
+    byRoute.set(`${place.countryCode.toLowerCase()}-${place.slug}`, place);
+  }
+  return [...byRoute.values()];
+}
+
+export const indexablePlaces = uniquePlaces([...prioritySeoPlaces, ...seedPlaces]);
 export const launchPlaces = [...new Set(indexablePlaces.map((place) => place.countryCode))]
   .flatMap((countryCode) => indexablePlaces.filter((place) => place.countryCode === countryCode).slice(0, 2));
 

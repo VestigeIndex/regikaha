@@ -1,5 +1,6 @@
 import { bad, isEmail, privateJson, sessionCookieHeaders } from "../../../apilib/http";
 import { createSession, newId } from "../../../apilib/auth";
+import { normalizeRole, type PublicAccountRole } from "../../../lib/accounts";
 
 interface GoogleTokenInfo {
   aud?: string;
@@ -15,7 +16,12 @@ function isVerified(value: unknown): boolean {
   return value === true || value === "true";
 }
 
-// POST /api/auth/google — inicia sesión o crea cuenta profesional base con Google.
+function publicRole(value: unknown): PublicAccountRole {
+  const role = normalizeRole(value, "client");
+  return role === "admin" || role === "superadmin" ? "client" : role;
+}
+
+// POST /api/auth/google — inicia sesión o crea cuenta base con Google.
 export async function onRequestPost(context: any) {
   const { request, env } = context;
   let body: any;
@@ -26,6 +32,7 @@ export async function onRequestPost(context: any) {
   }
 
   const credential = String(body.credential || "").trim();
+  const accountRole = publicRole(body.role || body.accountRole);
   const clientId = String(env.GOOGLE_CLIENT_ID || "").trim();
   if (!clientId) return bad("Google Connect no está configurado", 500);
   if (!credential) return bad("Falta el token de Google");
@@ -57,9 +64,9 @@ export async function onRequestPost(context: any) {
     if (!user) {
       const userId = newId("usr_");
       await env.DB.prepare(
-        "INSERT INTO users (id,email,password_hash,email_verified,role) VALUES (?,?,?,1,'professional')",
+        "INSERT INTO users (id,email,password_hash,email_verified,role) VALUES (?,?,?,1,?)",
       )
-        .bind(userId, email, "oauth:google")
+        .bind(userId, email, "oauth:google", accountRole)
         .run();
       user = await env.DB.prepare("SELECT * FROM users WHERE id = ?").bind(userId).first();
       created = true;

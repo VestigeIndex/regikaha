@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n/context";
 import type { Locale } from "@/lib/i18n/config";
-import { safeInternalPath } from "@/lib/accounts";
+import { safeInternalPath, type PublicAccountRole } from "@/lib/accounts";
 
 declare global {
   interface Window {
@@ -36,6 +36,7 @@ declare global {
 interface GoogleConnectButtonProps {
   clientId: string;
   redirectTo?: string;
+  accountRole?: PublicAccountRole;
 }
 
 const errorCopy: Record<Locale, { credential: string; connect: string; unavailable: string }> = {
@@ -69,7 +70,7 @@ function loadGoogleScript(locale: Locale): Promise<void> {
   return googleScriptPromise;
 }
 
-export function GoogleConnectButton({ clientId, redirectTo = "/panel" }: GoogleConnectButtonProps) {
+export function GoogleConnectButton({ clientId, redirectTo = "/panel", accountRole = "client" }: GoogleConnectButtonProps) {
   const { locale } = useI18n();
   const copy = errorCopy[locale];
   const targetRef = useRef<HTMLDivElement>(null);
@@ -96,7 +97,7 @@ export function GoogleConnectButton({ clientId, redirectTo = "/panel" }: GoogleC
               method: "POST",
               headers: { "content-type": "application/json" },
               credentials: "same-origin",
-              body: JSON.stringify({ credential }),
+              body: JSON.stringify({ credential, role: accountRole }),
             });
             const data = await res.json().catch(() => ({}));
             if (!res.ok) {
@@ -127,7 +128,7 @@ export function GoogleConnectButton({ clientId, redirectTo = "/panel" }: GoogleC
     return () => {
       cancelled = true;
     };
-  }, [clientId, copy, locale, redirectTo]);
+  }, [accountRole, clientId, copy, locale, redirectTo]);
 
   return (
     <div>

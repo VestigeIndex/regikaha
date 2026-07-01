@@ -1,3 +1,5 @@
+import { detectPublicLocale, localizedCategoryLabel, publicHtmlHeaders, publicMoney, publicProfileCopy } from "../_publicProfileI18n";
+
 function esc(value: unknown): string {
   return String(value ?? "")
     .replace(/&/g, "&amp;")
@@ -9,10 +11,6 @@ function esc(value: unknown): string {
 
 function initials(name: string): string {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
-}
-
-function money(value: unknown): string {
-  return new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(Number(value || 0));
 }
 
 function jsonArray(value: unknown): string[] {
@@ -38,9 +36,11 @@ function styles() {
 }
 
 export async function onRequestGet(context: any) {
+  const locale = detectPublicLocale(context.request);
+  const t = publicProfileCopy(locale);
   const slug = String(context.params.slug || "");
   const p = await context.env.DB.prepare("SELECT * FROM professionals WHERE slug = ? AND active_status = 1").bind(slug).first();
-  if (!p) return context.next ? context.next() : new Response("No encontrado", { status: 404 });
+  if (!p) return context.next ? context.next() : new Response("Not found", { status: 404 });
 
   const [catRows, serviceRows, portfolioRows] = await Promise.all([
     context.env.DB.prepare("SELECT category_id FROM professional_categories WHERE professional_id = ?").bind(p.id).all(),
@@ -52,9 +52,10 @@ export async function onRequestGet(context: any) {
   const services = serviceRows.results || [];
   const portfolio = portfolioRows.results || [];
   const origin = new URL(context.request.url).origin;
-  const publicName = p.public_name || "Profesional Regi Kaha";
+  const publicName = p.public_name || t.verifiedProfessional;
   const area = [p.city, p.region, p.country].filter(Boolean).join(", ");
-  const title = p.seo_title || `${publicName} - profesional verificado en ${area || "mercados activos"} | Regi Kaha`;
+  const areaLabel = area || t.activeMarkets;
+  const title = locale === "es" && p.seo_title ? p.seo_title : t.titleProfile(publicName, areaLabel);
   const description = p.seo_description || p.short_tagline || String(p.description || "").slice(0, 155);
   const schema = {
     "@context": "https://schema.org",
@@ -62,7 +63,7 @@ export async function onRequestGet(context: any) {
     name: publicName,
     description,
     url: `${origin}/profesionales/${p.slug}`,
-    areaServed: area || "Active markets",
+    areaServed: areaLabel,
     address: { "@type": "PostalAddress", addressLocality: p.city, addressRegion: p.region, addressCountry: p.country },
     knowsAbout: categories,
     knowsLanguage: jsonArray(p.languages),
@@ -75,7 +76,7 @@ export async function onRequestGet(context: any) {
     <a class="service" href="/profesionales/${esc(p.slug)}/${esc(s.slug)}" style="display:block;text-decoration:none">
       <h3>${esc(s.title)}</h3>
       <p class="muted">${esc(s.description)}</p>
-      <strong>${money(s.price_from)}</strong>
+      <strong>${publicMoney(s.price_from, locale)}</strong>
     </a>`).join("");
   const portfolioHtml = portfolio.map((item: any) => `
     <article>
@@ -83,9 +84,10 @@ export async function onRequestGet(context: any) {
       <h3>${esc(item.title)}</h3>
       <p class="muted">${esc(item.location || "")}</p>
     </article>`).join("");
-  const mapQuery = encodeURIComponent(area || "Active markets");
+  const mapQuery = encodeURIComponent(areaLabel);
+  const sendError = JSON.stringify(t.sendError);
 
-  const html = `<!doctype html><html lang="es"><head>
+  const html = `<!doctype html><html lang="${locale}"><head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
     <title>${esc(title)}</title><meta name="description" content="${esc(description)}">
     <link rel="canonical" href="${origin}/profesionales/${esc(p.slug)}">
@@ -94,7 +96,7 @@ export async function onRequestGet(context: any) {
     <script type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>
     ${styles()}
   </head><body>
-    <header class="hero"><div class="wrap top"><a class="brand" href="/">Regi Kaha</a><span class="pill">Profesional verificado</span></div></header>
+    <header class="hero"><div class="wrap top"><a class="brand" href="/">Regi Kaha</a><span class="pill">${esc(t.verifiedProfessional)}</span></div></header>
     <main class="wrap head">
       <article class="card main">
         <div class="profile">
@@ -102,36 +104,36 @@ export async function onRequestGet(context: any) {
           <div>
             <h1 class="h1">${esc(publicName)}</h1>
             <p class="muted">${esc(p.short_tagline || "")}</p>
-            <p>📍 ${esc(area || "mercados activos")} · responde en ${esc(p.response_time_hours || 24)} h</p>
-            <div class="chips">${categories.map((c: string) => `<span class="chip">${esc(c)}</span>`).join("")}</div>
+            <p>📍 ${esc(areaLabel)} · ${esc(t.respondsIn(p.response_time_hours))}</p>
+            <div class="chips">${categories.map((c: string) => `<span class="chip">${esc(localizedCategoryLabel(locale, c))}</span>`).join("")}</div>
           </div>
         </div>
         <div class="grid">
-          <div class="stat"><strong>${esc(p.completed_projects || 0)}</strong><span class="muted">Proyectos</span></div>
-          <div class="stat"><strong>${esc(p.years_experience || 0)}</strong><span class="muted">Años</span></div>
-          <div class="stat"><strong>${money(p.price_from)}</strong><span class="muted">Desde</span></div>
-          <div class="stat"><strong>${esc(p.average_rating || "0")}/5</strong><span class="muted">Valoración</span></div>
+          <div class="stat"><strong>${esc(p.completed_projects || 0)}</strong><span class="muted">${esc(t.projects)}</span></div>
+          <div class="stat"><strong>${esc(p.years_experience || 0)}</strong><span class="muted">${esc(t.years)}</span></div>
+          <div class="stat"><strong>${publicMoney(p.price_from, locale)}</strong><span class="muted">${esc(t.from)}</span></div>
+          <div class="stat"><strong>${esc(p.average_rating || "0")}/5</strong><span class="muted">${esc(t.rating)}</span></div>
         </div>
-        <section><h2 class="section-title">Sobre ${esc(publicName)}</h2><p>${esc(p.description || "")}</p></section>
-        <section><h2 class="section-title">Zona de operación</h2><iframe class="map" src="https://www.google.com/maps?q=${mapQuery}&output=embed" loading="lazy"></iframe></section>
-        ${services.length ? `<section><h2 class="section-title">Servicios</h2><div class="list">${serviceHtml}</div></section>` : ""}
-        ${portfolio.length ? `<section><h2 class="section-title">Trabajos realizados</h2><div class="portfolio">${portfolioHtml}</div></section>` : ""}
+        <section><h2 class="section-title">${esc(t.about)} ${esc(publicName)}</h2><p>${esc(p.description || "")}</p></section>
+        <section><h2 class="section-title">${esc(t.operationArea)}</h2><iframe class="map" src="https://www.google.com/maps?q=${mapQuery}&output=embed" loading="lazy"></iframe></section>
+        ${services.length ? `<section><h2 class="section-title">${esc(t.services)}</h2><div class="list">${serviceHtml}</div></section>` : ""}
+        ${portfolio.length ? `<section><h2 class="section-title">${esc(t.portfolio)}</h2><div class="portfolio">${portfolioHtml}</div></section>` : ""}
       </article>
       <aside class="card side">
-        <h2 class="section-title">Pide pre-presupuesto gratis</h2>
+        <h2 class="section-title">${esc(t.quoteTitle)}</h2>
         <form id="quote">
           <input type="hidden" name="professionalId" value="${esc(p.id)}">
           <input type="hidden" name="categoryId" value="${esc(categories[0] || "")}">
-          <label class="field">Nombre<input class="input" name="name" required></label>
-          <label class="field">Email<input class="input" type="email" name="email" required></label>
-          <label class="field">Teléfono<input class="input" name="phone"></label>
-          <label class="field">Ciudad<input class="input" name="city" required></label>
-          <label class="field">País<input class="input" name="country" value="${esc(p.country || "")}" required></label>
-          <label class="field">Proyecto<textarea class="textarea" name="description" required></textarea></label>
+          <label class="field">${esc(t.name)}<input class="input" name="name" required></label>
+          <label class="field">${esc(t.email)}<input class="input" type="email" name="email" required></label>
+          <label class="field">${esc(t.phone)}<input class="input" name="phone"></label>
+          <label class="field">${esc(t.city)}<input class="input" name="city" required></label>
+          <label class="field">${esc(t.country)}<input class="input" name="country" value="${esc(p.country || "")}" required></label>
+          <label class="field">${esc(t.project)}<textarea class="textarea" name="description" required></textarea></label>
           <div class="cf-turnstile" data-sitekey="0x4AAAAAADoWgsg2pjcNtzCF" data-action="request_quote"></div>
-          <p class="muted" style="font-size:12px">Los pre-presupuestos son estimaciones iniciales no vinculantes. El precio final puede variar tras visita técnica, mediciones, materiales, permisos o revisión del estado real.</p>
-          <button class="btn" type="submit">Enviar solicitud</button>
-          <p class="ok" id="ok">Solicitud enviada correctamente.</p><p class="err" id="err"></p>
+          <p class="muted" style="font-size:12px">${esc(t.disclaimer)}</p>
+          <button class="btn" type="submit">${esc(t.submit)}</button>
+          <p class="ok" id="ok">${esc(t.sent)}</p><p class="err" id="err"></p>
         </form>
       </aside>
     </main>
@@ -145,10 +147,10 @@ export async function onRequestGet(context: any) {
         delete data["cf-turnstile-response"];
         const res = await fetch("/api/quote", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify(data) });
         if (res.ok) { form.reset(); window.turnstile?.reset(); document.getElementById("ok").style.display="block"; document.getElementById("err").style.display="none"; }
-        else { window.turnstile?.reset(); const body = await res.json().catch(() => ({})); const err = document.getElementById("err"); err.textContent = body.error || "No se pudo enviar"; err.style.display="block"; }
+        else { window.turnstile?.reset(); const body = await res.json().catch(() => ({})); const err = document.getElementById("err"); err.textContent = body.error || ${sendError}; err.style.display="block"; }
       });
     </script>
   </body></html>`;
 
-  return new Response(html, { headers: { "content-type": "text/html; charset=utf-8" } });
+  return new Response(html, { headers: publicHtmlHeaders(locale) });
 }

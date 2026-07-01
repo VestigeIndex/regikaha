@@ -216,6 +216,7 @@ export async function cachePublicResponse(request: Request, ttlSeconds: number, 
   const cached = await cache.match(cacheKey);
   if (cached) return cached;
   const response = await producer();
+  if (response.headers.get("Cache-Control")?.toLowerCase().includes("no-store")) return response;
   if (response.ok) {
     const headers = new Headers(response.headers);
     headers.set("Cache-Control", `public, max-age=0, s-maxage=${ttlSeconds}`);

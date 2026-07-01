@@ -36,13 +36,26 @@ function isProductionDomain(request: Request): boolean {
   return hostname === "regikaha.com" || hostname === "www.regikaha.com";
 }
 
-export function sessionCookie(token: string, maxAgeSec: number, request: Request): string {
+function isSecureRequest(request: Request): boolean {
+  const url = new URL(request.url);
+  return url.protocol === "https:" || request.headers.get("X-Forwarded-Proto") === "https";
+}
+
+export function sessionCookie(
+  token: string,
+  maxAgeSec: number,
+  request: Request,
+  options: { name?: string; domain?: string; secure?: boolean } = {},
+): string {
   const expires = new Date(Date.now() + maxAgeSec * 1000).toUTCString();
+  const secure = options.secure ?? isSecureRequest(request);
+  const name = options.name || (secure ? SESSION_COOKIE : LEGACY_SESSION_COOKIE);
   const parts = [
-    `${SESSION_COOKIE}=${encodeURIComponent(token)}`,
+    `${name}=${encodeURIComponent(token)}`,
     "Path=/",
+    ...(options.domain ? [`Domain=${options.domain}`] : []),
     "HttpOnly",
-    "Secure",
+    ...(secure ? ["Secure"] : []),
     "SameSite=Lax",
     "Priority=High",
     `Max-Age=${maxAgeSec}`,
@@ -68,12 +81,18 @@ export function activeRoleCookie(role: string, maxAgeSec: number, request: Reque
 
 export function sessionCookieHeaders(token: string, maxAgeSec: number, request: Request): Headers {
   const headers = new Headers();
+  headers.append("Set-Cookie", expiredCookie(LEGACY_SESSION_COOKIE, undefined, false));
   headers.append("Set-Cookie", expiredCookie(LEGACY_SESSION_COOKIE));
   if (isProductionDomain(request)) {
     headers.append("Set-Cookie", expiredCookie(SESSION_COOKIE, "regikaha.com"));
     headers.append("Set-Cookie", expiredCookie(LEGACY_SESSION_COOKIE, "regikaha.com"));
+    headers.append("Set-Cookie", expiredCookie(SESSION_COOKIE));
+    headers.append("Set-Cookie", sessionCookie(token, maxAgeSec, request, { domain: "regikaha.com", secure: true }));
+  } else if (isSecureRequest(request)) {
+    headers.append("Set-Cookie", sessionCookie(token, maxAgeSec, request, { secure: true }));
+  } else {
+    headers.append("Set-Cookie", sessionCookie(token, maxAgeSec, request, { name: LEGACY_SESSION_COOKIE, secure: false }));
   }
-  headers.append("Set-Cookie", sessionCookie(token, maxAgeSec, request));
   return headers;
 }
 
@@ -88,13 +107,13 @@ export function sessionCookieHeadersWithRole(token: string, maxAgeSec: number, r
   return headers;
 }
 
-function expiredCookie(name: string, domain?: string): string {
+function expiredCookie(name: string, domain?: string, secure = true): string {
   const parts = [
     `${name}=`,
     "Path=/",
     ...(domain ? [`Domain=${domain}`] : []),
     "HttpOnly",
-    "Secure",
+    ...(secure ? ["Secure"] : []),
     "SameSite=Lax",
     "Max-Age=0",
     "Expires=Thu, 01 Jan 1970 00:00:00 GMT",
@@ -119,6 +138,7 @@ export function clearSessionCookies(request: Request): string[] {
     expiredCookie(LEGACY_SESSION_COOKIE),
     expiredCookie(ACTIVE_ROLE_COOKIE),
     expiredCookie(LEGACY_ACTIVE_ROLE_COOKIE),
+    expiredCookie(LEGACY_SESSION_COOKIE, undefined, false),
   ];
   if (isProductionDomain(request)) {
     cookies.push(expiredCookie(SESSION_COOKIE, "regikaha.com"));

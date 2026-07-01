@@ -23,19 +23,48 @@ export function useB1LStore() {
   const [hydrated, setHydrated] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>("local");
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const canSyncRemote = useRef(false);
 
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed: unknown = JSON.parse(raw);
-        if (isData(parsed)) setData(parsed);
+    let cancelled = false;
+    async function hydrate() {
+      let next = cloneSeed();
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed: unknown = JSON.parse(raw);
+          if (isData(parsed)) next = parsed;
+        }
+      } catch {
+        setSaveState("local");
       }
-    } catch {
-      setSaveState("local");
-    } finally {
-      setHydrated(true);
+
+      try {
+        const response = await fetch("/api/regi-works", { cache: "no-store", credentials: "same-origin" });
+        if (response.ok) {
+          const payload = await response.json().catch(() => ({}));
+          canSyncRemote.current = payload.canSync === true;
+          if (isData(payload.data)) {
+            next = payload.data;
+            setSaveState("saved");
+          } else if (!canSyncRemote.current) {
+            setSaveState("local");
+          }
+        }
+      } catch {
+        canSyncRemote.current = false;
+        setSaveState("local");
+      } finally {
+        if (!cancelled) {
+          setData(next);
+          setHydrated(true);
+        }
+      }
     }
+    void hydrate();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -45,10 +74,26 @@ export function useB1LStore() {
     saveTimer.current = setTimeout(() => {
       try {
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        setSaveState("saved");
       } catch {
         setSaveState("local");
       }
+
+      if (!canSyncRemote.current) {
+        setSaveState("local");
+        return;
+      }
+
+      fetch("/api/regi-works", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        cache: "no-store",
+        credentials: "same-origin",
+        body: JSON.stringify({ data }),
+      })
+        .then((response) => {
+          setSaveState(response.ok ? "saved" : "local");
+        })
+        .catch(() => setSaveState("local"));
     }, 250);
     return () => {
       if (saveTimer.current) clearTimeout(saveTimer.current);

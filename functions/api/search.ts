@@ -106,7 +106,14 @@ async function searchResponse(context: any) {
     + " ORDER BY " + (orderBy[sort] || orderBy.relevance)
     + " LIMIT 200";
 
-  const rows = await env.DB.prepare(sql).bind(...binds).all();
+  let rows: { results?: any[] };
+  try {
+    rows = await env.DB.prepare(sql).bind(...binds).all();
+  } catch {
+    return json({ total: 0, results: [], degraded: true }, 200, {
+      "Cache-Control": "private, no-store, max-age=0",
+    });
+  }
   let candidates = rows.results || [];
   if (hasOrigin) {
     candidates = candidates
@@ -124,17 +131,26 @@ async function searchResponse(context: any) {
       .filter(Boolean);
   }
 
-  const enriched = await Promise.all(candidates.slice(0, 60).map(async (professional: any) => {
-    const [cats, portfolio] = await Promise.all([
-      env.DB.prepare("SELECT category_id FROM professional_categories WHERE professional_id = ?").bind(professional.id).all(),
-      env.DB.prepare("SELECT COUNT(*) AS total FROM portfolio_items WHERE professional_id = ?").bind(professional.id).first(),
-    ]);
-    return {
+  let enriched: any[];
+  try {
+    enriched = await Promise.all(candidates.slice(0, 60).map(async (professional: any) => {
+      const [cats, portfolio] = await Promise.all([
+        env.DB.prepare("SELECT category_id FROM professional_categories WHERE professional_id = ?").bind(professional.id).all(),
+        env.DB.prepare("SELECT COUNT(*) AS total FROM portfolio_items WHERE professional_id = ?").bind(professional.id).first(),
+      ]);
+      return {
+        ...professional,
+        category_ids: (cats.results || []).map((row: any) => row.category_id),
+        portfolio_count: Number(portfolio?.total || 0),
+      };
+    }));
+  } catch {
+    enriched = candidates.slice(0, 60).map((professional: any) => ({
       ...professional,
-      category_ids: (cats.results || []).map((row: any) => row.category_id),
-      portfolio_count: Number(portfolio?.total || 0),
-    };
-  }));
+      category_ids: [],
+      portfolio_count: 0,
+    }));
+  }
 
   if (hasOrigin && sort === "relevance") {
     enriched.sort((a: any, b: any) =>

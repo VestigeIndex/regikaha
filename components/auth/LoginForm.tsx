@@ -17,6 +17,7 @@ export function LoginForm({ defaultRole = "client", adminMode = false }: { defau
   const { translate } = useDirectTranslation();
   const selectedRole = normalizeRole(params.get("role"), defaultRole);
   const role = adminMode ? "admin" : selectedRole;
+  const googleAccountRole: PublicAccountRole = selectedRole === "admin" || selectedRole === "superadmin" ? "client" : selectedRole;
   const redirectTo = safeInternalPath(params.get("next"), panelPathForRole(role));
   const roleLabel = role === "admin" ? "Admin" : role === "superadmin" ? "Superadmin" : dashboardDictionaries[locale].roles[role];
   const [pending, setPending] = useState(false);
@@ -90,7 +91,7 @@ export function LoginForm({ defaultRole = "client", adminMode = false }: { defau
             {translate("o")}
             <span className="h-px flex-1 bg-[var(--hairline)]" />
           </div>
-          <GoogleConnectButton clientId={integrations.googleClientId} redirectTo={redirectTo} />
+          <GoogleConnectButton clientId={integrations.googleClientId} redirectTo={redirectTo} accountRole={googleAccountRole} />
           <p className="mt-5 text-sm text-muted">
             {translate("¿Todavía no tienes cuenta?")}{" "}
             <Link href={registerHref} className="font-semibold text-forest-700 hover:underline">

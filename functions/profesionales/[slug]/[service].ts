@@ -1,3 +1,5 @@
+import { detectPublicLocale, publicHtmlHeaders, publicMoney, publicProfileCopy } from "../../_publicProfileI18n";
+
 function esc(value: unknown): string {
   return String(value ?? "")
     .replace(/&/g, "&amp;")
@@ -5,10 +7,6 @@ function esc(value: unknown): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
-}
-
-function money(value: unknown): string {
-  return new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(Number(value || 0));
 }
 
 function jsonArray(value: unknown): string[] {
@@ -22,8 +20,8 @@ function jsonArray(value: unknown): string[] {
   }
 }
 
-function list(items: string[]) {
-  return items.length ? `<ul>${items.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>` : `<p class="muted">Se concreta en la visita o primera valoración.</p>`;
+function list(items: string[], fallback: string) {
+  return items.length ? `<ul>${items.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>` : `<p class="muted">${esc(fallback)}</p>`;
 }
 
 function styles() {
@@ -36,6 +34,8 @@ function styles() {
 }
 
 export async function onRequestGet(context: any) {
+  const locale = detectPublicLocale(context.request);
+  const t = publicProfileCopy(locale);
   const slug = String(context.params.slug || "");
   const serviceSlug = String(context.params.service || "");
   const row = await context.env.DB.prepare(
@@ -44,11 +44,12 @@ export async function onRequestGet(context: any) {
      JOIN professionals p ON p.id = s.professional_id
      WHERE p.slug = ? AND s.slug = ? AND p.active_status = 1 AND s.is_active = 1`,
   ).bind(slug, serviceSlug).first();
-  if (!row) return context.next ? context.next() : new Response("No encontrado", { status: 404 });
+  if (!row) return context.next ? context.next() : new Response("Not found", { status: 404 });
 
   const origin = new URL(context.request.url).origin;
   const area = row.service_area || [row.city, row.region, row.country].filter(Boolean).join(", ");
-  const title = `${row.title} en ${area || "mercados activos"} | ${row.public_name} | Regi Kaha`;
+  const areaLabel = area || t.activeMarkets;
+  const title = t.titleService(row.title, areaLabel, row.public_name);
   const description = String(row.description || "").slice(0, 160);
   const includes = jsonArray(row.includes);
   const excludes = jsonArray(row.excludes);
@@ -58,7 +59,7 @@ export async function onRequestGet(context: any) {
     "@type": "Service",
     name: row.title,
     description,
-    areaServed: area || "Active markets",
+    areaServed: areaLabel,
     provider: {
       "@type": "HomeAndConstructionBusiness",
       name: row.public_name,
@@ -67,42 +68,44 @@ export async function onRequestGet(context: any) {
     offers: { "@type": "Offer", price: Number(row.price_from || 0), priceCurrency: "EUR" },
   };
 
-  const html = `<!doctype html><html lang="es"><head>
+  const sendError = JSON.stringify(t.sendError);
+
+  const html = `<!doctype html><html lang="${locale}"><head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
     <title>${esc(title)}</title><meta name="description" content="${esc(description)}">
     <link rel="canonical" href="${origin}/profesionales/${esc(row.professional_slug)}/${esc(row.slug)}">
     <script type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>
     ${styles()}
   </head><body>
-    <header class="hero"><div class="wrap"><a class="brand" href="/">Regi Kaha</a><h1 class="h1">${esc(row.title)}</h1><p>${esc(row.public_name)} · ${esc(area || "mercados activos")}</p></div></header>
+    <header class="hero"><div class="wrap"><a class="brand" href="/">Regi Kaha</a><h1 class="h1">${esc(row.title)}</h1><p>${esc(row.public_name)} · ${esc(areaLabel)}</p></div></header>
     <main class="wrap grid">
       <article class="card">
-        <span class="chip">Servicio profesional</span>
-        <p class="price">${money(row.price_from)}</p>
-        <p class="muted">${esc(row.estimated_time || "Tiempo a concretar")}</p>
+        <span class="chip">${esc(t.serviceProfessional)}</span>
+        <p class="price">${publicMoney(row.price_from, locale)}</p>
+        <p class="muted">${esc(row.estimated_time || t.timeToConfirm)}</p>
         <p>${esc(row.description || "")}</p>
         <div class="cols">
-          <section class="box"><h2>Incluye</h2>${list(includes)}</section>
-          <section class="box"><h2>No incluye</h2>${list(excludes)}</section>
-          <section class="box"><h2>Proceso</h2>${list(process)}</section>
+          <section class="box"><h2>${esc(t.includes)}</h2>${list(includes, t.visitDefault)}</section>
+          <section class="box"><h2>${esc(t.excludes)}</h2>${list(excludes, t.visitDefault)}</section>
+          <section class="box"><h2>${esc(t.process)}</h2>${list(process, t.visitDefault)}</section>
         </div>
       </article>
       <aside class="card">
-        <h2>Pide pre-presupuesto gratis</h2>
+        <h2>${esc(t.quoteTitle)}</h2>
         <form id="quote">
           <input type="hidden" name="professionalId" value="${esc(row.professional_id)}">
           <input type="hidden" name="serviceId" value="${esc(row.id)}">
           <input type="hidden" name="categoryId" value="${esc(row.category_id || "")}">
-          <label class="field">Nombre<input class="input" name="name" required></label>
-          <label class="field">Email<input class="input" type="email" name="email" required></label>
-          <label class="field">Teléfono<input class="input" name="phone"></label>
-          <label class="field">Ciudad<input class="input" name="city" required></label>
-          <label class="field">País<input class="input" name="country" value="${esc(row.country || "")}" required></label>
-          <label class="field">Proyecto<textarea class="textarea" name="description" required>${esc(row.title)}: </textarea></label>
+          <label class="field">${esc(t.name)}<input class="input" name="name" required></label>
+          <label class="field">${esc(t.email)}<input class="input" type="email" name="email" required></label>
+          <label class="field">${esc(t.phone)}<input class="input" name="phone"></label>
+          <label class="field">${esc(t.city)}<input class="input" name="city" required></label>
+          <label class="field">${esc(t.country)}<input class="input" name="country" value="${esc(row.country || "")}" required></label>
+          <label class="field">${esc(t.project)}<textarea class="textarea" name="description" required>${esc(row.title)}: </textarea></label>
           <div class="cf-turnstile" data-sitekey="0x4AAAAAADoWgsg2pjcNtzCF" data-action="request_quote"></div>
-          <p class="muted" style="font-size:12px">Estimación inicial no vinculante. El precio definitivo puede variar tras visita técnica, mediciones, materiales, permisos o revisión real del trabajo.</p>
-          <button class="btn" type="submit">Enviar solicitud</button>
-          <p class="ok" id="ok">Solicitud enviada correctamente.</p><p class="err" id="err"></p>
+          <p class="muted" style="font-size:12px">${esc(t.serviceDisclaimer)}</p>
+          <button class="btn" type="submit">${esc(t.submit)}</button>
+          <p class="ok" id="ok">${esc(t.sent)}</p><p class="err" id="err"></p>
         </form>
       </aside>
     </main>
@@ -116,10 +119,10 @@ export async function onRequestGet(context: any) {
         delete data["cf-turnstile-response"];
         const res = await fetch("/api/quote", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify(data) });
         if (res.ok) { form.reset(); window.turnstile?.reset(); document.getElementById("ok").style.display="block"; document.getElementById("err").style.display="none"; }
-        else { window.turnstile?.reset(); const body = await res.json().catch(() => ({})); const err = document.getElementById("err"); err.textContent = body.error || "No se pudo enviar"; err.style.display="block"; }
+        else { window.turnstile?.reset(); const body = await res.json().catch(() => ({})); const err = document.getElementById("err"); err.textContent = body.error || ${sendError}; err.style.display="block"; }
       });
     </script>
   </body></html>`;
 
-  return new Response(html, { headers: { "content-type": "text/html; charset=utf-8" } });
+  return new Response(html, { headers: publicHtmlHeaders(locale) });
 }

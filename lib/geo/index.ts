@@ -1,5 +1,6 @@
 import type { Professional } from "@/lib/types";
 import { getCategoryById } from "@/lib/data/categories";
+import { prioritySeoPlaces } from "./priority-places";
 
 export * from "./adapters";
 export * from "./distance";
@@ -17,7 +18,19 @@ export type CoverageStatus =
   | "activa"
   | "fuerte";
 
+const priorityCityCoordinates: Record<string, Coordinates> = Object.fromEntries(
+  prioritySeoPlaces.flatMap((place) => {
+    const coordinates = { lat: place.latitude, lng: place.longitude };
+    return [
+      [place.slug, coordinates],
+      ...(place.localityName ? [[place.localityName, coordinates] as const] : []),
+      ...place.aliases.map((alias) => [alias, coordinates] as const),
+    ];
+  }),
+);
+
 export const cityCoordinates: Record<string, Coordinates> = {
+  ...Object.fromEntries(Object.entries(priorityCityCoordinates).map(([name, coordinates]) => [key(name), coordinates])),
   madrid: { lat: 40.4168, lng: -3.7038 },
   barcelona: { lat: 41.3874, lng: 2.1686 },
   valencia: { lat: 39.4699, lng: -0.3763 },

@@ -194,7 +194,7 @@ export function RegistroForm() {
                 {t.ui.register.connectText}
               </p>
               <div className="mt-3">
-                <GoogleConnectButton clientId={integrations.googleClientId} redirectTo="/registro/profesional" />
+                <GoogleConnectButton clientId={integrations.googleClientId} redirectTo="/registro/profesional" accountRole="professional" />
               </div>
             </div>
             <Field label={t.ui.register.professionalType}>

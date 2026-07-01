@@ -312,6 +312,12 @@ CREATE TABLE IF NOT EXISTS estimate_templates (
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS regi_works_snapshots (
+  user_id TEXT PRIMARY KEY,
+  data_json TEXT NOT NULL,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS professional_lead_preferences (
   professional_id TEXT PRIMARY KEY,
   countries TEXT NOT NULL DEFAULT '[]',

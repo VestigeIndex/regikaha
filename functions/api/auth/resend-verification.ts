@@ -19,5 +19,6 @@ export async function onRequestPost(context: any) {
   const origin = String(env.NEXT_PUBLIC_SITE_URL || request.headers.get("Origin") || new URL(request.url).origin).replace(/\/$/, "");
   const verifyUrl = `${origin}/verificar-email?token=${encodeURIComponent(rawToken)}`;
   const result = await sendEmail(env, verificationEmailMessage({ email: user.email, verifyUrl }));
+  if (!result.ok) return bad("No se pudo enviar el email de verificación", 502);
   return json({ ok: true, provider: result.provider });
 }

@@ -14,27 +14,36 @@ export async function onRequestPost(context: any) {
     return bad("Preferencias inválidas");
   }
 
-  const user = await getSessionUser(env, request);
-  await env.DB.prepare(
-    `INSERT INTO cookie_consents
-      (id, consent_id, user_id, necessary, analytics, maps, marketing, locale, policy_version, decided_at, updated_at)
-     VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
-     ON CONFLICT(consent_id) DO UPDATE SET
-      user_id = COALESCE(excluded.user_id, cookie_consents.user_id),
-      analytics = excluded.analytics,
-      maps = excluded.maps,
-      marketing = excluded.marketing,
-      locale = excluded.locale,
-      policy_version = excluded.policy_version,
-      decided_at = datetime('now'),
-      updated_at = datetime('now')`,
-  ).bind(
-    crypto.randomUUID(), consentId, user?.id || null,
-    body.analytics === true ? 1 : 0,
-    body.maps === true ? 1 : 0,
-    body.marketing === true ? 1 : 0,
-    locale, policyVersion,
-  ).run();
+  let user: any = null;
+  try {
+    user = await getSessionUser(env, request);
+  } catch {
+    user = null;
+  }
+  try {
+    await env.DB.prepare(
+      `INSERT INTO cookie_consents
+        (id, consent_id, user_id, necessary, analytics, maps, marketing, locale, policy_version, decided_at, updated_at)
+       VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+       ON CONFLICT(consent_id) DO UPDATE SET
+        user_id = COALESCE(excluded.user_id, cookie_consents.user_id),
+        analytics = excluded.analytics,
+        maps = excluded.maps,
+        marketing = excluded.marketing,
+        locale = excluded.locale,
+        policy_version = excluded.policy_version,
+        decided_at = datetime('now'),
+        updated_at = datetime('now')`,
+    ).bind(
+      crypto.randomUUID(), consentId, user?.id || null,
+      body.analytics === true ? 1 : 0,
+      body.maps === true ? 1 : 0,
+      body.marketing === true ? 1 : 0,
+      locale, policyVersion,
+    ).run();
+  } catch {
+    return privateJson({ ok: true, stored: false });
+  }
 
   return privateJson({ ok: true });
 }
