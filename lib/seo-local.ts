@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { categories } from "@/lib/data/categories";
+import { tradeCategoryIds } from "@/lib/data/trade-categories";
 import { seedPlaces } from "@/lib/geo/places";
 import { prioritySeoPlaces } from "@/lib/geo/priority-places";
 import type { Place } from "@/lib/geo/types";
@@ -17,8 +18,14 @@ function uniquePlaces(places: Place[]): Place[] {
 }
 
 export const indexablePlaces = uniquePlaces([...prioritySeoPlaces, ...seedPlaces]);
+export const serviceSeoPlaces = uniquePlaces(prioritySeoPlaces);
 export const launchPlaces = [...new Set(indexablePlaces.map((place) => place.countryCode))]
   .flatMap((countryCode) => indexablePlaces.filter((place) => place.countryCode === countryCode).slice(0, 2));
+const tradeCategoryIdSet = new Set<string>(tradeCategoryIds);
+
+export function seoPlacesForCategory(categoryId: string): Place[] {
+  return tradeCategoryIdSet.has(categoryId) ? launchPlaces : serviceSeoPlaces;
+}
 
 export const openGraphLocales: Record<Locale, string> = {
   es: "es_ES",

@@ -15,6 +15,8 @@ import {
   localityPath,
   placeName,
   indexablePlaces,
+  placeRouteId,
+  seoPlacesForCategory,
 } from "@/lib/seo-local";
 import { site } from "@/lib/site";
 
@@ -28,6 +30,12 @@ function nearbyPlaces(place: Place) {
     .filter((candidate) => candidate.countryCode === place.countryCode && candidate.id !== place.id)
     .sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured) || Number(b.population || 0) - Number(a.population || 0))
     .slice(0, 8);
+}
+
+function serviceHref(locale: Locale, item: Category, place: Place) {
+  const hasStaticPage = seoPlacesForCategory(item.id).some((candidate) => placeRouteId(candidate) === placeRouteId(place));
+  if (hasStaticPage) return localServicePath(locale, item.slug, place);
+  return `/buscar?cat=${encodeURIComponent(item.id)}&loc=${encodeURIComponent(place.slug)}`;
 }
 
 export function LocalSeoPage({ locale, place, category }: { locale: Locale; place: Place; category?: Category }) {
@@ -159,7 +167,7 @@ export function LocalSeoPage({ locale, place, category }: { locale: Locale; plac
               <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {related.map((item) => {
                   const translated = localizedCategory(locale, item.id);
-                  return <Link key={item.id} href={localServicePath(locale, item.slug, place)} className="rounded-lg border hairline bg-white p-4 transition hover:border-forest-500 hover:shadow-soft"><span className="font-semibold text-ink">{translated.name}</span><span className="mt-2 flex items-center gap-1 text-sm text-forest-700">{copy.search} <ArrowRight size={14} /></span></Link>;
+                  return <Link key={item.id} href={serviceHref(locale, item, place)} className="rounded-lg border hairline bg-white p-4 transition hover:border-forest-500 hover:shadow-soft"><span className="font-semibold text-ink">{translated.name}</span><span className="mt-2 flex items-center gap-1 text-sm text-forest-700">{copy.search} <ArrowRight size={14} /></span></Link>;
                 })}
               </div>
             </div>
@@ -174,7 +182,7 @@ export function LocalSeoPage({ locale, place, category }: { locale: Locale; plac
               const translated = localizedCategory(locale, item.id);
               const available = getProfessionalsByCategory(item.id).filter((professional) => professional.countryCode === place.countryCode).length;
               return (
-                <Link key={item.id} href={localServicePath(locale, item.slug, place)} className="rounded-lg border hairline p-5 transition hover:border-forest-500 hover:shadow-soft">
+                <Link key={item.id} href={serviceHref(locale, item, place)} className="rounded-lg border hairline p-5 transition hover:border-forest-500 hover:shadow-soft">
                   <h3 className="font-bold text-ink">{translated.name}</h3>
                   <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted">{translated.shortDescription}</p>
                   <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-forest-700">{copy.search} <ArrowRight size={14} /></span>

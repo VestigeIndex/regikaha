@@ -2,28 +2,24 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LocalSeoPage } from "@/components/marketplace/LocalSeoPage";
 import { categories, getCategoryBySlug } from "@/lib/data";
-import { tradeCategoryIds } from "@/lib/data/trade-categories";
 import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import {
   categorySeoImage,
   countryName,
   getPlaceByRouteId,
-  indexablePlaces,
-  launchPlaces,
   localizedCategory,
   localizedMetadata,
   localSeoDictionaries,
   localServicePath,
   placeName,
+  seoPlacesForCategory,
 } from "@/lib/seo-local";
 
 export const dynamicParams = false;
-const tradeCategoryIdSet = new Set<string>(tradeCategoryIds);
 
 export function generateStaticParams() {
   return locales.flatMap((locale) => categories.flatMap((category) => {
-    const places = tradeCategoryIdSet.has(category.id) ? launchPlaces : indexablePlaces;
-    return places.map((place) => ({
+    return seoPlacesForCategory(category.id).map((place) => ({
       locale,
       category: category.slug,
       place: `${place.countryCode.toLowerCase()}-${place.slug}`,

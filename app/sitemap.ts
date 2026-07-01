@@ -3,7 +3,7 @@ import { site } from "@/lib/site";
 import { categories, publicProfessionals, getServicesByProfessional } from "@/lib/data";
 import { activeMarkets } from "@/lib/market";
 import { locales } from "@/lib/i18n/config";
-import { indexablePlaces, localityPath, localServicePath, primaryLocaleByCountry } from "@/lib/seo-local";
+import { indexablePlaces, localityPath, localServicePath, primaryLocaleByCountry, seoPlacesForCategory } from "@/lib/seo-local";
 
 export const dynamic = "force-static";
 
@@ -89,6 +89,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: primary ? 0.75 : 0.55,
       });
       for (const category of categories) {
+        if (!seoPlacesForCategory(category.id).some((candidate) => candidate.id === place.id)) continue;
         entries.push({
           url: `${site.url}${localServicePath(locale, category.slug, place)}`,
           lastModified: now,
